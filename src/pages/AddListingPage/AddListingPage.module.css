@@ -1,0 +1,435 @@
+/* src/pages/AddListingPage/AddListingPage.module.css - ОНОВЛЕНО: стилі для блоку зручностей як широкої секції */
+.addListingPage {
+    background-color: #FAF7F0;
+    padding: 40px 0;
+    min-height: calc(100vh - var(--navbar-height, 80px));
+    display: flex;
+    justify-content: center;
+    align-items: flex-start;
+    font-family: 'Afacad', sans-serif;
+    color: #4A4947;
+    width: 100%;
+    box-sizing: border-box;
+}
+
+.pageContentWrapper {
+    max-width: 1200px;
+    width: 100%;
+    padding: 0 40px;
+    box-sizing: border-box;
+    margin: 0 auto;
+}
+
+.pageTitle {
+    font-size: 36px;
+    color: #4A4947;
+    text-align: center;
+    margin-bottom: 40px;
+    font-weight: 700;
+}
+
+.listingForm {
+    display: flex;
+    flex-direction: column;
+    gap: 30px; /* Загальний відступ між основними секціями */
+}
+
+.formColumns {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 40px;
+}
+
+.formColumn {
+    display: flex;
+    flex-direction: column;
+    gap: 20px; /* Відступ між секціями всередині колонки */
+}
+
+.formSection {
+    background-color: #F7F5F0;
+    border-radius: 8px;
+    padding: 30px;
+    box-shadow: inset 0 1px 3px rgba(0, 0, 0, 0.05);
+}
+
+.formSection h2 {
+    font-size: 20px;
+    color: #4A4947;
+    margin-top: 0;
+    margin-bottom: 25px;
+    text-align: left;
+    font-weight: 600;
+}
+
+.formGroup {
+    margin-bottom: 15px;
+    text-align: left;
+    position: relative;
+}
+
+.formGroup:last-child {
+    margin-bottom: 0;
+}
+
+.formGroup label {
+    display: block;
+    font-size: 15px;
+    color: #4A4947;
+    margin-bottom: 8px;
+    font-weight: 500;
+}
+
+.formGroup input[type="text"],
+.formGroup input[type="number"],
+.formGroup textarea,
+.formGroup select {
+    width: 100%;
+    padding: 12px 15px;
+    border: 1px solid #E0E0E0;
+    border-radius: 20px;
+    font-size: 16px;
+    color: #4A4947;
+    background-color: transparent;
+    box-sizing: border-box;
+    transition: border-color 0.2s ease, box-shadow 0.2s ease;
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    appearance: none;
+}
+
+.formGroup select {
+    background-image: url('data:image/svg+xml;utf8,<svg fill="%234A4947" height="24" viewBox="0 0 24 24" width="24" xmlns="http://www.w3.org/2000/svg"><path d="M7 10l5 5 5-5z"/><path d="M0 0h24v24H0z" fill="none"/></svg>');
+    background-repeat: no-repeat;
+    background-position: right 10px center;
+    background-size: 24px;
+    padding-right: 40px;
+    cursor: pointer;
+}
+
+.formGroup input[type="text"]::placeholder,
+.formGroup input[type="number"]::placeholder,
+.formGroup textarea::placeholder,
+.formGroup select option[value=""][disabled] {
+    color: #B2B2B2;
+}
+
+.formGroup input[type="text"]:focus,
+.formGroup input[type="number"]:focus,
+.formGroup textarea:focus,
+.formGroup select:focus {
+    border-color: #B17457;
+    box-shadow: 0 0 0 3px rgba(177, 116, 87, 0.1);
+    outline: none;
+}
+
+.formGroup textarea {
+    resize: vertical;
+    min-height: 120px;
+}
+
+.charCounter {
+    position: absolute;
+    bottom: 5px;
+    right: 15px;
+    font-size: 13px;
+    color: #888;
+}
+
+/* ОНОВЛЕНО: Стилі для списку зручностей як широкої секції */
+.amenitiesList {
+    display: grid; /* Використовуємо Grid для розташування елементів в кілька колонок */
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); /* 250px - мінімальна ширина колонки */
+    gap: 10px 20px; /* Відступи між рядками та колонками */
+    padding: 0; /* Прибираємо внутрішній відступ, його дає formSection */
+    list-style: none; /* Видаляємо стандартні маркери списку */
+}
+
+.amenityItem {
+    display: flex;
+    align-items: center;
+    gap: 12px; /* Відступ між кругликом та текстом */
+    padding: 10px 5px; /* Внутрішній відступ для кожного елемента */
+    cursor: pointer;
+    transition: background-color 0.2s ease, transform 0.1s ease;
+    border-radius: 8px; /* Невелике заокруглення для ховер-ефекту */
+    font-size: 16px;
+}
+
+.amenityItem:hover {
+    background-color: rgba(177, 116, 87, 0.05); /* Легкий ховер-ефект */
+    transform: translateY(-1px); /* Легка анімація при наведенні */
+}
+
+.amenityIndicator {
+    width: 20px; /* Розмір круглика */
+    height: 20px;
+    border: 2px solid #B17457; /* Обведення круглика */
+    border-radius: 50%; /* Робимо круглий */
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-shrink: 0; /* Щоб не стискався */
+    transition: border-color 0.2s ease;
+}
+
+.amenityIndicator::after {
+    content: '';
+    display: block;
+    width: 12px; /* Розмір внутрішнього круглика */
+    height: 12px;
+    background-color: transparent; /* Початковий колір - прозорий */
+    border-radius: 50%;
+    transition: background-color 0.2s ease;
+}
+
+.amenityItem.selected .amenityIndicator {
+    border-color: #B17457; /* Обведення залишається таким же кольором при виборі */
+}
+
+.amenityItem.selected .amenityIndicator::after {
+    background-color: #B17457; /* Колір при виборі */
+}
+
+.photoUploadSection {
+    padding: 30px;
+    text-align: center;
+}
+
+.photoUploadSection h2 {
+    text-align: left;
+    margin-bottom: 25px;
+}
+
+.imageGrid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(130px, 1fr));
+    gap: 20px;
+    justify-content: center;
+    align-items: center;
+}
+
+.addPhotoButton {
+    background-color: #E0E0E0;
+    border: 2px dashed #B17457;
+    border-radius: 8px;
+    width: 130px;
+    height: 130px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    cursor: pointer;
+    transition: background-color 0.2s ease;
+    flex-shrink: 0;
+}
+
+.addPhotoButton span {
+    font-size: 60px;
+    color: #B17457;
+    line-height: 1;
+}
+
+.addPhotoButton:hover {
+    background-color: #d1d1d1;
+}
+
+.imagePreviewItem,
+.emptyPhotoSlot {
+    position: relative;
+    width: 130px;
+    height: 130px;
+    border: 1px solid #E0E0E0;
+    border-radius: 8px;
+    overflow: hidden;
+    background-color: #F7F5F0;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-shrink: 0;
+}
+
+.previewImage {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+.removeImageButton {
+    position: absolute;
+    top: 5px;
+    right: 5px;
+    background-color: rgba(255, 0, 0, 0.7);
+    color: white;
+    border: none;
+    border-radius: 50%;
+    width: 25px;
+    height: 25px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-size: 14px;
+    cursor: pointer;
+    transition: background-color 0.2s ease;
+    z-index: 10;
+}
+
+.removeImageButton:hover {
+    background-color: rgba(255, 0, 0, 1);
+}
+
+.placeholderCamera {
+    width: 60%;
+    height: auto;
+    opacity: 0.3;
+}
+
+.submitButton {
+    background-color: #B17457;
+    color: white;
+    padding: 15px 50px;
+    border: none;
+    border-radius: 1000px;
+    font-size: 20px;
+    font-weight: 700;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+    align-self: center;
+    margin-top: 30px;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+}
+
+.submitButton:hover {
+    background-color: #9c5e44;
+}
+
+/* Медіа-запити для адаптивності */
+@media (max-width: 992px) {
+    .formColumns {
+        grid-template-columns: 1fr;
+        gap: 30px;
+    }
+    .pageContentWrapper {
+        padding: 0 30px;
+    }
+    .formGroup input,
+    .formGroup textarea,
+    .formGroup select {
+        border-radius: 15px;
+        background-color: transparent;
+    }
+    .submitButton {
+        border-radius: 50px;
+    }
+
+    .amenitiesList {
+        grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); /* Менше колонок на планшетах */
+        gap: 8px 15px;
+    }
+    .amenityItem {
+        padding: 8px 5px;
+    }
+}
+
+@media (max-width: 768px) {
+    .pageContentWrapper {
+        padding: 0 20px;
+    }
+    .pageTitle {
+        font-size: 30px;
+    }
+    .formSection {
+        padding: 20px;
+    }
+    .formSection h2 {
+        font-size: 18px;
+    }
+    .formGroup input,
+    .formGroup textarea,
+    .formGroup select {
+        padding: 10px 12px;
+        font-size: 15px;
+        border-radius: 12px;
+        background-color: transparent;
+    }
+    .amenitiesList {
+        grid-template-columns: 1fr; /* Одна колонка на мобільних, щоб не було тісно */
+        gap: 5px;
+    }
+    .amenityItem {
+        padding: 8px 10px; /* Збільшуємо для мобільних */
+        font-size: 15px;
+    }
+    .amenityIndicator {
+        width: 18px;
+        height: 18px;
+    }
+    .amenityIndicator::after {
+        width: 10px;
+        height: 10px;
+    }
+    .addPhotoButton,
+    .imagePreviewItem,
+    .emptyPhotoSlot {
+        width: 100px;
+        height: 100px;
+    }
+    .addPhotoButton span {
+        font-size: 40px;
+    }
+    .submitButton {
+        padding: 12px 30px;
+        font-size: 18px;
+        border-radius: 40px;
+    }
+}
+
+@media (max-width: 480px) {
+    .pageContentWrapper {
+        padding: 0 15px;
+    }
+    .pageTitle {
+        font-size: 24px;
+    }
+    .formSection {
+        padding: 15px;
+    }
+    .formSection h2 {
+        font-size: 16px;
+    }
+    .formGroup label {
+        font-size: 14px;
+    }
+    .charCounter {
+        font-size: 12px;
+    }
+    .amenityItem {
+        padding: 6px 8px;
+        font-size: 14px;
+    }
+    .amenityIndicator {
+        width: 16px;
+        height: 16px;
+    }
+    .amenityIndicator::after {
+        width: 8px;
+        height: 8px;
+    }
+    .imageGrid {
+        grid-template-columns: repeat(auto-fit, minmax(80px, 1fr));
+        gap: 10px;
+    }
+    .addPhotoButton,
+    .imagePreviewItem,
+    .emptyPhotoSlot {
+        width: 80px;
+        height: 80px;
+    }
+    .addPhotoButton span {
+        font-size: 30px;
+    }
+    .submitButton {
+        padding: 10px 20px;
+        font-size: 16px;
+        border-radius: 30px;
+    }
+}

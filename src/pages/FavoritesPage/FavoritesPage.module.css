@@ -1,0 +1,139 @@
+/* src/pages/FavoritesPage/FavoritesPage.module.css */
+.favoritesPage {
+    background-color: #FAF7F0;
+    padding: 40px 20px;
+    min-height: calc(100vh - var(--navbar-height, 80px));
+    font-family: 'Afacad', sans-serif;
+    color: #4A4947;
+    max-width: 1200px; /* Обмежте ширину, щоб картки не були занадто широкими */
+    margin: 0 auto; /* Центруємо сторінку */
+    box-sizing: border-box;
+}
+
+.favoritesHeader {
+    text-align: left; /* Заголовок ліворуч, згідно скріншоту */
+    margin-bottom: 40px;
+}
+
+.title {
+    font-size: 36px;
+    font-weight: 700;
+    color: #4A4947;
+    margin: 0;
+}
+
+.loading,
+.noFavoritesMessage {
+    text-align: center;
+    font-size: 18px;
+    color: #888;
+    margin-top: 50px;
+}
+
+.favoritesGrid {
+    display: grid;
+    /* Використовуємо auto-fit замість auto-fill, щоб уникнути порожніх місць, якщо карток менше */
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); /* Припустимо 300px для кращого вигляду */
+    gap: 30px;
+    justify-content: center; /* Центруємо елементи в сітці */
+    margin-bottom: 40px; /* Відступ перед кнопками */
+}
+
+.favoritesActions {
+    display: flex;
+    justify-content: center; /* Центруємо кнопки */
+    gap: 20px; /* Відступ між кнопками */
+    margin-top: 20px;
+}
+
+.clearButton {
+    /* Стилі для кнопки "Очистити список обраних" */
+    background-color: #B17457; /* Основний колір */
+    color: #FAF7F0; /* Білий текст */
+    border: none;
+    border-radius: 25px; /* Збільшено заокруглення */
+    padding: 12px 25px;
+    font-size: 16px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: background-color 0.2s ease, transform 0.2s ease;
+    text-decoration: none; /* Для випадків, якщо Button - це Link або обгортка Link */
+    display: inline-flex; /* Для вирівнювання тексту та іконок, якщо вони є */
+    align-items: center;
+    justify-content: center;
+}
+
+.clearButton:hover {
+    background-color: #9c634a; /* Темніший при наведенні */
+    transform: translateY(-2px);
+}
+
+.viewAllButton {
+    /* Стилі для кнопки "Переглянути всі оголошення" */
+    background-color: transparent; /* Прозорий фон */
+    color: #B17457; /* Основний колір тексту */
+    border: 2px solid #B17457; /* Обведення */
+    border-radius: 25px; /* Збільшено заокруглення */
+    padding: 10px 25px; /* Менший padding, щоб обведення було 2px */
+    font-size: 16px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    text-decoration: none; /* Прибираємо підкреслення у Link */
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.viewAllButton:hover {
+    background-color: #B17457;
+    color: #FAF7F0;
+}
+
+/* Медіа-запити для адаптивності */
+@media (max-width: 992px) {
+    .favoritesPage {
+        padding: 30px 15px;
+    }
+    .title {
+        font-size: 32px;
+    }
+    .favoritesGrid {
+        grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+        gap: 25px;
+    }
+    .favoritesActions {
+        flex-direction: column; /* Кнопки в стовпець на менших екранах */
+        gap: 15px;
+    }
+    .clearButton,
+    .viewAllButton {
+        width: 100%; /* Займають всю доступну ширину */
+        box-sizing: border-box;
+    }
+}
+
+@media (max-width: 768px) {
+    .favoritesPage {
+        padding: 25px 10px;
+    }
+    .title {
+        font-size: 28px;
+    }
+    .favoritesGrid {
+        grid-template-columns: 1fr; /* Одна колонка на мобільних */
+        gap: 20px;
+    }
+}
+
+@media (max-width: 480px) {
+    .favoritesPage {
+        padding: 20px 10px;
+    }
+    .title {
+        font-size: 24px;
+    }
+    .noFavoritesMessage {
+        font-size: 16px;
+    }
+}

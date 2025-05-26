@@ -1,10 +1,16 @@
 #root {
-  max-width: 1280px;
-  margin: 0 auto;
-  padding: 2rem;
-  text-align: center;
+  /* Прибираємо max-width та padding, щоб дозволити додатку займати всю ширину */
+  /* max-width: 1280px; */
+  /* margin: 0 auto; */
+  /* padding: 2rem; */
+  text-align: center; /* Це можна залишити, якщо потрібно глобальне центрування тексту */
+
+  /* Додаємо ширину 100% та min-height, щоб #root займав весь простір */
+  width: 100%; /* <--- ДОДАНО */
+  min-height: 100vh; /* <--- ДОДАНО: Щоб #root займав всю висоту вікна */
 }
 
+/* Решта ваших стилів App.css залишається без змін */
 .logo {
   height: 6em;
   padding: 1.5em;

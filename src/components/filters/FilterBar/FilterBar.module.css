@@ -1,0 +1,222 @@
+/* src/components/filters/FilterBar/FilterBar.module.css */
+.filterBarContainer {
+    width: 100%;
+    margin-bottom: 40px;
+}
+
+.headerControls {
+    display: flex;
+    align-items: center;
+    margin-bottom: 20px;
+    position: relative;
+}
+
+.filterToggleButton {
+    background-color: #B17457;
+    color: white;
+    border: none;
+    border-radius: 20px;
+    padding: 10px 20px;
+    font-size: 16px;
+    font-weight: 600;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    transition: background-color 0.2s ease;
+    z-index: 2;
+    min-width: 120px;
+    justify-content: center;
+}
+
+.filterToggleButton:hover {
+    background-color: #9c5e44;
+}
+
+.filtersSection {
+    background-color: #F7F5F0;
+    border-radius: 8px;
+    padding: 30px;
+    box-shadow: inset 0 1px 3px rgba(0, 0, 0, 0.05);
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+}
+
+.filterRow {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+    gap: 15px;
+    align-items: flex-end;
+}
+
+.formGroup {
+    margin-bottom: 0;
+    text-align: left;
+    display: flex;
+    flex-direction: column;
+}
+
+.formGroup label {
+    display: block;
+    font-size: 14px;
+    color: #4A4947;
+    margin-bottom: 8px;
+    font-weight: 500;
+}
+
+.formGroup input[type="text"],
+.formGroup input[type="number"],
+.formGroup select {
+    width: 100%;
+    padding: 10px 12px;
+    border: 1px solid #D8D2C2;
+    border-radius: 20px;
+    font-size: 15px;
+    color: #4A4947;
+    background-color: transparent; /* ЗМІНЕНО: прозорий фон */
+    box-sizing: border-box;
+    transition: border-color 0.2s ease, box-shadow 0.2s ease;
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    appearance: none;
+    height: 40px;
+}
+
+.formGroup select {
+    /* Залишаємо стрілку, але можемо змінити її колір, якщо бажаєте */
+    background-image: url('data:image/svg+xml;utf8,<svg fill="%234A4947" height="24" viewBox="0 0 24 24" width="24" xmlns="http://www.w3.org/2000/svg"><path d="M7 10l5 5 5-5z"/><path d="M0 0h24v24H0z" fill="none"/></svg>');
+    background-repeat: no-repeat;
+    background-position: right 10px center;
+    background-size: 20px;
+    padding-right: 35px;
+    cursor: pointer;
+}
+
+.formGroup input[type="text"]::placeholder,
+.formGroup input[type="number"]::placeholder {
+    color: #B2B2B2;
+}
+
+.formGroup input[type="text"]:focus,
+.formGroup input[type="number"]:focus,
+.formGroup select:focus {
+    border-color: #B17457;
+    box-shadow: 0 0 0 2px rgba(177, 116, 87, 0.1);
+    outline: none;
+}
+
+.priceRangeGroup {
+    display: flex;
+    flex-direction: column;
+}
+
+.priceInputs {
+    display: flex;
+    gap: 10px;
+    width: 100%;
+}
+
+.priceInputs input {
+    flex: 1;
+}
+
+.filterButtons {
+    display: flex;
+    gap: 15px;
+    justify-content: flex-start;
+    margin-top: 10px;
+}
+
+.resetButton {
+    padding: 10px 25px;
+    border-radius: 20px;
+    font-size: 16px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: background-color 0.2s ease, color 0.2s ease, border-color 0.2s ease;
+    min-width: 120px;
+    background-color: transparent;
+    color: #B17457;
+    border: 1px solid #D8D2C2;
+}
+
+.resetButton:hover {
+    background-color: #F0EAD6;
+    border-color: #B17457;
+}
+
+/* Медіа-запити для адаптивності FilterBar */
+@media (max-width: 992px) {
+    .headerControls {
+        flex-direction: column;
+        align-items: flex-start;
+        margin-bottom: 20px;
+    }
+    .filterToggleButton {
+        position: static;
+        transform: none;
+        margin-bottom: 15px;
+    }
+    .filterRow {
+        grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+    }
+    .formGroup input,
+    .formGroup select {
+        border-radius: 15px;
+        background-color: transparent; /* Забезпечення прозорого фону на малих екранах */
+    }
+    .resetButton {
+        border-radius: 15px;
+    }
+}
+
+@media (max-width: 768px) {
+    .filtersSection {
+        padding: 20px;
+    }
+    .filterRow {
+        grid-template-columns: 1fr;
+    }
+    .filterButtons {
+        flex-direction: column;
+        align-items: stretch;
+    }
+    .resetButton {
+        min-width: unset;
+    }
+    .formGroup input,
+    .formGroup select {
+        border-radius: 12px;
+        background-color: transparent; /* Забезпечення прозорого фону на малих екранах */
+    }
+    .resetButton {
+        border-radius: 12px;
+    }
+}
+
+@media (max-width: 480px) {
+    .filtersSection {
+        padding: 15px;
+    }
+    .formGroup label {
+        font-size: 13px;
+    }
+    .formGroup input,
+    .formGroup select {
+        font-size: 14px;
+        padding: 8px 10px;
+        height: 36px;
+        border-radius: 10px;
+        background-color: transparent; /* Забезпечення прозорого фону на малих екранах */
+    }
+    .filterToggleButton {
+        font-size: 14px;
+        padding: 8px 15px;
+    }
+    .resetButton {
+        padding: 8px 15px;
+        font-size: 14px;
+        border-radius: 10px;
+    }
+}

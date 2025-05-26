@@ -1,0 +1,103 @@
+/* src/components/listings/ReviewForm.module.css */
+.reviewForm {
+  background-color: #F7F5F0;
+  border-radius: 12px;
+  padding: 30px;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
+  font-family: 'Afacad', sans-serif;
+  color: #4A4947;
+  height: 100%;
+  box-sizing: border-box;
+}
+
+.sectionTitle {
+  font-size: 24px;
+  font-weight: 600;
+  color: #4A4947;
+  margin-top: 0;
+  margin-bottom: 25px;
+  text-align: left;
+}
+
+.ratingSelect {
+  margin-bottom: 20px;
+  text-align: left;
+}
+
+.ratingLabel {
+  display: block;
+  font-size: 16px;
+  font-weight: 500;
+  margin-bottom: 10px;
+}
+
+.starsContainer {
+  font-size: 30px;
+}
+
+.star {
+  cursor: pointer;
+  color: #D8D2C2; /* Сірий для незаповнених зірок */
+  transition: color 0.2s ease;
+}
+
+.star.filled {
+  color: #B17457; /* Помаранчевий для заповнених */
+}
+
+.formGroup {
+  margin-bottom: 20px;
+  text-align: left;
+}
+
+.formGroup label {
+  display: block;
+  font-size: 16px;
+  font-weight: 500;
+  margin-bottom: 10px;
+}
+
+.textarea {
+  width: 100%;
+  padding: 12px 15px;
+  border: 1px solid #D8D2C2;
+  border-radius: 8px;
+  font-size: 16px;
+  color: #4A4947;
+  background-color: #FFFFFF;
+  box-sizing: border-box;
+  resize: vertical;
+  min-height: 100px;
+  font-family: 'Afacad', sans-serif; /* Важливо для textarea */
+}
+
+.textarea::placeholder {
+  color: #B2B2B2;
+}
+
+.textarea:focus {
+  border-color: #B17457;
+  box-shadow: 0 0 0 2px rgba(177, 116, 87, 0.1);
+  outline: none;
+}
+
+.submitButton {
+  background-color: #B17457;
+  color: white;
+  border: none;
+  border-radius: 8px; /* Не круглі, як на скріншоті */
+  padding: 12px 25px;
+  font-size: 17px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background-color 0.2s ease;
+  width: auto;
+  min-width: 180px;
+  display: block; /* Щоб кнопка була на новому рядку */
+  margin-left: auto; /* Вирівнюємо праворуч, якщо потрібно, або видаляємо */
+  margin-right: auto; /* Для центрування */
+}
+
+.submitButton:hover {
+  background-color: #9c5e44;
+}

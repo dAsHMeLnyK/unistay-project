@@ -15,19 +15,23 @@
 
 a {
   font-weight: 500;
-  color: #646cff;
+  color: #4A4947;
   text-decoration: inherit;
 }
 a:hover {
-  color: #535bf2;
+  color: #4A4947;
 }
 
 body {
   margin: 0;
-  display: flex;
-  place-items: center;
-  min-width: 320px;
+  /* Забезпечуємо, що body займає всю ширину і висоту */
+  width: 100%;
   min-height: 100vh;
+  /* Прибираємо flex-властивості, які центрують і можуть обмежувати ширину */
+  /* display: flex; */
+  /* place-items: center; */
+  min-width: 320px; /* Можете залишити, щоб уникнути проблем на дуже малих екранах */
+  overflow-x: hidden; /* Додаємо, щоб уникнути горизонтального скролу, якщо щось вилізе */
 }
 
 h1 {
@@ -47,7 +51,7 @@ button {
   transition: border-color 0.25s;
 }
 button:hover {
-  border-color: #646cff;
+  border-color: #4A4947;
 }
 button:focus,
 button:focus-visible {
@@ -60,9 +64,11 @@ button:focus-visible {
     background-color: #ffffff;
   }
   a:hover {
-    color: #747bff;
+    color: #4A4947;
   }
   button {
     background-color: #f9f9f9;
   }
 }
+
+

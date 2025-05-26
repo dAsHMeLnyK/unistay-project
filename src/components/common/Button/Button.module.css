@@ -1,0 +1,41 @@
+.button {
+  padding: 12px 24px; /* Трохи зменшено вертикальні та горизонтальні відступи */
+  border: none;
+  border-radius: 1000px; /* Заокруглення "пігулкою" */
+  font-size: 16px; /* Зменшено розмір шрифту */
+  cursor: pointer;
+  transition: background-color 0.2s, transform 0.1s;
+  font-weight: 500;
+  font-family: 'Afacad', sans-serif;
+  min-width: 180px; /* Трохи зменшено мінімальну ширину */
+  height: auto; /* Автоматична висота */
+}
+
+.button:active {
+  transform: scale(0.98);
+}
+
+.primary {
+  background-color: #B17457;
+  color: #FAF7F0;
+}
+
+.primary:hover:not(:disabled) {
+  background-color: #9c5e44;
+}
+
+.secondary {
+  background-color: transparent;
+  color: #B17457;
+  border: 1px solid #B17457;
+}
+
+.secondary:hover:not(:disabled) {
+  background-color: #FAF7F0;
+}
+
+.button:disabled {
+  background-color: #D8D2C2;
+  color: #4A4947;
+  cursor: not-allowed;
+}

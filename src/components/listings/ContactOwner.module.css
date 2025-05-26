@@ -1,0 +1,105 @@
+/* src/components/listings/ContactOwner.module.css */
+.contactOwner {
+  background-color: #F7F5F0;
+  border-radius: 12px;
+  padding: 30px;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
+  font-family: 'Afacad', sans-serif;
+  color: #4A4947;
+  height: 100%;
+  box-sizing: border-box;
+  display: flex;
+  flex-direction: column;
+}
+
+.sectionTitle {
+  font-size: 24px;
+  font-weight: 600;
+  color: #4A4947;
+  margin-top: 0;
+  margin-bottom: 25px;
+  text-align: left;
+}
+
+.ownerInfo {
+  display: flex;
+  align-items: center;
+  gap: 15px;
+  margin-bottom: 20px;
+  flex-wrap: wrap; /* Для адаптивності */
+}
+
+.ownerAvatar {
+  width: 60px;
+  height: 60px;
+  border-radius: 50%;
+  object-fit: cover;
+  flex-shrink: 0;
+  border: 2px solid #B17457; /* Обводка аватара */
+}
+
+.ownerDetails {
+  flex-grow: 1;
+}
+
+.ownerName {
+  font-size: 18px;
+  font-weight: 600;
+  margin: 0;
+}
+
+.registrationDate {
+  font-size: 14px;
+  color: #888;
+  margin: 0;
+}
+
+.messageButton {
+  background-color: #B17457;
+  color: white;
+  border: none;
+  border-radius: 8px; /* Не круглі, як на скріншоті */
+  padding: 10px 18px;
+  font-size: 16px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background-color 0.2s ease;
+  flex-shrink: 0; /* Щоб кнопка не стискалася */
+}
+
+.messageButton:hover {
+  background-color: #9c5e44;
+}
+
+.ownerContact {
+  margin-top: auto; /* Щоб притиснути номер телефону до низу */
+  padding-top: 15px;
+  border-top: 1px solid #E0E0E0; /* Розділювач */
+  text-align: left;
+}
+
+.ownerPhone {
+  font-size: 18px;
+  font-weight: 600;
+  color: #4A4947;
+  margin: 0;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.phoneIcon {
+  color: #B17457;
+  font-size: 20px;
+}
+
+@media (max-width: 768px) {
+  .ownerInfo {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+  .messageButton {
+    width: 100%; /* Кнопка на всю ширину на мобільних */
+    margin-top: 15px;
+  }
+}

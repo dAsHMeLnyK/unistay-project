@@ -1,0 +1,398 @@
+/* src/pages/ListingDetailPage/ListingDetailsPage.module.css */
+.listingDetailsPage {
+    background-color: #FAF7F0;
+    padding: 40px 0;
+    min-height: calc(100vh - var(--navbar-height, 80px));
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    font-family: 'Afacad', sans-serif;
+    color: #4A4947;
+    width: 100%;
+    box-sizing: border-box;
+}
+
+.mainContent,
+.twoColumnGrid,
+.fullWidthGrid,
+.reviewsListContainer { /* Загальний контейнер для ReviewsList */
+    background-color: #fff; /* Основний колір фону для блоків контенту */
+    border-radius: 12px;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.08);
+    padding: 40px;
+    max-width: 1200px;
+    width: 100%;
+    box-sizing: border-box;
+    margin-bottom: 30px; /* Відступ між секціями */
+}
+
+/* Specific styling for the ReviewsList, as it has a different background in the screenshot */
+.reviewsListContainer {
+    background-color: #F7F5F0; /* Колір фону для блоку відгуків */
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05); /* Менша тінь */
+}
+
+.mainContent {
+    display: grid;
+    grid-template-columns: 1.5fr 1fr; /* Галерея трохи ширша за інфо-блок */
+    gap: 30px;
+    margin-bottom: 30px;
+    align-items: flex-start;
+}
+
+.imageGallery {
+    position: relative;
+    width: 100%;
+    padding-bottom: 65%; /* Співвідношення 4:3 для основного зображення */
+    background-color: #e0e0e0;
+    border-radius: 12px;
+    overflow: hidden;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+}
+
+.mainImage {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+.galleryButton {
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+    background-color: rgba(0, 0, 0, 0.5);
+    color: white;
+    border: none;
+    border-radius: 50%;
+    width: 40px;
+    height: 40px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-size: 24px;
+    cursor: pointer;
+    z-index: 10;
+    transition: background-color 0.2s ease;
+}
+
+.galleryButton:hover {
+    background-color: rgba(0, 0, 0, 0.7);
+}
+
+.prevButton {
+    left: 10px;
+}
+
+.nextButton {
+    right: 10px;
+}
+
+.imagePagination {
+    position: absolute;
+    bottom: 10px;
+    left: 50%;
+    transform: translateX(-50%);
+    display: flex;
+    gap: 8px;
+    z-index: 10;
+}
+
+.paginationDot {
+    width: 10px;
+    height: 10px;
+    background-color: rgba(255, 255, 255, 0.6);
+    border-radius: 50%;
+    cursor: pointer;
+    transition: background-color 0.2s ease;
+}
+
+.paginationDot.activeDot {
+    background-color: #B17457; /* Активна точка - помаранчева */
+}
+
+.infoSection {
+    display: flex;
+    flex-direction: column;
+    text-align: left;
+}
+
+.ratingInfo {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-bottom: 10px;
+}
+
+.ratingValue {
+    font-size: 24px;
+    font-weight: 700;
+    color: #B17457;
+}
+
+.starsContainer {
+    font-size: 20px;
+}
+
+.filledStar {
+    color: #B17457;
+}
+
+.halfStar {
+    color: #B17457;
+}
+
+.emptyStar {
+    color: #D8D2C2;
+}
+
+.reviewCount {
+    font-size: 14px;
+    color: #888;
+}
+
+.title {
+    font-size: 36px;
+    font-weight: 700;
+    color: #4A4947;
+    margin-top: 0;
+    margin-bottom: 10px;
+    line-height: 1.2;
+}
+
+.price {
+    font-size: 28px;
+    font-weight: bold;
+    color: #4A4947;
+    margin-bottom: 15px;
+}
+
+.address {
+    font-size: 18px;
+    color: #4A4947;
+    margin-bottom: 20px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.locationIcon {
+    font-size: 20px;
+    color: #B17457;
+}
+
+/* Контейнер для кнопок "Показати на мапі" та "Вибране" */
+.buttonsContainer {
+    display: flex;
+    gap: 15px; /* Простір між кнопками */
+    margin-bottom: 30px; /* Відступ від блоку інформації */
+    align-items: center; /* Вирівнювання по центру */
+}
+
+.showOnMapButton {
+    background-color: transparent;
+    color: #B17457;
+    border: 2px solid #B17457;
+    border-radius: 8px;
+    padding: 10px 20px;
+    font-size: 16px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    height: 48px;
+    white-space: nowrap;
+}
+
+.showOnMapButton:hover {
+    background-color: #B17457;
+    color: white;
+}
+
+/* Стилі для кнопки "Вибране" */
+.favoriteButton {
+    background: none;
+    border: 2px solid #B17457;
+    border-radius: 8px;
+    font-size: 24px;
+    color: #B17457;
+    cursor: pointer;
+    padding: 8px 12px;
+    transition: all 0.2s ease-in-out;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 48px;
+    width: 48px;
+}
+
+.favoriteButton:hover {
+    background-color: #B17457;
+    color: #FAF7F0;
+}
+
+.favoriteButton.favorited {
+    background-color: #B17457;
+    color: #FAF7F0;
+    border-color: #B17457;
+}
+
+.detailsGrid {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 15px;
+    margin-bottom: 20px;
+}
+
+.detailItem {
+    font-size: 16px;
+    color: #4A4947;
+    margin: 0;
+}
+
+.detailLabel {
+    font-weight: 600;
+    color: #B17457;
+    margin-right: 5px;
+}
+
+.publishedDate {
+    font-size: 14px;
+    color: #888;
+    margin-top: 20px;
+}
+
+.sectionTitle {
+    font-size: 24px;
+    font-weight: 600;
+    color: #4A4947;
+    margin-top: 0;
+    margin-bottom: 25px;
+    text-align: left;
+}
+
+.twoColumnGrid {
+    display: grid;
+    grid-template-columns: 1.5fr 1fr;
+    gap: 30px;
+    align-items: flex-start;
+}
+
+.descriptionAmenities {
+    display: flex;
+    flex-direction: column;
+    gap: 30px;
+}
+
+.descriptionBlock p {
+    line-height: 1.6;
+    font-size: 16px;
+    margin: 0;
+}
+
+.ownerMap {
+    display: flex;
+    flex-direction: column;
+    gap: 30px;
+}
+
+.mapPlaceholder {
+    background-color: #EFECE6;
+    border-radius: 8px;
+    height: 200px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    color: #777;
+    font-size: 18px;
+    border: 1px solid #D8D2C2;
+}
+
+.fullWidthGrid {
+    display: grid;
+    grid-template-columns: 1.2fr 1fr;
+    gap: 30px;
+    align-items: flex-start;
+}
+
+/* Медіа-запити для адаптивності */
+@media (max-width: 992px) {
+    .mainContent,
+    .twoColumnGrid,
+    .fullWidthGrid {
+        grid-template-columns: 1fr;
+        padding: 30px;
+    }
+    .title {
+        font-size: 32px;
+    }
+    .price {
+        font-size: 24px;
+    }
+    .sectionTitle {
+        font-size: 22px;
+    }
+    .buttonsContainer {
+        flex-direction: column; /* Кнопки в стовпець на вузьких екранах */
+        align-items: flex-start; /* Вирівнювання ліворуч */
+        gap: 10px; /* Менший відступ */
+    }
+    .showOnMapButton,
+    .favoriteButton {
+        width: 100%; /* Займають всю ширину */
+        box-sizing: border-box; /* Враховуємо padding та border */
+    }
+}
+
+@media (max-width: 768px) {
+    .mainContent,
+    .twoColumnGrid,
+    .fullWidthGrid,
+    .reviewsListContainer {
+        padding: 25px 20px;
+        margin-bottom: 20px;
+    }
+    .imageGallery {
+        padding-bottom: 75%; /* Більше висоти на мобільних */
+    }
+    .title {
+        font-size: 28px;
+    }
+    .price {
+        font-size: 22px;
+    }
+    .sectionTitle {
+        font-size: 20px;
+    }
+}
+
+@media (max-width: 480px) {
+    .listingDetailsPage {
+        padding: 20px 0;
+    }
+    .mainContent,
+    .twoColumnGrid,
+    .fullWidthGrid,
+    .reviewsListContainer {
+        padding: 20px 15px;
+    }
+    .galleryButton {
+        width: 30px;
+        height: 30px;
+        font-size: 20px;
+    }
+    .paginationDot {
+        width: 8px;
+        height: 8px;
+    }
+    .title {
+        font-size: 24px;
+    }
+    .price {
+        font-size: 20px;
+    }
+    .address {
+        font-size: 16px;
+    }
+}
