@@ -1,0 +1,35 @@
+.inputWrapper {
+  display: flex;
+  align-items: center;
+  /* width: 100%; */ /* Можливо, краще задавати ширину ззовні */
+  background-color: #F8F5F1; /* Колір фону, як у Figma */
+  border-radius: 1000px; /* Заокруглені кути */
+  padding: 12px 20px; /* Відступи всередині інпута */
+  margin-bottom: 20px; /* Відступ знизу, між полями */
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05); /* Легка тінь */
+}
+
+.inputField {
+  flex-grow: 1; /* Займати всю доступну ширину */
+  border: none;
+  background-color: transparent;
+  outline: none; /* Прибираємо стандартний outline при фокусі */
+  font-size: 16px;
+  color: #4A4947; /* Колір тексту */
+  font-family: 'Afacad', sans-serif; /* Використовуємо ваш шрифт */
+}
+
+.inputField::placeholder {
+  color: #8C8C8C; /* Колір плейсхолдера */
+}
+
+/* .inputField:focus {
+  /* Можете додати легкий outline або змінити тінь при фокусі, якщо потрібно */
+  /* box-shadow: 0 0 0 2px #B17457; 
+} */
+
+.icon {
+  margin-right: 12px; /* Відступ між іконкою та текстом */
+  color: #8C8C8C; /* Колір іконки */
+  font-size: 20px; /* Розмір іконки */
+}

@@ -1,8 +1,7 @@
 import React, { useState, useEffect } from 'react';
-import { useParams } from 'react-router-dom';
+import { useParams, useNavigate } from 'react-router-dom';
 import styles from './ListingDetailsPage.module.css';
 
-// ... (Ваші компоненти-заглушки залишаються незмінними, якщо ви їх ще не замінили)
 // Заглушки для відсутніх компонентів
 const AverageRating = ({ rating, totalReviews }) => (
     <div className={styles.reviewsListContainer} style={{ textAlign: 'center', padding: '20px', border: '1px dashed #ccc', margin: '20px 0' }}>
@@ -25,7 +24,7 @@ const ContactOwner = ({ owner }) => (
     <div className={styles.ownerContactBlock} style={{ textAlign: 'center', padding: '20px', border: '1px dashed #ccc', margin: '20px 0' }}>
         <h3>Зв'язатися з власником</h3>
         <p>Ім'я: {owner?.name || 'Невідомо'}</p>
-        <p>Контакт: {owner?.contact || 'Невідомо'}</p>
+        <p>Контакт: {owner?.phone || 'Невідомо'}</p>
         <p>Компонент ContactOwner тут</p>
     </div>
 );
@@ -33,7 +32,7 @@ const ReviewForm = ({ listingId, onAddReview }) => (
     <div className={styles.reviewsListContainer} style={{ textAlign: 'center', padding: '20px', border: '1px dashed #ccc', margin: '20px 0' }}>
         <h3>Додати відгук</h3>
         <p>Компонент ReviewForm тут (для оголошення ID: {listingId})</p>
-        <button onClick={() => onAddReview({ id: Date.now(), author: 'Test User', text: 'Це тестовий відгук.', rating: 4, date: new Date().toISOString().split('T')[0] })}>Додати тестовий відгук</button>
+        <button onClick={() => onAddReview({ id: Date.now(), author: 'Test User', comment: 'Це тестовий відгук.', rating: 4, date: new Date().toISOString().split('T')[0], avatarUrl: 'https://via.placeholder.com/40x40/CCCCCC/FFFFFF?text=TU' })}>Додати тестовий відгук</button>
     </div>
 );
 const ReviewsList = ({ reviews }) => (
@@ -43,7 +42,8 @@ const ReviewsList = ({ reviews }) => (
             <ul>
                 {reviews.map((review, index) => (
                     <li key={index} style={{ marginBottom: '10px', borderBottom: '1px solid #eee', paddingBottom: '10px' }}>
-                        <strong>{review.author}</strong> ({review.rating} зірок): {review.text}
+                        <img src={review.avatarUrl} alt={review.author} style={{ width: '40px', height: '40px', borderRadius: '50%', marginRight: '10px' }} />
+                        <strong>{review.author}</strong> ({review.rating} зірок): {review.comment} - {review.date}
                     </li>
                 ))}
             </ul>
@@ -55,20 +55,17 @@ const ReviewsList = ({ reviews }) => (
 );
 
 const ListingDetailsPage = () => {
-    // ЗМІНЕНО ТУТ: Використовуємо listingId
     const { listingId } = useParams();
+    const navigate = useNavigate();
     const [listing, setListing] = useState(null);
     const [currentImageIndex, setCurrentImageIndex] = useState(0);
     const [isFavorite, setIsFavorite] = useState(false);
 
     useEffect(() => {
-        // ЗМІНЕНО ТУТ: Використовуємо listingId в console.log
         console.log('ListingDetailsPage useEffect triggered for ID:', listingId);
 
         const storedListings = JSON.parse(localStorage.getItem('listings')) || [];
-        console.log('Listings from localStorage:', storedListings);
 
-        // ЗМІНЕНО ТУТ: Порівнюємо з listingId
         const foundListing = storedListings.find((item) => String(item.id) === listingId);
 
         if (foundListing) {
@@ -76,13 +73,12 @@ const ListingDetailsPage = () => {
             setListing(foundListing);
 
             const favorites = JSON.parse(localStorage.getItem('favorites')) || [];
-            // ЗМІНЕНО ТУТ: Порівнюємо з listingId
             setIsFavorite(favorites.some(fav => String(fav.id) === listingId));
         } else {
-            // ЗМІНЕНО ТУТ: Використовуємо listingId в console.error
             console.error('Оголошення не знайдено в localStorage для ID:', listingId);
+            navigate('/listings'); // Перенаправляємо на сторінку зі списком оголошень
         }
-    }, [listingId]); // ЗМІНЕНО ТУТ: Залежність від listingId
+    }, [listingId, navigate]);
 
     const handleFavoriteClick = () => {
         if (!listing) return;
@@ -100,11 +96,6 @@ const ListingDetailsPage = () => {
         setIsFavorite(!isFavorite);
     };
 
-    if (!listing) {
-        return <div className={styles.loading}>Завантаження...</div>;
-    }
-
-    // ... (решта коду компонента залишається без змін)
     const handlePrevImage = () => {
         setCurrentImageIndex((prevIndex) =>
             prevIndex === 0 ? listing.allImages.length - 1 : prevIndex - 1
@@ -119,17 +110,29 @@ const ListingDetailsPage = () => {
 
     const handleAddReview = (newReview) => {
         const updatedReviews = [...(listing.reviews || []), newReview];
-
         const updatedListing = { ...listing, reviews: updatedReviews };
         setListing(updatedListing);
 
         const storedListings = JSON.parse(localStorage.getItem('listings')) || [];
-        // ЗМІНЕНО ТУТ: Порівнюємо з listingId
         const updatedListingsData = storedListings.map(item =>
             String(item.id) === String(listing.id) ? updatedListing : item
         );
         localStorage.setItem('listings', JSON.stringify(updatedListingsData));
         console.log('Відгук додано:', newReview);
+    };
+
+    const handleDeleteListing = () => {
+        if (!listing) return;
+
+        const confirmDelete = window.confirm(`Ви впевнені, що хочете видалити оголошення "${listing.title}"?`);
+
+        if (confirmDelete) {
+            let storedListings = JSON.parse(localStorage.getItem('listings')) || [];
+            const updatedListings = storedListings.filter(item => String(item.id) !== String(listing.id));
+            localStorage.setItem('listings', JSON.stringify(updatedListings));
+            alert(`Оголошення "${listing.title}" успішно видалено.`);
+            navigate('/');
+        }
     };
 
     const renderStars = (avgRating) => {
@@ -150,17 +153,20 @@ const ListingDetailsPage = () => {
         return stars;
     };
 
+    if (!listing) {
+        return <div className={styles.loading}>Завантаження...</div>;
+    }
+
     return (
         <div className={styles.listingDetailsPage}>
             <div className={styles.mainContent}>
                 <div className={styles.imageGallery}>
-                    {/* Перевірка на існування allImages та його довжину */}
                     {listing.allImages && listing.allImages.length > 0 ? (
-                         <img
-                            src={listing.allImages[currentImageIndex]}
-                            alt={listing.title}
-                            className={styles.mainImage}
-                        />
+                            <img
+                                src={listing.allImages[currentImageIndex]}
+                                alt={listing.title}
+                                className={styles.mainImage}
+                            />
                     ) : (
                         <div className={styles.noImagePlaceholder}>Немає зображень</div>
                     )}
@@ -190,11 +196,11 @@ const ListingDetailsPage = () => {
 
                 <div className={styles.infoSection}>
                     <div className={styles.ratingInfo}>
-                        <span className={styles.ratingValue}>{listing.rating ? listing.rating.toFixed(1) : '0.0'}</span> {/* Перевірка на існування rating */}
+                        <span className={styles.ratingValue}>{listing.rating ? listing.rating.toFixed(1) : '0.0'}</span>
                         <div className={styles.starsContainer}>
-                            {renderStars(listing.rating || 0)} {/* Передаємо 0, якщо rating відсутній */}
+                            {renderStars(listing.rating || 0)}
                         </div>
-                        <span className={styles.reviewCount}>({listing.reviews ? listing.reviews.length : 0} відгуків)</span> {/* Перевірка на існування reviews */}
+                        <span className={styles.reviewCount}>({listing.reviews ? listing.reviews.length : 0} відгуків)</span>
                     </div>
                     <h1 className={styles.title}>{listing.title}</h1>
                     <p className={styles.price}>{listing.price} грн</p>
@@ -209,6 +215,20 @@ const ListingDetailsPage = () => {
                             aria-label="Додати в обране"
                         >
                             <span>{isFavorite ? '♥' : '♡'}</span>
+                        </button>
+                        {/* Кнопка Редагувати оголошення */}
+                        <button
+                            className={styles.editButton}
+                            onClick={() => navigate(`/edit-listing/${listingId}`)}
+                        >
+                            Редагувати оголошення
+                        </button>
+                        {/* Кнопка Видалити оголошення */}
+                        <button
+                            className={styles.deleteButton}
+                            onClick={handleDeleteListing}
+                        >
+                            Видалити оголошення
                         </button>
                     </div>
 

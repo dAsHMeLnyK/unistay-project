@@ -1,0 +1,136 @@
+.container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  /* min-height: 100vh;  ЦЕ НЕ ПОТРІБНО ТУТ, ЦЕ МАЄ БУТИ НА AuthLayout */
+  width: 100%;
+  position: relative;
+  /* overflow: hidden;  МОЖЛИВО, САМЕ ЦЕ ПРИЧИНА ОБРІЗАННЯ. Спробуйте видалити або змінити. */
+}
+
+
+.formCard {
+  background-color: #FAF7F0;
+  border-radius: 20px;
+  /* Збільшуємо padding-top, щоб створити місце для аватара */
+  padding: 80px 40px 40px; /* Залишаємо 80px */
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+  text-align: center;
+  position: relative;
+  width: 100%;
+  max-width: 400px;
+  margin: 20px;
+  /* Додайте overflow: visible; якщо у вас тут було overflow: hidden; */
+  overflow: visible; /* Переконайтеся, що тут не обрізається */
+}
+
+.avatarPlaceholder {
+  position: absolute;
+  top: -40px; /* Залишаємо -40px */
+  left: 50%;
+  transform: translateX(-50%);
+  width: 80px;
+  height: 80px;
+  background-color: #B17457;
+  border-radius: 50%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+  /* Додайте z-index, щоб бути впевненим, що аватар поверх інших елементів */
+  z-index: 2; /* Вище, ніж formCard */
+}
+
+.avatarIcon {
+  color: #FAF7F0;
+  font-size: 40px;
+}
+
+.title {
+  font-size: 28px;
+  color: #4A4947;
+  margin-bottom: 30px;
+  margin-top: 40px; /* Збільшіть margin-top, щоб створити простір між аватаром і заголовком */
+  font-family: 'Afacad', sans-serif;
+  font-weight: 600;
+}
+
+.formContent {
+  /* Додаткові стилі для контейнера полів форми, якщо потрібно */
+}
+
+.divider {
+  margin: 25px 0;
+  color: #8C8C8C;
+  position: relative;
+  font-size: 14px;
+}
+
+.divider::before,
+.divider::after {
+  content: '';
+  position: absolute;
+  top: 50%;
+  width: 40%; /* Ширина ліній */
+  height: 1px;
+  background-color: #D8D2C2; /* Колір ліній */
+}
+
+.divider::before {
+  left: 0;
+}
+
+.divider::after {
+  right: 0;
+}
+
+.socialAuthButtons {
+  display: flex;
+  justify-content: center;
+  gap: 15px; /* Відступ між кнопками */
+  margin-bottom: 30px;
+}
+
+.socialButton {
+  width: 50px; /* Розмір кнопок */
+  height: 50px;
+  border-radius: 50%;
+  border: 1px solid #D8D2C2;
+  background-color: #FFFFFF;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  cursor: pointer;
+  transition: background-color 0.2s, border-color 0.2s;
+}
+
+.socialButton:hover {
+  background-color: #F0EDE5;
+  border-color: #B17457;
+}
+
+.socialIcon {
+  width: 24px;
+  height: 24px;
+}
+
+.switchAuth {
+  margin-top: 20px;
+  font-size: 15px;
+  color: #4A4947;
+}
+
+.switchLink {
+  color: #B17457;
+  text-decoration: none;
+  font-weight: 500;
+  margin-left: 5px;
+  transition: color 0.2s;
+}
+
+.switchLink:hover {
+  color: #9c5e44;
+}
+
+/* Додайте стилі для фонового зображення */
+/* Переконайтеся, що у вас є зображення за шляхом public/images/auth-background.jpg або змініть шлях */

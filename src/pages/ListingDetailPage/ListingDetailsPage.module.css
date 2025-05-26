@@ -189,6 +189,7 @@
     gap: 15px; /* Простір між кнопками */
     margin-bottom: 30px; /* Відступ від блоку інформації */
     align-items: center; /* Вирівнювання по центру */
+    flex-wrap: wrap; /* Додано flex-wrap */
 }
 
 .showOnMapButton {
@@ -237,6 +238,47 @@
     color: #FAF7F0;
     border-color: #B17457;
 }
+
+/* НОВІ СТИЛІ ДЛЯ КНОПКИ РЕДАГУВАННЯ */
+.editButton {
+    background-color: transparent;
+    color: #4CAF50; /* Зелений колір, типовий для редагування */
+    border: 2px solid #4CAF50;
+    border-radius: 8px;
+    padding: 10px 20px;
+    font-size: 16px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    height: 48px;
+    white-space: nowrap;
+}
+
+.editButton:hover {
+    background-color: #4CAF50;
+    color: white;
+}
+
+/* СТИЛІ ДЛЯ КНОПКИ ВИДАЛЕННЯ */
+.deleteButton {
+    background-color: transparent;
+    color: #DC3545; /* Червоний колір для тексту кнопки */
+    border: 2px solid #DC3545; /* Червона рамка */
+    border-radius: 8px;
+    padding: 10px 20px;
+    font-size: 16px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    height: 48px; /* Робимо висоту однаковою з іншими кнопками */
+    white-space: nowrap;
+}
+
+.deleteButton:hover {
+    background-color: #DC3545; /* Фон стає червоним при наведенні */
+    color: white; /* Текст стає білим */
+}
+
 
 .detailsGrid {
     display: grid;
@@ -339,7 +381,9 @@
         gap: 10px; /* Менший відступ */
     }
     .showOnMapButton,
-    .favoriteButton {
+    .favoriteButton,
+    .deleteButton, /* Додано .deleteButton сюди */
+    .editButton {  /* Додано .editButton сюди */
         width: 100%; /* Займають всю ширину */
         box-sizing: border-box; /* Враховуємо padding та border */
     }

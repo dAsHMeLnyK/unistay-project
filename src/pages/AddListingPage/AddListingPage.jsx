@@ -1,10 +1,10 @@
 // src/pages/AddListingPage/AddListingPage.jsx
 import React, { useState, useEffect } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useParams } from 'react-router-dom'; // <-- ДОДАНО: useParams
 import styles from './AddListingPage.module.css';
 
 // Імпортуємо бібліотеку UUID для надійної унікальності ID
-import { v4 as uuidv4 } from 'uuid'; // <-- ДОДАНО: Імпорт uuid
+import { v4 as uuidv4 } from 'uuid';
 
 // Функція для генерації унікального ID (використовуємо uuid)
 const generateUniqueId = () => {
@@ -27,36 +27,79 @@ const availableAmenities = [
 
 const AddListingPage = () => {
     const navigate = useNavigate();
+    const { listingId } = useParams(); // <-- ДОДАНО: Отримуємо listingId з URL
 
-    const [formData, setFormData] = useState({
+    // Початкові значення форми. Вони будуть перезаписані, якщо це режим редагування.
+    const initialFormData = {
         title: '',
-        housingType: 'room', // Встановлено початкове значення
+        housingType: 'room',
         description: '',
-        address: 'м. Острог, вул. Незалежності, 15', // Встановлено початкове значення
-        utilityPaymentType: 'separate', // Встановлено початкове значення
-        ownerOccupancy: 'with-owner', // Встановлено початкове значення
-        neighborInfo: 'with-roommates', // Встановлено початкове значення
+        address: 'м. Острог, вул. Незалежності, 15',
+        utilityPaymentType: 'separate',
+        ownerOccupancy: 'with-owner',
+        neighborInfo: 'with-roommates',
         amenities: [],
         price: '',
-        images: [],
-        // Додайте поля, які потрібні для ListingDetailsPage, якщо їх немає у формі
-        // Наприклад, для кількості спалень, ванних кімнат, гостей
-        bedrooms: 1, // Можливо, додати поле у форму, або залишити дефолт
-        bathrooms: 1, // Можливо, додати поле у форму, або залишити дефолт
-        guests: 1, // Можливо, додати поле у форму, або залишити дефолт
-    });
+        images: [], // Для об'єктів File, якщо будемо працювати з File API
+        // Заповнюємо ці поля, щоб вони завжди були у формі, навіть якщо їх немає у початкових даних
+        bedrooms: 1,
+        bathrooms: 1,
+        guests: 1,
+    };
 
+    const [formData, setFormData] = useState(initialFormData);
     const [descriptionCharCount, setDescriptionCharCount] = useState(0);
     const MAX_DESCRIPTION_LENGTH = 2000;
-
-    const [imagePreviews, setImagePreviews] = useState([]);
+    const [imagePreviews, setImagePreviews] = useState([]); // Для URL прев'ю зображень
     const MAX_IMAGES = 6;
 
+    // Визначаємо, чи перебуваємо ми в режимі редагування
+    const isEditMode = !!listingId;
+    const pageTitle = isEditMode ? 'Редагувати оголошення' : 'Створити оголошення';
+    const submitButtonText = isEditMode ? 'Оновити оголошення' : 'Опублікувати';
+
+
     useEffect(() => {
-        // Цей useEffect тепер менш критичний, якщо ми задаємо початкові значення прямо у useState
-        // Але можна залишити, якщо потрібно встановлювати значення на основі іншої логіки
-        // Або для синхронізації з localStorage, якщо це потрібно для редагування
-    }, []);
+        if (isEditMode && listingId) {
+            const storedListings = JSON.parse(localStorage.getItem('listings')) || [];
+            const listingToEdit = storedListings.find(item => String(item.id) === listingId);
+
+            if (listingToEdit) {
+                // Заповнюємо форму даними оголошення
+                setFormData({
+                    title: listingToEdit.title || '',
+                    housingType: listingToEdit.housingType || 'room',
+                    description: listingToEdit.fullDescription || listingToEdit.description || '', // Використовуємо fullDescription
+                    address: listingToEdit.address || 'м. Острог, вул. Незалежності, 15',
+                    utilityPaymentType: listingToEdit.utilityPaymentType || 'separate',
+                    ownerOccupancy: listingToEdit.ownerOccupancy || 'with-owner',
+                    neighborInfo: listingToEdit.neighborInfo || 'with-roommates',
+                    // Перетворюємо amenities назад у 'value' для форми, якщо вони зберігаються як 'label'
+                    amenities: listingToEdit.amenities ? listingToEdit.amenities.map(label => {
+                        const amenity = availableAmenities.find(a => a.label === label);
+                        return amenity ? amenity.value : label;
+                    }) : [],
+                    price: listingToEdit.price || '',
+                    images: [], // Для режиму редагування ми не завантажуємо File об'єкти
+                    bedrooms: listingToEdit.bedrooms || 1,
+                    bathrooms: listingToEdit.bathrooms || 1,
+                    guests: listingToEdit.guests || 1,
+                });
+
+                // Встановлюємо прев'ю зображень з посилань
+                setImagePreviews(listingToEdit.allImages || []);
+                setDescriptionCharCount(listingToEdit.fullDescription?.length || listingToEdit.description?.length || 0);
+            } else {
+                console.error('Оголошення для редагування не знайдено:', listingId);
+                navigate('/add-listing'); // Якщо оголошення не знайдено, переходимо в режим створення
+            }
+        } else {
+            // Скидаємо форму, якщо переходимо в режим створення з редагування
+            setFormData(initialFormData);
+            setImagePreviews([]);
+            setDescriptionCharCount(0);
+        }
+    }, [listingId, isEditMode, navigate]); // Залежності useEffect
 
     const handleChange = (e) => {
         const { name, value } = e.target;
@@ -89,88 +132,106 @@ const AddListingPage = () => {
 
     const handleImageUpload = (e) => {
         const files = Array.from(e.target.files);
-        const filesToProcess = files.slice(0, MAX_IMAGES - imagePreviews.length);
+        // Фільтруємо вже існуючі прев'юшки, щоб не додавати їх двічі, якщо вони вже є
+        const currentImageCount = imagePreviews.length;
+        const filesToProcess = files.slice(0, MAX_IMAGES - currentImageCount);
 
         const newPreviews = [];
-        const newImageFiles = [];
-
         filesToProcess.forEach((file) => {
             newPreviews.push(URL.createObjectURL(file));
-            newImageFiles.push(file);
         });
 
         setImagePreviews((prevPreviews) => [...prevPreviews, ...newPreviews]);
-        setFormData((prevData) => ({
-            ...prevData,
-            images: [...prevData.images, ...newImageFiles],
-        }));
+        // Важливо: для редагування ми зберігаємо URL-и, а не File об'єкти
+        // Тому formData.images не потрібен для збереження File об'єктів
     };
 
     const handleRemoveImage = (indexToRemove) => {
-        URL.revokeObjectURL(imagePreviews[indexToRemove]);
+        // Якщо це URL, ми відкликаємо його
+        if (imagePreviews[indexToRemove].startsWith('blob:')) {
+            URL.revokeObjectURL(imagePreviews[indexToRemove]);
+        }
         setImagePreviews((prevPreviews) => prevPreviews.filter((_, index) => index !== indexToRemove));
-        setFormData((prevData) => ({
-            ...prevData,
-            images: prevData.images.filter((_, index) => index !== indexToRemove),
-        }));
     };
 
     const handleSubmit = (e) => {
         e.preventDefault();
 
-        const imageUrls = imagePreviews.length > 0
+        // Забезпечуємо, що завжди є хоча б одне зображення
+        const finalImageUrls = imagePreviews.length > 0
             ? imagePreviews
             : ['https://via.placeholder.com/600x400?text=Listing+Image'];
 
-        const newListing = {
-            id: generateUniqueId(), // Тепер генеруємо UUID
+        const commonListingData = {
             title: formData.title,
             housingType: formData.housingType,
             description: formData.description,
-            fullDescription: formData.description, // <-- ДОДАНО: fullDescription
+            fullDescription: formData.description,
             address: formData.address,
             utilityPaymentType: formData.utilityPaymentType,
             ownerOccupancy: formData.ownerOccupancy,
             neighborInfo: formData.neighborInfo,
-            amenities: formData.amenities.map(value => { // <-- ДОДАНО: Перетворення 'value' на 'label'
+            amenities: formData.amenities.map(value => {
                 const amenity = availableAmenities.find(a => a.value === value);
                 return amenity ? amenity.label : value;
             }),
             price: parseFloat(formData.price),
-            imageUrl: imageUrls[0],
-            allImages: imageUrls, // <-- ДОДАНО: allImages
-            rating: parseFloat((Math.random() * (5 - 3) + 3).toFixed(1)), // Перетворюємо на число
-            reviewCount: Math.floor(Math.random() * 50) + 5,
-            publishedDate: new Date().toLocaleDateString('uk-UA'),
-
-            // ДОДАНО: Поля, які є у статичних даних, але не у вашій формі AddListingPage
-            bedrooms: formData.bedrooms, // Припускаємо, що це поле є у formData, або має дефолт
-            bathrooms: formData.bathrooms, // Припускаємо, що це поле є у formData, або має дефолт
-            guests: formData.guests, // Припускаємо, що це поле є у formData, або має дефолт
-
-            owner: { // <-- ДОДАНО: Дані власника за замовчуванням
-                name: 'Новий Власник', // Можна зробити поле для вводу у формі
-                phone: '+380998887766',
-                avatarUrl: 'https://via.placeholder.com/60x60/CCCCCC/FFFFFF?text=NV',
-                registrationDate: new Date().toLocaleDateString('uk-UA'),
-            },
-            reviews: [], // <-- ДОДАНО: Порожній масив відгуків за замовчуванням
+            imageUrl: finalImageUrls[0], // Перше зображення як основне
+            allImages: finalImageUrls, // Всі зображення
+            bedrooms: formData.bedrooms,
+            bathrooms: formData.bathrooms,
+            guests: formData.guests,
+            // Owner та Reviews додаємо лише при створенні нового оголошення,
+            // при редагуванні вони вже повинні бути в існуючому об'єкті
         };
 
-        const existingListings = JSON.parse(localStorage.getItem('listings')) || [];
-        // Тут ми додаємо нове оголошення на початок, щоб воно було одразу видиме.
-        const updatedListings = [newListing, ...existingListings];
-        localStorage.setItem('listings', JSON.stringify(updatedListings));
+        let storedListings = JSON.parse(localStorage.getItem('listings')) || [];
 
-        console.log('Додано нове оголошення:', newListing); // Для дебагу
-        alert('Оголошення успішно додано!');
-        navigate('/');
+        if (isEditMode) {
+            // Режим редагування: знаходимо оголошення і оновлюємо його
+            const updatedListings = storedListings.map(item => {
+                if (String(item.id) === listingId) {
+                    return {
+                        ...item, // Зберігаємо існуючі поля (наприклад, rating, reviews, owner), якщо вони не змінюються через форму
+                        ...commonListingData,
+                        // Переконаємося, що rating, reviews, owner зберігаються, якщо вони не оновлюються через форму
+                        rating: item.rating || 0,
+                        reviews: item.reviews || [],
+                        owner: item.owner || { name: 'Невідомо', phone: 'Невідомо' }, // Дефолтне значення, якщо немає
+                    };
+                }
+                return item;
+            });
+            localStorage.setItem('listings', JSON.stringify(updatedListings));
+            alert('Оголошення успішно оновлено!');
+            navigate(`/listing/${listingId}`); // Повертаємося на сторінку деталей
+        } else {
+            // Режим створення: додаємо нове оголошення
+            const newListing = {
+                id: generateUniqueId(),
+                ...commonListingData,
+                rating: parseFloat((Math.random() * (5 - 3) + 3).toFixed(1)), // Випадковий рейтинг для нового
+                reviewCount: Math.floor(Math.random() * 50) + 5,
+                publishedDate: new Date().toLocaleDateString('uk-UA'),
+                owner: {
+                    name: 'Новий Власник',
+                    phone: '+380998887766',
+                    avatarUrl: 'https://via.placeholder.com/60x60/CCCCCC/FFFFFF?text=NV',
+                    registrationDate: new Date().toLocaleDateString('uk-UA'),
+                },
+                reviews: [],
+            };
+            const updatedListings = [newListing, ...storedListings];
+            localStorage.setItem('listings', JSON.stringify(updatedListings));
+            alert('Оголошення успішно додано!');
+            navigate('/'); // Перенаправляємо на головну сторінку
+        }
     };
 
     return (
         <div className={styles.addListingPage}>
             <div className={styles.pageContentWrapper}>
-                <h1 className={styles.pageTitle}>Створити оголошення</h1>
+                <h1 className={styles.pageTitle}>{pageTitle}</h1> {/* Оновлений заголовок */}
                 <form onSubmit={handleSubmit} className={styles.listingForm}>
                     <div className={styles.formColumns}>
                         {/* Ліва колонка */}
@@ -302,7 +363,7 @@ const AddListingPage = () => {
                         </div>
                     </div> {/* Закінчення formColumns */}
 
-                    {/* НОВА СЕКЦІЯ: Зручності - тепер це окрема широка секція */}
+                    {/* Секція Зручності */}
                     <div className={styles.formSection}>
                         <div className={styles.formGroup}>
                             <label>Оберіть наявні зручності (можна декілька)</label>
@@ -363,7 +424,7 @@ const AddListingPage = () => {
                     </div>
 
                     <button type="submit" className={styles.submitButton}>
-                        Опублікувати
+                        {submitButtonText} {/* Оновлений текст кнопки */}
                     </button>
                 </form>
             </div>

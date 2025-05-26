@@ -1,0 +1,48 @@
+.authLayout {
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+  font-family: 'Afacad', sans-serif;
+  position: relative; /* Для коректного позиціонування backgroundBlur */
+  overflow: hidden;
+}
+
+.header {
+  padding: 20px 40px;
+  z-index: 10;
+}
+
+.logo {
+  font-size: 36px;
+  font-weight: 700;
+  color: #FAF7F0;
+  text-decoration: none;
+  transition: color 0.3s ease;
+  font-family: 'Afacad', sans-serif;
+}
+
+.logo:hover {
+    color: #9c5e44;
+}
+
+.mainContent {
+  flex-grow: 1;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 20px;
+  z-index: 1;
+}
+
+.backgroundBlur {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-image: url('../../assets/images/bg.jpg');
+  background-size: cover;
+  background-position: center;
+  filter: blur(50px);
+  z-index: -1;
+}

@@ -1,0 +1,11 @@
+/* src/pages/SignInPage/SignInPage.module.css */
+.forgotPasswordLink {
+  color: #B17457;
+  text-decoration: none;
+  font-size: 14px;
+  transition: color 0.2s;
+}
+
+.forgotPasswordLink:hover {
+  color: #9c5e44;
+}
