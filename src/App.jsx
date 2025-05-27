@@ -1,8 +1,10 @@
+// src/App.jsx
 import React from 'react';
 import { Routes, Route } from 'react-router-dom';
 import MainLayout from './layouts/MainLayout';
 import AuthLayout from './layouts/AuthLayout/AuthLayout';
 
+// Імпорти сторінок
 import HomePage from './pages/HomePage/HomePage';
 import ListingsPage from './pages/ListingsPage/ListingsPage';
 import ListingDetailPage from './pages/ListingDetailPage/ListingDetailsPage';
@@ -12,29 +14,53 @@ import SignInPage from './pages/SignInPage/SignInPage';
 import SignUpPage from './pages/SignUpPage/SignUpPage';
 import NotFoundPage from './pages/NotFoundPage/NotFoundPage';
 
+// Імпортуємо AuthProvider з AuthContext.tsx
+import { AuthProvider } from './context/AuthContext';
+// Імпортуємо ProtectedRoute з нової локації
+import ProtectedRoute from './components/common/ProtectedRoute'; // Ось оновлений шлях!
+
 function App() {
   return (
-    <Routes>
-      {/* Маршрути, що використовують MainLayout */}
-      <Route path="/" element={<MainLayout />}>
-        <Route index element={<HomePage />} />
-        <Route path="listings" element={<ListingsPage />} />
-        <Route path="listings/:listingId" element={<ListingDetailPage />} />
-        <Route path="/add-listing" element={<AddListingPage />} />
-        <Route path="/edit-listing/:listingId" element={<AddListingPage />} />
-        <Route path="favorites" element={<FavoritesPage />} />
-      </Route>
+    <AuthProvider>
+      <Routes>
+        <Route path="/" element={<MainLayout />}>
+          <Route index element={<HomePage />} />
+          <Route path="listings" element={<ListingsPage />} />
+          <Route path="listings/:listingId" element={<ListingDetailPage />} />
 
-      {/* Маршрути автентифікації, кожен з власним AuthLayout */}
-      {/* ЦЕЙ КОД ВЖЕ БУВ НАДАНИЙ У "ВАРІАНТІ 1" - ВИКОРИСТОВУЙТЕ ЙОГО! */}
-      <Route path="/signin" element={<AuthLayout><SignInPage /></AuthLayout>} />
-      <Route path="/signup" element={<AuthLayout><SignUpPage /></AuthLayout>} />
-      {/* Можете додати сюди маршрут для скидання паролю */}
-      {/* <Route path="/forgot-password" element={<AuthLayout><ForgotPasswordPage /></AuthLayout>} /> */}
+          {/* Захищені маршрути всередині MainLayout */}
+          <Route
+            path="/add-listing"
+            element={
+              <ProtectedRoute>
+                <AddListingPage />
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/edit-listing/:listingId"
+            element={
+              <ProtectedRoute>
+                <AddListingPage />
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="favorites"
+            element={
+              <ProtectedRoute>
+                <FavoritesPage />
+              </ProtectedRoute>
+            }
+          />
+        </Route>
 
-      {/* Маршрут для 404 сторінки */}
-      <Route path="*" element={<NotFoundPage />} />
-    </Routes>
+        <Route path="/signin" element={<AuthLayout><SignInPage /></AuthLayout>} />
+        <Route path="/signup" element={<AuthLayout><SignUpPage /></AuthLayout>} />
+
+        <Route path="*" element={<NotFoundPage />} />
+      </Routes>
+    </AuthProvider>
   );
 }
 
