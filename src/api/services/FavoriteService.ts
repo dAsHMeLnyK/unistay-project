@@ -6,7 +6,7 @@ import {
 
 class FavoriteService {
   private httpClient = new HttpClient({
-    baseURL: "http://localhost:5131/api",
+    baseURL: "http://localhost:5113/api",
   });
 
   async addToFavorites(listingId: string): Promise<FavoriteDto> {

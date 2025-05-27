@@ -7,7 +7,7 @@ import {
 
 class MessageService {
   private httpClient = new HttpClient({
-    baseURL: "http://localhost:5131/api/messages",
+    baseURL: "http://localhost:5113/api/messages",
   });
 
   async send(data: CreateMessageDto): Promise<MessageDto> {

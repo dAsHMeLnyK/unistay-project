@@ -6,7 +6,7 @@ export class HttpClient {
 
   constructor(configs: AxiosRequestConfig) {
     this.axiosInstance = axios.create({
-      baseURL: configs.baseURL || "http://localhost:5131",
+      baseURL: configs.baseURL || "http://localhost:5113",
       timeout: configs.timeout || 5000,
       headers: {
         "Content-Type": "application/json",

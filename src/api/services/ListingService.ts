@@ -7,7 +7,7 @@ import {
 
 class ListingService {
   private httpClient = new HttpClient({
-    baseURL: "http://localhost:5131/api/listings",
+    baseURL: "http://localhost:5113/api/listings",
   });
 
   async getAll(): Promise<ListingDto[]> {

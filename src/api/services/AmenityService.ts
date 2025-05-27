@@ -7,7 +7,7 @@ import {
 
 class AmenityService {
   private httpClient = new HttpClient({
-    baseURL: "http://localhost:5131/api/amenities",
+    baseURL: "http://localhost:5113/api/amenities",
   });
 
   async getAll(): Promise<AmenityDto[]> {

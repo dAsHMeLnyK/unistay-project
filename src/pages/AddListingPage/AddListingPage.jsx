@@ -1,15 +1,10 @@
 // src/pages/AddListingPage/AddListingPage.jsx
 import React, { useState, useEffect } from 'react';
-import { useNavigate, useParams } from 'react-router-dom'; // <-- ДОДАНО: useParams
+import { useNavigate, useParams } from 'react-router-dom';
 import styles from './AddListingPage.module.css';
 
-// Імпортуємо бібліотеку UUID для надійної унікальності ID
-import { v4 as uuidv4 } from 'uuid';
-
-// Функція для генерації унікального ID (використовуємо uuid)
-const generateUniqueId = () => {
-    return uuidv4(); // Генеруємо унікальний UUID
-};
+// Імпортуємо useListings з нашого контексту
+import { useListings } from '../../context/ListingContext'; // <--- ІМПОРТ
 
 // Симуляція даних про доступні зручності з бази даних
 const availableAmenities = [
@@ -27,12 +22,12 @@ const availableAmenities = [
 
 const AddListingPage = () => {
     const navigate = useNavigate();
-    const { listingId } = useParams(); // <-- ДОДАНО: Отримуємо listingId з URL
+    const { listingId } = useParams();
+    const { addListing } = useListings(); // <--- ВИКОРИСТОВУЄМО addListing З КОНТЕКСТУ
 
-    // Початкові значення форми. Вони будуть перезаписані, якщо це режим редагування.
     const initialFormData = {
         title: '',
-        housingType: 'room',
+        housingType: 'room', // Змінено на 'room', оскільки у вас в селекті 'room'
         description: '',
         address: 'м. Острог, вул. Незалежності, 15',
         utilityPaymentType: 'separate',
@@ -40,24 +35,31 @@ const AddListingPage = () => {
         neighborInfo: 'with-roommates',
         amenities: [],
         price: '',
-        images: [], // Для об'єктів File, якщо будемо працювати з File API
-        // Заповнюємо ці поля, щоб вони завжди були у формі, навіть якщо їх немає у початкових даних
+        // Нові поля, які були додані в listings.js та в ListingContext
         bedrooms: 1,
         bathrooms: 1,
         guests: 1,
+        condition: 'new', // Дефолтне значення
+        buildYear: '', // Може бути числом або null
+        floor: '',
+        totalFloors: '',
+        heating: '',
+        parking: false,
+        balcony: false,
+        animals: false, // Відповідає pet-friendly?
+        children: false,
+        wifi: false, // Може бути перекрите amenity 'wifi'
     };
 
     const [formData, setFormData] = useState(initialFormData);
     const [descriptionCharCount, setDescriptionCharCount] = useState(0);
     const MAX_DESCRIPTION_LENGTH = 2000;
-    const [imagePreviews, setImagePreviews] = useState([]); // Для URL прев'ю зображень
+    const [imagePreviews, setImagePreviews] = useState([]);
     const MAX_IMAGES = 6;
 
-    // Визначаємо, чи перебуваємо ми в режимі редагування
     const isEditMode = !!listingId;
     const pageTitle = isEditMode ? 'Редагувати оголошення' : 'Створити оголошення';
     const submitButtonText = isEditMode ? 'Оновити оголошення' : 'Опублікувати';
-
 
     useEffect(() => {
         if (isEditMode && listingId) {
@@ -65,47 +67,62 @@ const AddListingPage = () => {
             const listingToEdit = storedListings.find(item => String(item.id) === listingId);
 
             if (listingToEdit) {
-                // Заповнюємо форму даними оголошення
+                // Мапінг 'type' з listings.js до 'housingType' для форми
+                const mappedHousingType =
+                    listingToEdit.type === 'Квартира' ? 'apartment' :
+                    listingToEdit.type === 'Кімната' ? 'room' :
+                    listingToEdit.type === 'Будинок' ? 'house' :
+                    'room'; // Дефолтне значення
+
+                // Мапінг amenity labels до values
+                const mappedAmenities = listingToEdit.amenities ? listingToEdit.amenities.map(label => {
+                    const amenity = availableAmenities.find(a => a.label === label);
+                    return amenity ? amenity.value : null; // Повертаємо value або null, якщо не знайдено
+                }).filter(Boolean) : []; // Відфільтровуємо null
+
                 setFormData({
                     title: listingToEdit.title || '',
-                    housingType: listingToEdit.housingType || 'room',
-                    description: listingToEdit.fullDescription || listingToEdit.description || '', // Використовуємо fullDescription
+                    housingType: mappedHousingType,
+                    description: listingToEdit.fullDescription || listingToEdit.description || '',
                     address: listingToEdit.address || 'м. Острог, вул. Незалежності, 15',
                     utilityPaymentType: listingToEdit.utilityPaymentType || 'separate',
                     ownerOccupancy: listingToEdit.ownerOccupancy || 'with-owner',
                     neighborInfo: listingToEdit.neighborInfo || 'with-roommates',
-                    // Перетворюємо amenities назад у 'value' для форми, якщо вони зберігаються як 'label'
-                    amenities: listingToEdit.amenities ? listingToEdit.amenities.map(label => {
-                        const amenity = availableAmenities.find(a => a.label === label);
-                        return amenity ? amenity.value : label;
-                    }) : [],
+                    amenities: mappedAmenities, // Використовуємо mappedAmenities
                     price: listingToEdit.price || '',
-                    images: [], // Для режиму редагування ми не завантажуємо File об'єкти
                     bedrooms: listingToEdit.bedrooms || 1,
                     bathrooms: listingToEdit.bathrooms || 1,
                     guests: listingToEdit.guests || 1,
+                    condition: listingToEdit.condition || 'new',
+                    buildYear: listingToEdit.buildYear || '',
+                    floor: listingToEdit.floor || '',
+                    totalFloors: listingToEdit.totalFloors || '',
+                    heating: listingToEdit.heating || '',
+                    parking: listingToEdit.parking || false,
+                    balcony: listingToEdit.balcony || false,
+                    animals: listingToEdit.animals || false,
+                    children: listingToEdit.children || false,
+                    wifi: listingToEdit.wifi || false,
                 });
 
-                // Встановлюємо прев'ю зображень з посилань
                 setImagePreviews(listingToEdit.allImages || []);
                 setDescriptionCharCount(listingToEdit.fullDescription?.length || listingToEdit.description?.length || 0);
             } else {
                 console.error('Оголошення для редагування не знайдено:', listingId);
-                navigate('/add-listing'); // Якщо оголошення не знайдено, переходимо в режим створення
+                navigate('/add-listing');
             }
         } else {
-            // Скидаємо форму, якщо переходимо в режим створення з редагування
             setFormData(initialFormData);
             setImagePreviews([]);
             setDescriptionCharCount(0);
         }
-    }, [listingId, isEditMode, navigate]); // Залежності useEffect
+    }, [listingId, isEditMode, navigate]);
 
     const handleChange = (e) => {
-        const { name, value } = e.target;
+        const { name, value, type, checked } = e.target;
         setFormData((prevData) => ({
             ...prevData,
-            [name]: value,
+            [name]: type === 'checkbox' ? checked : value,
         }));
 
         if (name === 'description') {
@@ -132,7 +149,6 @@ const AddListingPage = () => {
 
     const handleImageUpload = (e) => {
         const files = Array.from(e.target.files);
-        // Фільтруємо вже існуючі прев'юшки, щоб не додавати їх двічі, якщо вони вже є
         const currentImageCount = imagePreviews.length;
         const filesToProcess = files.slice(0, MAX_IMAGES - currentImageCount);
 
@@ -142,12 +158,9 @@ const AddListingPage = () => {
         });
 
         setImagePreviews((prevPreviews) => [...prevPreviews, ...newPreviews]);
-        // Важливо: для редагування ми зберігаємо URL-и, а не File об'єкти
-        // Тому formData.images не потрібен для збереження File об'єктів
     };
 
     const handleRemoveImage = (indexToRemove) => {
-        // Якщо це URL, ми відкликаємо його
         if (imagePreviews[indexToRemove].startsWith('blob:')) {
             URL.revokeObjectURL(imagePreviews[indexToRemove]);
         }
@@ -157,14 +170,20 @@ const AddListingPage = () => {
     const handleSubmit = (e) => {
         e.preventDefault();
 
-        // Забезпечуємо, що завжди є хоча б одне зображення
         const finalImageUrls = imagePreviews.length > 0
             ? imagePreviews
-            : ['https://via.placeholder.com/600x400?text=Listing+Image'];
+            : ['/src/assets/images/завантаження (4).jpg']; // Використовуємо ваше дефолтне зображення
 
-        const commonListingData = {
+        // Мапінг 'housingType' форми до 'type' в ListingsContext
+        const mappedType =
+            formData.housingType === 'apartment' ? 'Квартира' :
+            formData.housingType === 'room' ? 'Кімната' :
+            formData.housingType === 'house' ? 'Будинок' :
+            'Кімната'; // Дефолтне значення
+
+        const listingToSave = {
             title: formData.title,
-            housingType: formData.housingType,
+            type: mappedType, // Використовуємо mappedType
             description: formData.description,
             fullDescription: formData.description,
             address: formData.address,
@@ -176,192 +195,255 @@ const AddListingPage = () => {
                 return amenity ? amenity.label : value;
             }),
             price: parseFloat(formData.price),
-            imageUrl: finalImageUrls[0], // Перше зображення як основне
-            allImages: finalImageUrls, // Всі зображення
-            bedrooms: formData.bedrooms,
-            bathrooms: formData.bathrooms,
-            guests: formData.guests,
-            // Owner та Reviews додаємо лише при створенні нового оголошення,
-            // при редагуванні вони вже повинні бути в існуючому об'єкті
+            imageUrl: finalImageUrls[0],
+            allImages: finalImageUrls,
+            bedrooms: parseInt(formData.bedrooms, 10),
+            bathrooms: parseInt(formData.bathrooms, 10),
+            guests: parseInt(formData.guests, 10),
+            condition: formData.condition,
+            buildYear: formData.buildYear ? parseInt(formData.buildYear, 10) : null,
+            floor: formData.floor ? parseInt(formData.floor, 10) : null,
+            totalFloors: formData.totalFloors ? parseInt(formData.totalFloors, 10) : null,
+            heating: formData.heating,
+            parking: formData.parking,
+            balcony: formData.balcony,
+            animals: formData.animals,
+            children: formData.children,
+            wifi: formData.wifi,
+            // Ці поля будуть встановлені в ListingContext при створенні,
+            // а при редагуванні збережуться з існуючого об'єкта
+            // ownerId: буде встановлений в ListingContext
+            // owner: буде встановлений в ListingContext
+            // reviews: []
+            // publishedDate: буде встановлений в ListingContext
+            // rating: буде встановлений в ListingContext
         };
 
         let storedListings = JSON.parse(localStorage.getItem('listings')) || [];
 
         if (isEditMode) {
-            // Режим редагування: знаходимо оголошення і оновлюємо його
             const updatedListings = storedListings.map(item => {
                 if (String(item.id) === listingId) {
                     return {
-                        ...item, // Зберігаємо існуючі поля (наприклад, rating, reviews, owner), якщо вони не змінюються через форму
-                        ...commonListingData,
-                        // Переконаємося, що rating, reviews, owner зберігаються, якщо вони не оновлюються через форму
-                        rating: item.rating || 0,
-                        reviews: item.reviews || [],
-                        owner: item.owner || { name: 'Невідомо', phone: 'Невідомо' }, // Дефолтне значення, якщо немає
+                        ...item, // Зберігаємо існуючі дані, які не змінюються формою
+                        ...listingToSave, // Оновлюємо поля, які можуть бути змінені формою
+                        // Переконаємося, що rating, reviews, ownerId, owner зберігаються, якщо вони не оновлюються через форму
+                        // Вони вже були завантажені в useEffect, тому просто залишимо їх
+                        rating: item.rating || 0, // Зберігаємо існуючий рейтинг
+                        reviews: item.reviews || [], // Зберігаємо існуючі відгуки
+                        ownerId: item.ownerId, // Зберігаємо існуючий ownerId
+                        owner: item.owner, // Зберігаємо існуючі дані власника
                     };
                 }
                 return item;
             });
             localStorage.setItem('listings', JSON.stringify(updatedListings));
             alert('Оголошення успішно оновлено!');
-            navigate(`/listing/${listingId}`); // Повертаємося на сторінку деталей
+            navigate(`/listing/${listingId}`);
         } else {
-            // Режим створення: додаємо нове оголошення
-            const newListing = {
-                id: generateUniqueId(),
-                ...commonListingData,
-                rating: parseFloat((Math.random() * (5 - 3) + 3).toFixed(1)), // Випадковий рейтинг для нового
-                reviewCount: Math.floor(Math.random() * 50) + 5,
-                publishedDate: new Date().toLocaleDateString('uk-UA'),
-                owner: {
-                    name: 'Новий Власник',
-                    phone: '+380998887766',
-                    avatarUrl: 'https://via.placeholder.com/60x60/CCCCCC/FFFFFF?text=NV',
-                    registrationDate: new Date().toLocaleDateString('uk-UA'),
-                },
-                reviews: [],
-            };
-            const updatedListings = [newListing, ...storedListings];
-            localStorage.setItem('listings', JSON.stringify(updatedListings));
+            // Використовуємо функцію addListing з контексту
+            const newListingId = addListing(listingToSave); // <--- ВИКЛИК addListing З КОНТЕКСТУ
             alert('Оголошення успішно додано!');
-            navigate('/'); // Перенаправляємо на головну сторінку
+            navigate(`/listing/${newListingId}`); // Перенаправляємо на сторінку нового оголошення
         }
     };
 
     return (
         <div className={styles.addListingPage}>
             <div className={styles.pageContentWrapper}>
-                <h1 className={styles.pageTitle}>{pageTitle}</h1> {/* Оновлений заголовок */}
+                <h1 className={styles.pageTitle}>{pageTitle}</h1>
                 <form onSubmit={handleSubmit} className={styles.listingForm}>
                     <div className={styles.formColumns}>
                         {/* Ліва колонка */}
                         <div className={styles.formColumn}>
-                            <div className={styles.formSection}>
-                                <div className={styles.formGroup}>
-                                    <label htmlFor="title">Вкажіть назву</label>
-                                    <input
-                                        type="text"
-                                        id="title"
-                                        name="title"
-                                        value={formData.title}
-                                        onChange={handleChange}
-                                        placeholder="Назва оголошення"
-                                        required
-                                        maxLength="70"
-                                    />
-                                    <span className={styles.charCounter}>{formData.title.length}/70</span>
-                                </div>
-
-                                <div className={styles.formGroup}>
-                                    <label htmlFor="housingType">Вкажіть тип житла</label>
-                                    <select
-                                        id="housingType"
-                                        name="housingType"
-                                        value={formData.housingType}
-                                        onChange={handleChange}
-                                        required
-                                    >
-                                        <option value="room">Кімната</option>
-                                        <option value="apartment">Квартира</option>
-                                        <option value="house">Будинок</option>
-                                    </select>
-                                </div>
-
-                                <div className={styles.formGroup}>
-                                    <label htmlFor="description">Придумайте опис</label>
-                                    <textarea
-                                        id="description"
-                                        name="description"
-                                        value={formData.description}
-                                        onChange={handleChange}
-                                        placeholder="Опис"
-                                        rows="5"
-                                        required
-                                        maxLength={MAX_DESCRIPTION_LENGTH}
-                                    ></textarea>
-                                    <span className={styles.charCounter}>{descriptionCharCount}/{MAX_DESCRIPTION_LENGTH}</span>
-                                </div>
-
-                                <div className={styles.formGroup}>
-                                    <label htmlFor="address">Вкажіть адресу</label>
-                                    <select
-                                        id="address"
-                                        name="address"
-                                        value={formData.address}
-                                        onChange={handleChange}
-                                        required
-                                    >
-                                        <option value="м. Острог, вул. Незалежності, 15">Вулиця Незалежності, 15</option>
-                                        <option value="м. Острог, вул. Студентська, 3">Вулиця Студентська, 3</option>
-                                        <option value="м. Острог, пров. Лісовий, 7">Провулок Лісовий, 7</option>
-                                        <option value="м. Острог, вул. Паркова, 20">Вулиця Паркова, 20</option>
-                                        <option value="м. Острог, вул. Шкільна, 8">Вулиця Шкільна, 8</option>
-                                    </select>
-                                </div>
+                            <div className={styles.formGroup}>
+                                <label htmlFor="title">Вкажіть назву</label>
+                                <input
+                                    type="text"
+                                    id="title"
+                                    name="title"
+                                    value={formData.title}
+                                    onChange={handleChange}
+                                    placeholder="Назва оголошення"
+                                    required
+                                    maxLength="70"
+                                />
+                                <span className={styles.charCounter}>{formData.title.length}/70</span>
                             </div>
+
+                            <div className={styles.formGroup}>
+                                <label htmlFor="housingType">Вкажіть тип житла</label>
+                                <select
+                                    id="housingType"
+                                    name="housingType"
+                                    value={formData.housingType}
+                                    onChange={handleChange}
+                                    required
+                                >
+                                    <option value="room">Кімната</option>
+                                    <option value="apartment">Квартира</option>
+                                    <option value="house">Будинок</option>
+                                </select>
+                            </div>
+
+                            <div className={styles.formGroup}>
+                                <label htmlFor="description">Придумайте опис</label>
+                                <textarea
+                                    id="description"
+                                    name="description"
+                                    value={formData.description}
+                                    onChange={handleChange}
+                                    placeholder="Опис"
+                                    rows="5"
+                                    required
+                                    maxLength={MAX_DESCRIPTION_LENGTH}
+                                ></textarea>
+                                <span className={styles.charCounter}>{descriptionCharCount}/{MAX_DESCRIPTION_LENGTH}</span>
+                            </div>
+
+                            <div className={styles.formGroup}>
+                                <label htmlFor="address">Вкажіть адресу</label>
+                                <select
+                                    id="address"
+                                    name="address"
+                                    value={formData.address}
+                                    onChange={handleChange}
+                                    required
+                                >
+                                    <option value="м. Острог, вул. Незалежності, 15">Вулиця Незалежності, 15</option>
+                                    <option value="м. Острог, вул. Студентська, 3">Вулиця Студентська, 3</option>
+                                    <option value="м. Острог, пров. Лісовий, 7">Провулок Лісовий, 7</option>
+                                    <option value="м. Острог, вул. Паркова, 20">Вулиця Паркова, 20</option>
+                                    <option value="м. Острог, вул. Шкільна, 8">Вулиця Шкільна, 8</option>
+                                </select>
+                            </div>
+
+                            {/* Нові поля для кількісних характеристик */}
+                            <div className={styles.formGroup}>
+                                <label htmlFor="bedrooms">Кількість спалень</label>
+                                <input type="number" id="bedrooms" name="bedrooms" value={formData.bedrooms} onChange={handleChange} min="0" />
+                            </div>
+                            <div className={styles.formGroup}>
+                                <label htmlFor="bathrooms">Кількість ванних кімнат</label>
+                                <input type="number" id="bathrooms" name="bathrooms" value={formData.bathrooms} onChange={handleChange} min="0" />
+                            </div>
+                            <div className={styles.formGroup}>
+                                <label htmlFor="guests">Максимальна кількість гостей</label>
+                                <input type="number" id="guests" name="guests" value={formData.guests} onChange={handleChange} min="1" />
+                            </div>
+
                         </div>
 
                         {/* Права колонка */}
                         <div className={styles.formColumn}>
-                            <div className={styles.formSection}>
-                                <div className={styles.formGroup}>
-                                    <label htmlFor="utilityPaymentType">Вкажіть тип оплати за комунальні послуги</label>
-                                    <select
-                                        id="utilityPaymentType"
-                                        name="utilityPaymentType"
-                                        value={formData.utilityPaymentType}
-                                        onChange={handleChange}
-                                        required
-                                    >
-                                        <option value="separate">Окремо</option>
-                                        <option value="included">Включено в ціну</option>
-                                    </select>
-                                </div>
+                            <div className={styles.formGroup}>
+                                <label htmlFor="utilityPaymentType">Вкажіть тип оплати за комунальні послуги</label>
+                                <select
+                                    id="utilityPaymentType"
+                                    name="utilityPaymentType"
+                                    value={formData.utilityPaymentType}
+                                    onChange={handleChange}
+                                    required
+                                >
+                                    <option value="separate">Окремо</option>
+                                    <option value="included">Включено в ціну</option>
+                                </select>
+                            </div>
 
-                                <div className={styles.formGroup}>
-                                    <label htmlFor="ownerOccupancy">Вкажіть інформацію про проживання власників</label>
-                                    <select
-                                        id="ownerOccupancy"
-                                        name="ownerOccupancy"
-                                        value={formData.ownerOccupancy}
-                                        onChange={handleChange}
-                                        required
-                                    >
-                                        <option value="with-owner">Проживання з господарями</option>
-                                        <option value="without-owner">Без господарів</option>
-                                    </select>
-                                </div>
+                            <div className={styles.formGroup}>
+                                <label htmlFor="ownerOccupancy">Вкажіть інформацію про проживання власників</label>
+                                <select
+                                    id="ownerOccupancy"
+                                    name="ownerOccupancy"
+                                    value={formData.ownerOccupancy}
+                                    onChange={handleChange}
+                                    required
+                                >
+                                    <option value="with-owner">Проживання з господарями</option>
+                                    <option value="without-owner">Без господарів</option>
+                                </select>
+                            </div>
 
-                                <div className={styles.formGroup}>
-                                    <label htmlFor="neighborInfo">Вкажіть інформацію про сусідів</label>
-                                    <select
-                                        id="neighborInfo"
-                                        name="neighborInfo"
-                                        value={formData.neighborInfo}
-                                        onChange={handleChange}
-                                        required
-                                    >
-                                        <option value="with-roommates">Проживання з сусідами</option>
-                                        <option value="no-roommates">Без сусідів</option>
-                                    </select>
-                                </div>
+                            <div className={styles.formGroup}>
+                                <label htmlFor="neighborInfo">Вкажіть інформацію про сусідів</label>
+                                <select
+                                    id="neighborInfo"
+                                    name="neighborInfo"
+                                    value={formData.neighborInfo}
+                                    onChange={handleChange}
+                                    required
+                                >
+                                    <option value="with-roommates">Проживання з сусідами</option>
+                                    <option value="no-roommates">Без сусідів</option>
+                                </select>
+                            </div>
 
-                                <div className={styles.formGroup}>
-                                    <label htmlFor="price">Вкажіть ціну, ₴</label>
-                                    <input
-                                        type="number"
-                                        id="price"
-                                        name="price"
-                                        value={formData.price}
-                                        onChange={handleChange}
-                                        placeholder="1000"
-                                        required
-                                        min="0"
-                                    />
-                                </div>
+                            <div className={styles.formGroup}>
+                                <label htmlFor="price">Вкажіть ціну, ₴</label>
+                                <input
+                                    type="number"
+                                    id="price"
+                                    name="price"
+                                    value={formData.price}
+                                    onChange={handleChange}
+                                    placeholder="1000"
+                                    required
+                                    min="0"
+                                />
+                            </div>
+
+                            {/* Додаткові поля, які були додані в listings.js */}
+                            <div className={styles.formGroup}>
+                                <label htmlFor="condition">Стан</label>
+                                <select id="condition" name="condition" value={formData.condition} onChange={handleChange}>
+                                    <option value="new">Новий</option>
+                                    <option value="good">Добрий</option>
+                                    <option value="needs-repair">Потребує ремонту</option>
+                                </select>
+                            </div>
+                            <div className={styles.formGroup}>
+                                <label htmlFor="buildYear">Рік побудови</label>
+                                <input type="number" id="buildYear" name="buildYear" value={formData.buildYear} onChange={handleChange} min="1900" max={new Date().getFullYear()} />
+                            </div>
+                            <div className={styles.formGroup}>
+                                <label htmlFor="floor">Поверх</label>
+                                <input type="number" id="floor" name="floor" value={formData.floor} onChange={handleChange} min="0" />
+                            </div>
+                            <div className={styles.formGroup}>
+                                <label htmlFor="totalFloors">Всього поверхів</label>
+                                <input type="number" id="totalFloors" name="totalFloors" value={formData.totalFloors} onChange={handleChange} min="0" />
+                            </div>
+                            <div className={styles.formGroup}>
+                                <label htmlFor="heating">Опалення</label>
+                                <input type="text" id="heating" name="heating" value={formData.heating} onChange={handleChange} placeholder="Централізоване, індивідуальне тощо" />
+                            </div>
+                            <div className={styles.formGroup}>
+                                <label>
+                                    <input type="checkbox" name="parking" checked={formData.parking} onChange={handleChange} /> Паркінг
+                                </label>
+                            </div>
+                            <div className={styles.formGroup}>
+                                <label>
+                                    <input type="checkbox" name="balcony" checked={formData.balcony} onChange={handleChange} /> Балкон
+                                </label>
+                            </div>
+                            <div className={styles.formGroup}>
+                                <label>
+                                    <input type="checkbox" name="animals" checked={formData.animals} onChange={handleChange} /> Можна з тваринами
+                                </label>
+                            </div>
+                            <div className={styles.formGroup}>
+                                <label>
+                                    <input type="checkbox" name="children" checked={formData.children} onChange={handleChange} /> Можна з дітьми
+                                </label>
+                            </div>
+                            <div className={styles.formGroup}>
+                                <label>
+                                    <input type="checkbox" name="wifi" checked={formData.wifi} onChange={handleChange} /> Wi-Fi
+                                </label>
                             </div>
                         </div>
-                    </div> {/* Закінчення formColumns */}
+                    </div>
 
                     {/* Секція Зручності */}
                     <div className={styles.formSection}>
@@ -424,7 +506,7 @@ const AddListingPage = () => {
                     </div>
 
                     <button type="submit" className={styles.submitButton}>
-                        {submitButtonText} {/* Оновлений текст кнопки */}
+                        {submitButtonText}
                     </button>
                 </form>
             </div>

@@ -1,0 +1,126 @@
+/* src/pages/MyListingsPage/MyListingsPage.module.css */
+.myListingsPage {
+    padding: 20px;
+    background-color: var(--color-background-light);
+    min-height: calc(100vh - var(--header-height, 60px) - var(--footer-height, 0px));
+    text-align: center;
+}
+
+.title {
+    font-size: 2.5em;
+    color: var(--color-primary-dark);
+    margin-bottom: 30px;
+}
+
+.message {
+    font-size: 1.2em;
+    color: var(--color-text-secondary);
+    margin-bottom: 20px;
+}
+
+.loginButton, .addListingButton {
+    background-color: var(--color-primary);
+    color: white;
+    padding: 12px 25px;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    font-size: 1.1em;
+    transition: background-color 0.3s ease;
+}
+
+.loginButton:hover, .addListingButton:hover {
+    background-color: var(--color-primary-dark);
+}
+
+.noListings {
+    background-color: var(--color-white);
+    padding: 40px;
+    border-radius: 8px;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.05);
+    max-width: 600px;
+    margin: 40px auto;
+}
+
+.noListings p {
+    font-size: 1.1em;
+    color: var(--color-text-secondary);
+    margin-bottom: 20px;
+}
+
+.listingsGrid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+    gap: 30px;
+    max-width: 1200px;
+    margin: 0 auto;
+    padding-top: 20px; /* Додатковий відступ зверху, якщо потрібно */
+}
+
+.listingItem {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    /* height: 100%; */ /* Передаємо control height to ListingCard using aspect-ratio */
+}
+
+.actions {
+    display: flex;
+    justify-content: space-between;
+    gap: 10px;
+    margin-top: 15px; /* Відступ від картки */
+}
+
+.actionButton {
+    flex: 1; /* Кнопки займають рівний простір */
+    padding: 10px 15px;
+    border: none;
+    border-radius: 8px;
+    font-size: 0.95em;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}
+
+.editButton {
+    background-color: var(--color-secondary); /* Зелений */
+    color: white;
+}
+
+.editButton:hover {
+    background-color: var(--color-secondary-dark);
+}
+
+.deleteButton {
+    background-color: var(--color-danger); /* Червоний */
+    color: white;
+}
+
+.deleteButton:hover {
+    background-color: #c0392b; /* Темніший червоний */
+}
+
+/* Адаптивність */
+@media (max-width: 768px) {
+    .title {
+        font-size: 2em;
+    }
+    .listingsGrid {
+        grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+        gap: 20px;
+    }
+}
+
+@media (max-width: 480px) {
+    .myListingsPage {
+        padding: 15px;
+    }
+    .title {
+        font-size: 1.8em;
+    }
+    .listingsGrid {
+        grid-template-columns: 1fr; /* Один стовпець на дуже малих екранах */
+    }
+    .actions {
+        flex-direction: column;
+    }
+}

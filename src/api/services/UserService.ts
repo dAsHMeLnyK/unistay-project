@@ -8,7 +8,7 @@ import {
 
 class UserService {
   private httpClient = new HttpClient({
-    baseURL: "http://localhost:5131/api/users",
+    baseURL: "http://localhost:5113/api/users",
   });
 
   async getAll(): Promise<UserDto[]> {

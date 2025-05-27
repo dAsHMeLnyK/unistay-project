@@ -1,6 +1,6 @@
-// src/pages/ListingsPage/ListingsPage.jsx - ОНОВЛЕНО: прибрано контейнер
+// src/pages/ListingsPage/ListingsPage.jsx
 import React, { useState, useEffect } from 'react';
-import listingsData from '../../data/listings';
+import listingsData from '../../data/listings'; // <--- ЗАЛИШАЄМО ЦЕЙ ІМПОРТ
 import ListingCard from '../../components/listings/ListingCard/ListingCard';
 import FilterBar from '../../components/filters/FilterBar/FilterBar';
 import styles from './ListingsPage.module.css';
@@ -19,14 +19,18 @@ const ListingsPage = () => {
     const [showFilters, setShowFilters] = useState(true);
 
     useEffect(() => {
+        // Зчитуємо з localStorage
         const storedListings = JSON.parse(localStorage.getItem('listings'));
         if (storedListings && storedListings.length > 0) {
             setListings(storedListings);
         } else {
+            // Якщо в localStorage немає, використовуємо дані з файлу і зберігаємо їх
             localStorage.setItem('listings', JSON.stringify(listingsData));
             setListings(listingsData);
         }
-    }, []);
+    }, []); // Пустий масив залежностей означає, що ефект запускається один раз після першого рендеру
+
+    // ... (решта вашого коду handleFilterChange, handleResetFilters, handleSearchButtonClick, filteredListings)
 
     const handleFilterChange = (e) => {
         const { name, value } = e.target;
@@ -54,10 +58,11 @@ const ListingsPage = () => {
     };
 
     const filteredListings = listings.filter((listing) => {
-        const listingType = typeof listing.type === 'object' ? listing.type.name : listing.type;
-        const listingUtilityPaymentType = typeof listing.utilityPaymentType === 'object' ? listing.utilityPaymentType.type : listing.utilityPaymentType;
-        const listingOwnerOccupancy = typeof listing.ownerOccupancy === 'object' ? listing.ownerOccupancy.type : listing.ownerOccupancy;
-        const listingNeighborInfo = typeof listing.neighborInfo === 'object' ? listing.neighborInfo.type : listing.neighborInfo;
+        const listingType = typeof listing.type === 'object' && listing.type !== null ? listing.type.name : listing.type;
+        const listingUtilityPaymentType = typeof listing.utilityPaymentType === 'object' && listing.utilityPaymentType !== null ? listing.utilityPaymentType.type : listing.utilityPaymentType;
+        const listingOwnerOccupancy = typeof listing.ownerOccupancy === 'object' && listing.ownerOccupancy !== null ? listing.ownerOccupancy.type : listing.ownerOccupancy;
+        const listingNeighborInfo = typeof listing.neighborInfo === 'object' && listing.neighborInfo !== null ? listing.neighborInfo.type : listing.neighborInfo;
+
 
         const matchesSearch =
             listing.title.toLowerCase().includes(filters.search.toLowerCase()) ||
@@ -77,8 +82,7 @@ const ListingsPage = () => {
 
     return (
         <div className={styles.listingsPage}>
-            {/* Видалили div з класом styles.container */}
-            <div className={styles.pageContentWrapper}> {/* Додаємо новий обгортковий div */}
+            <div className={styles.pageContentWrapper}>
                 <div className={styles.pageHeader}>
                     <h1 className={styles.pageTitle}>Усі оголошення</h1>
                     <div className={styles.searchBar}>

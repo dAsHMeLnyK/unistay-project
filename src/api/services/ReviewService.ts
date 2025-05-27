@@ -7,7 +7,7 @@ import {
 
 class ReviewService {
   private httpClient = new HttpClient({
-    baseURL: "http://localhost:5131/api",
+    baseURL: "http://localhost:5113/api",
   });
 
   async getById(reviewId: string): Promise<ReviewDto> {

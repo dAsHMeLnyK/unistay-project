@@ -7,7 +7,7 @@ import {
 
 class ListingImageService {
   private httpClient = new HttpClient({
-    baseURL: "http://localhost:5131/api",
+    baseURL: "http://localhost:5113/api",
   });
 
   async getById(imageId: string): Promise<ListingImageDto> {
