@@ -1,42 +1,60 @@
-import { HttpClient } from "../HttpClient";
-import {
-  ListingDto,
-  CreateListingDto,
-  UpdateListingDto,
-} from "../dto/ListingDto";
+import api from "../HttpClient";
+import { ListingDto, CreateListingDto } from "../dto/ListingDto";
 
-class ListingService {
-  private httpClient = new HttpClient({
-    baseURL: "http://localhost:5113/api/listings",
-  });
+export const ListingService = {
+  // Отримати всі оголошення
+  getAll: async (): Promise<ListingDto[]> => {
+    return await api.get("/listings");
+  },
 
-  async getAll(): Promise<ListingDto[]> {
-    return await this.httpClient.get<ListingDto[]>("/");
+  // Отримати одне за ID
+  getById: async (id: string): Promise<ListingDto> => {
+    return await api.get(`/listings/${id}`);
+  },
+
+  // Пошук за ключовим словом
+  search: async (keyword: string): Promise<ListingDto[]> => {
+    return await api.get("/listings/search", {
+      params: { keyword }
+    });
+  },
+
+  // Отримати оголошення конкретного користувача
+  getByUserId: async (userId: string): Promise<ListingDto[]> => {
+    return await api.get(`/listings/user/${userId}`);
+  },
+
+  // Отримати список усіх зручностей
+  getAmenities: async (): Promise<any[]> => {
+    return await api.get("/amenities");
+  },
+
+  // Створити оголошення
+  create: async (data: CreateListingDto): Promise<ListingDto> => {
+    return await api.post("/listings", data);
+  },
+
+  // Додати зображення до оголошення
+  addImage: async (listingId: string, imageUrl: string): Promise<any> => {
+    return await api.post(`/listings/${listingId}/images`, { imageUrl });
+  },
+
+  // Видалити зображення
+  deleteImage: async (imageId: string): Promise<void> => {
+    return await api.delete(`/listingimages/${imageId}`);
+  },
+
+  // Видалити оголошення
+  delete: async (id: string): Promise<void> => {
+    return await api.delete(`/listings/${id}`);
+  },
+
+  // Порівняти два оголошення
+  compare: async (listing1Id: string, listing2Id: string): Promise<any> => {
+    return await api.get(`/listings/compare`, {
+      params: { listing1Id, listing2Id }
+    });
   }
+};
 
-  async search(keyword: string): Promise<ListingDto[]> {
-    return await this.httpClient.get<ListingDto[]>(`/search?keyword=${encodeURIComponent(keyword)}`);
-  }
-
-  async getByUserId(userId: string): Promise<ListingDto[]> {
-    return await this.httpClient.get<ListingDto[]>(`/user/${userId}`);
-  }
-
-  async getById(listingId: string): Promise<ListingDto> {
-    return await this.httpClient.get<ListingDto>(`/${listingId}`);
-  }
-
-  async create(data: CreateListingDto): Promise<ListingDto> {
-    return await this.httpClient.post<ListingDto, CreateListingDto>("/", data);
-  }
-
-  async update(listingId: string, data: UpdateListingDto): Promise<ListingDto> {
-    return await this.httpClient.put<ListingDto, UpdateListingDto>(`/${listingId}`, data);
-  }
-
-  async delete(listingId: string): Promise<void> {
-    await this.httpClient.delete<void>(`/${listingId}`);
-  }
-}
-
-export default new ListingService();
+export default ListingService;

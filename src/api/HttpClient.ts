@@ -1,13 +1,13 @@
 import axios, { AxiosError, AxiosInstance, AxiosRequestConfig } from "axios";
-import AuthService from "./services/AuthService";
+import { jwtDecode } from "jwt-decode";
 
 export class HttpClient {
   private axiosInstance: AxiosInstance;
 
   constructor(configs: AxiosRequestConfig) {
     this.axiosInstance = axios.create({
-      baseURL: configs.baseURL || "http://localhost:5113",
-      timeout: configs.timeout || 5000,
+      baseURL: configs.baseURL || "https://localhost:7190/api", 
+      timeout: configs.timeout || 15000,
       headers: {
         "Content-Type": "application/json",
         Accept: "application/json",
@@ -23,13 +23,16 @@ export class HttpClient {
         const token = localStorage.getItem("token");
         if (token) {
           config.headers["Authorization"] = `Bearer ${token}`;
+          try {
+            const decoded: any = jwtDecode(token);
+            const userId = decoded.userid || decoded.nameid || decoded.sub;
+            if (userId) {
+              config.headers["X-User-Id"] = userId;
+            }
+          } catch (e) {
+            console.warn("Token decode failed");
+          }
         }
-
-        const userId = AuthService.getUserIdFromToken();
-        if (userId) {
-          config.headers["X-User-Id"] = userId;
-        }
-
         return config;
       },
       (error) => Promise.reject(error)
@@ -40,46 +43,39 @@ export class HttpClient {
       (error) => {
         if (error instanceof AxiosError && error.response?.status === 401) {
           localStorage.removeItem("token");
-          window.location.href = "/login";
+          if (window.location.pathname !== "/login") {
+            window.location.href = "/login";
+          }
         }
         return Promise.reject(error);
       }
     );
   }
 
-  // Запит GET
   public async get<T>(url: string, config?: AxiosRequestConfig): Promise<T> {
-    return this.axiosInstance
-      .get(url, config)
-      .then((response) => response.data);
+    const response = await this.axiosInstance.get<T>(url, config);
+    return response.data;
   }
 
-  // Запит POST
-  public async post<T, D = unknown>(
-    url: string,
-    data: D,
-    config?: AxiosRequestConfig
-  ): Promise<T> {
-    return this.axiosInstance
-      .post(url, data, config)
-      .then((response) => response.data);
+  public async post<T, D = unknown>(url: string, data: D, config?: AxiosRequestConfig): Promise<T> {
+    const response = await this.axiosInstance.post<T, any, D>(url, data, config);
+    return response.data;
   }
 
-  // Запит PUT
-  public async put<T, D = unknown>(
-    url: string,
-    data: D,
-    config?: AxiosRequestConfig
-  ): Promise<T> {
-    return this.axiosInstance
-      .put(url, data, config)
-      .then((response) => response.data);
+  // ДОДАНО МЕТОД PUT
+  public async put<T, D = unknown>(url: string, data: D, config?: AxiosRequestConfig): Promise<T> {
+    const response = await this.axiosInstance.put<T, any, D>(url, data, config);
+    return response.data;
   }
 
-  // Запит DELETE
   public async delete<T>(url: string, config?: AxiosRequestConfig): Promise<T> {
-    return this.axiosInstance
-      .delete(url, config)
-      .then((response) => response.data);
+    const response = await this.axiosInstance.delete<T>(url, config);
+    return response.data;
   }
 }
+
+const api = new HttpClient({
+  baseURL: "https://localhost:7190/api",
+});
+
+export default api;

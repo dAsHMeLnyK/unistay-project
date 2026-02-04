@@ -1,64 +1,81 @@
 import React, { useState } from "react";
-import { useNavigate } from "react-router-dom"; // Імпортуємо useNavigate для перенаправлення
-import AuthFormContainer from "../../components/auth/AuthFormContainer/AuthFormContainer"; // Переконайтеся, що шлях правильний
-import Input from "../../components/common/Input/Input"; // Переконайтеся, що шлях правильний
-import Button from "../../components/common/Button/Button"; // Переконайтеся, що шлях правильний
+import { useNavigate, Link } from "react-router-dom";
+import AuthFormContainer from "../../components/auth/AuthFormContainer/AuthFormContainer";
+import Input from "../../components/common/Input/Input";
+import Button from "../../components/common/Button/Button";
 import { FiMail, FiLock } from "react-icons/fi";
-import { Link } from "react-router-dom";
 import styles from "./SignInPage.module.css";
-
-import { useAuth } from "../../context/AuthContext"; // <--- ІМПОРТУЄМО useAuth ХУК
+import { useAuth } from "../../context/AuthContext";
 
 const SignInPage = () => {
   const [formData, setFormData] = useState({
     email: "",
     password: "",
   });
-  const [error, setError] = useState(null); // Стан для зберігання помилок
-  const [loading, setLoading] = useState(false); // Стан для індикатора завантаження
+  const [error, setError] = useState(null);
+  const [loading, setLoading] = useState(false);
 
-  const { login } = useAuth(); // <--- ОТРИМУЄМО ФУНКЦІЮ login З AuthContext
-  const navigate = useNavigate(); // Ініціалізуємо useNavigate
+  const { login } = useAuth();
+  const navigate = useNavigate();
 
   const handleChange = (e) => {
     const { name, value } = e.target;
     setFormData({ ...formData, [name]: value });
+    // Очищуємо помилку, коли користувач починає знову вводити дані
+    if (error) setError(null);
+  };
+
+  const validateForm = () => {
+    // Валідація Email
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    if (!emailRegex.test(formData.email)) {
+      setError("Будь ласка, введіть коректну електронну адресу.");
+      return false;
+    }
+
+    // Валідація пароля (згідно з вашим CreateUserCommandValidator)
+    if (formData.password.length < 8) {
+      setError("Пароль повинен містити не менше 8 символів.");
+      return false;
+    }
+
+    return true;
   };
 
   const handleSubmit = async (e) => {
-    // Робимо функцію асинхронною
     e.preventDefault();
-    setError(null); // Скидаємо попередні помилки
-    setLoading(true); // Встановлюємо стан завантаження
+    setError(null);
+
+    // Спочатку перевіряємо формат на фронтенді
+    if (!validateForm()) return;
+
+    setLoading(true);
 
     try {
-      // Викликаємо функцію login з AuthContext, передаючи email та password
       const success = await login(formData.email, formData.password);
 
       if (success) {
-        // Якщо вхід успішний, перенаправляємо на головну сторінку
         navigate("/");
       } else {
-        // Якщо вхід не успішний (наприклад, невірні облікові дані)
+        // Зазвичай бекенд повертає 401 для невірних паролів
         setError("Невірний логін або пароль.");
       }
     } catch (err) {
-      // Обробка інших помилок (наприклад, проблеми з мережею, помилки бекенду)
-      setError("Виникла помилка під час входу. Будь ласка, спробуйте ще раз.");
+      // Якщо бекенд повернув помилку з повідомленням
+      const serverMessage = err.response?.data?.Message || err.response?.data?.message;
+      setError(serverMessage || "Виникла помилка під час входу. Перевірте з'єднання з сервером.");
       console.error("Помилка при спробі входу:", err);
     } finally {
-      setLoading(false); // Завжди скидаємо стан завантаження, незалежно від успіху/помилки
+      setLoading(false);
     }
   };
 
   const handleGoogleAuth = () => {
-    console.log("Вхід через Google (не реалізовано)");
-    alert("Вхід через Google поки не реалізовано."); // Для тесту
+    alert("Вхід через Google поки не реалізовано.");
   };
 
   const handleFacebookAuth = () => {
-    console.log("Вхід через Facebook (не реалізовано)");
-    alert("Вхід через Facebook поки не реалізовано."); // Для тесту
+    alert("Вхід через Facebook поки не реалізовано.");
   };
 
   return (
@@ -68,15 +85,22 @@ const SignInPage = () => {
       onGoogleAuth={handleGoogleAuth}
       onFacebookAuth={handleFacebookAuth}
     >
-      <form onSubmit={handleSubmit}>
+      <form onSubmit={handleSubmit} noValidate>
         {error && (
-          <p
-            style={{ color: "red", textAlign: "center", marginBottom: "15px" }}
-          >
+          <div style={{ 
+            color: "#d93025", 
+            backgroundColor: "#fde7e9", 
+            padding: "10px", 
+            borderRadius: "4px", 
+            marginBottom: "15px",
+            fontSize: "14px",
+            textAlign: "center",
+            border: "1px solid #f8c9cc"
+          }}>
             {error}
-          </p>
-        )}{" "}
-        {/* Відображення помилки */}
+          </div>
+        )}
+
         <Input
           icon={FiMail}
           type="email"
@@ -87,6 +111,7 @@ const SignInPage = () => {
           onChange={handleChange}
           required
         />
+        
         <Input
           icon={FiLock}
           type="password"
@@ -97,15 +122,15 @@ const SignInPage = () => {
           onChange={handleChange}
           required
         />
+
         <div style={{ textAlign: "right", marginBottom: "20px" }}>
           <Link to="/forgot-password" className={styles.forgotPasswordLink}>
             Забули пароль?
           </Link>
         </div>
+
         <Button type="submit" variant="primary" disabled={loading}>
-          {" "}
-          {/* Вимикаємо кнопку під час завантаження */}
-          {loading ? "Вхід..." : "Увійти"} {/* Змінюємо текст кнопки */}
+          {loading ? "Вхід..." : "Увійти"}
         </Button>
       </form>
     </AuthFormContainer>

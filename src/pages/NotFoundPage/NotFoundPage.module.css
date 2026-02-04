@@ -1,45 +1,86 @@
-/* src/pages/NotFoundPage/NotFoundPage.module.css */
-.notFoundContainer {
+.notFoundWrapper {
+    height: 100vh;
+    background-color: #FAF7F0; /* Ваш колір фону */
     display: flex;
-    flex-direction: column;
-    align-items: center;
     justify-content: center;
-    min-height: calc(100vh - var(--header-height, 60px) - var(--footer-height, 0px)); /* Adjust for header/footer */
+    align-items: center;
+    font-family: 'Afacad', sans-serif;
+    color: #4A4947;
     text-align: center;
     padding: 20px;
-    background-color: var(--color-background-light);
+}
+
+.errorCode {
+    font-size: 120px;
+    margin: 0;
+    color: #B17457; /* Ваш акцентний колір */
+    font-weight: 800;
+    line-height: 1;
 }
 
 .title {
-    font-size: 6em;
-    color: var(--color-primary-dark);
-    margin-bottom: 20px;
-    font-weight: bold;
-}
-
-.message {
-    font-size: 1.8em;
-    color: var(--color-text-primary);
-    margin-bottom: 15px;
+    font-size: 32px;
+    margin-top: 20px;
+    font-weight: 700;
 }
 
 .description {
-    font-size: 1.1em;
-    color: var(--color-text-secondary);
-    max-width: 600px;
-    margin-bottom: 30px;
+    font-size: 18px;
+    max-width: 450px;
+    margin: 15px auto 30px;
+    opacity: 0.8;
 }
 
 .homeButton {
-    background-color: var(--color-primary);
+    background-color: #B17457;
     color: white;
-    padding: 12px 25px;
-    border-radius: 8px;
-    text-decoration: none;
-    font-size: 1.1em;
-    transition: background-color 0.3s ease;
+    padding: 15px 40px;
+    border: none;
+    border-radius: 1000px;
+    font-size: 18px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: transform 0.2s ease;
 }
 
 .homeButton:hover {
-    background-color: var(--color-primary-dark);
+    transform: translateY(-3px);
+    box-shadow: 0 5px 15px rgba(177, 116, 87, 0.3);
+}
+
+/* Маленька анімація будиночка */
+.houseIllustration {
+    width: 100px;
+    height: 100px;
+    margin: 20px auto;
+    position: relative;
+}
+
+.roof {
+    width: 0;
+    height: 0;
+    border-left: 50px solid transparent;
+    border-right: 50px solid transparent;
+    border-bottom: 40px solid #4A4947;
+}
+
+.base {
+    width: 80px;
+    height: 50px;
+    background-color: #B17457;
+    margin: 0 auto;
+    position: relative;
+    border-bottom-left-radius: 4px;
+    border-bottom-right-radius: 4px;
+}
+
+.door {
+    width: 20px;
+    height: 30px;
+    background-color: #FAF7F0;
+    position: absolute;
+    bottom: 0;
+    left: 30px;
+    border-top-left-radius: 10px;
+    border-top-right-radius: 10px;
 }

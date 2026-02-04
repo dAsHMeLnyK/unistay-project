@@ -1,47 +1,75 @@
 import React, { useState, useEffect } from 'react';
-import { useNavigate } from 'react-router-dom';
-import styles from './AddListingPage.module.css';
+import { useNavigate, useParams } from 'react-router-dom';
+import styles from './EditListingPage.module.css';
+import { useListings } from '../../context/ListingContext';
 import { useAuth } from '../../context/AuthContext';
 import { ListingService } from '../../api/services/ListingService';
-import LoadingPage from '../LoadingPage/LoadingPage';
+import LoadingPage from '../LoadingPage/LoadingPage'; // Додайте імпорт лоадера
 
-const AddListingPage = () => {
+const EditListingPage = () => {
+    const { listingId } = useParams();
     const navigate = useNavigate();
-    const { isAuthenticated, userId } = useAuth(); // Використовуємо userId з вашого AuthContext
+    const { updateListing } = useListings();
+    const { isAuthenticated } = useAuth();
 
     const CLOUD_NAME = "dmgawz7me";
     const UPLOAD_PRESET = "listing_images"; 
 
     const [dbAmenities, setDbAmenities] = useState([]);
+    const [existingImages, setExistingImages] = useState([]); 
     const [isSubmitting, setIsSubmitting] = useState(false);
-    const [isInitialLoading, setIsInitialLoading] = useState(true);
     const [isUploading, setIsUploading] = useState(false);
-    const [imageUrls, setImageUrls] = useState([]);
+    const [isLoading, setIsLoading] = useState(true);
 
     const [formData, setFormData] = useState({
         title: '',
         description: '',
         address: '',
         price: '',
-        type: 1, 
-        owners: 1, 
-        neighbours: 1, 
-        communalService: 1, 
+        type: 1,
+        owners: 1,
+        neighbours: 1,
+        communalService: 1,
         latitude: 50.3291,
         longitude: 26.5126,
         amenityIds: []
     });
 
     useEffect(() => {
-        ListingService.getAmenities()
-            .then(setDbAmenities)
-            .catch(err => console.error("Помилка зручностей:", err))
-            .finally(() => setIsInitialLoading(false));
-    }, []);
+        const loadData = async () => {
+            try {
+                const [amenitiesData, listingData] = await Promise.all([
+                    ListingService.getAmenities(),
+                    ListingService.getById(listingId)
+                ]);
+                setDbAmenities(amenitiesData);
+                setExistingImages(listingData.listingImages || []);
+                
+                setFormData({
+                    title: listingData.title,
+                    description: listingData.description,
+                    address: listingData.address,
+                    price: listingData.price,
+                    type: listingData.type,
+                    owners: listingData.owners,
+                    neighbours: listingData.neighbours,
+                    communalService: listingData.communalServices?.[0] || 0,
+                    latitude: listingData.latitude,
+                    longitude: listingData.longitude,
+                    amenityIds: listingData.amenities?.map(a => typeof a === 'object' ? a.id : a) || []
+                });
+            } catch (err) {
+                console.error("Помилка завантаження:", err);
+                navigate('/my-listings');
+            } finally {
+                setIsLoading(false);
+            }
+        };
+        if (isAuthenticated) loadData();
+    }, [listingId, isAuthenticated, navigate]);
 
     const handleChange = (e) => {
         const { name, value } = e.target;
-        // Конвертуємо числові значення для бекенда
         const val = (['type', 'owners', 'neighbours', 'communalService', 'price'].includes(name)) 
             ? parseFloat(value) : value;
         setFormData(prev => ({ ...prev, [name]: val }));
@@ -61,8 +89,6 @@ const AddListingPage = () => {
         if (files.length === 0) return;
 
         setIsUploading(true);
-        const uploadedLinks = [];
-
         for (const file of files) {
             const data = new FormData();
             data.append("file", file);
@@ -73,118 +99,109 @@ const AddListingPage = () => {
                     method: "POST", 
                     body: data 
                 });
-                const fileData = await response.json();
-                if (fileData.secure_url) uploadedLinks.push(fileData.secure_url);
+                const result = await response.json();
+                if (result.secure_url) {
+                    const savedImage = await ListingService.addImage(listingId, result.secure_url);
+                    setExistingImages(prev => [...prev, savedImage]);
+                }
             } catch (error) {
-                console.error("Помилка Cloudinary:", error);
+                console.error("Upload error:", error);
             }
         }
-
-        setImageUrls(prev => [...prev, ...uploadedLinks]);
         setIsUploading(false);
+    };
+
+    const handleDeleteImage = async (imageId) => {
+        if (!window.confirm("Видалити це зображення?")) return;
+        try {
+            await ListingService.deleteImage(imageId);
+            setExistingImages(prev => prev.filter(img => img.id !== imageId));
+        } catch (err) {
+            alert("Помилка видалення");
+        }
     };
 
     const handleSubmit = async (e) => {
         e.preventDefault();
-        if (!isAuthenticated) return alert("Будь ласка, увійдіть в систему");
-        if (isUploading) return alert("Зачекайте, поки завантажаться фото");
-
         setIsSubmitting(true);
         try {
-            const listingPayload = {
-                title: formData.title,
-                description: formData.description,
-                address: formData.address,
-                latitude: formData.latitude,
-                longitude: formData.longitude,
+            const updateDto = {
+                ...formData,
                 price: parseFloat(formData.price),
-                type: parseInt(formData.type),
-                communalServices: [parseInt(formData.communalService)],
-                owners: parseInt(formData.owners),
-                neighbours: parseInt(formData.neighbours),
-                amenityIds: formData.amenityIds
+                communalServices: [formData.communalService],
             };
-
-            // Викликаємо сервіс напряму
-            const createdListing = await ListingService.create(listingPayload);
-
-            // Додаємо фото до створеного оголошення
-            if (imageUrls.length > 0 && createdListing?.id) {
-                await Promise.all(imageUrls.map(url => 
-                    ListingService.addImage(createdListing.id, url)
-                ));
-            }
-
-            alert('Оголошення успішно опубліковано!');
-            navigate(`/listings/${createdListing.id}`);
+            await updateListing(listingId, updateDto);
+            alert('Зміни збережено успішно!');
+            navigate(`/listings/${listingId}`);
         } catch (err) {
-            console.error(err);
-            alert("Помилка при створенні оголошення. Перевірте консоль.");
+            alert(err.response?.data?.Message || "Помилка збереження");
         } finally {
             setIsSubmitting(false);
         }
     };
 
-    if (isInitialLoading) return <LoadingPage />;
-    if (isSubmitting) return <LoadingPage message="Публікуємо ваше оголошення..." />;
+    // Використовуємо лоадер під час завантаження даних або збереження
+    if (isLoading || isSubmitting) {
+        return <LoadingPage />;
+    }
 
     return (
         <div className={styles.addListingPage}>
             <div className={styles.pageContentWrapper}>
-                <h1 className={styles.pageTitle}>Створити нове оголошення</h1>
+                <h1 className={styles.pageTitle}>Редагувати оголошення</h1>
                 
                 <form onSubmit={handleSubmit} className={styles.listingForm}>
                     <div className={styles.formColumns}>
                         <div className={styles.formSection}>
-                            <h2>Загальна інформація</h2>
+                            <h2>Основна інформація</h2>
                             <div className={styles.formGroup}>
                                 <label>Заголовок</label>
-                                <input name="title" onChange={handleChange} required placeholder="Введіть заголовок..." />
+                                <input name="title" value={formData.title} onChange={handleChange} required />
                             </div>
                             <div className={styles.formGroup}>
-                                <label>Повна адреса</label>
-                                <input name="address" onChange={handleChange} required placeholder="Місто, вулиця..." />
+                                <label>Адреса</label>
+                                <input name="address" value={formData.address} onChange={handleChange} required />
                             </div>
                             <div className={styles.formGroup}>
-                                <label>Ціна (грн/міс)</label>
-                                <input type="number" name="price" onChange={handleChange} required placeholder="0.00" />
+                                <label>Ціна (грн)</label>
+                                <input type="number" name="price" value={formData.price} onChange={handleChange} required />
                             </div>
                             <div className={styles.formGroup}>
                                 <label>Опис</label>
-                                <textarea name="description" onChange={handleChange} required rows="5" placeholder="Опишіть ваше житло..." />
+                                <textarea name="description" value={formData.description} onChange={handleChange} required rows="5" />
                             </div>
                         </div>
 
                         <div className={styles.formSection}>
-                            <h2>Деталі житла</h2>
+                            <h2>Деталі та Фото</h2>
                             <div className={styles.formGroup}>
-                                <label>Тип об'єкту</label>
-                                <select name="type" onChange={handleChange} value={formData.type}>
+                                <label>Тип житла</label>
+                                <select name="type" value={formData.type} onChange={handleChange}>
                                     <option value={1}>Квартира</option>
                                     <option value={0}>Будинок</option>
                                     <option value={2}>Кімната</option>
                                 </select>
                             </div>
-                            
+
                             <div className={styles.formGroup}>
-                                <label>Фотографії</label>
+                                <label>Фотогалерея</label>
                                 <div className={styles.imageGrid}>
-                                    {imageUrls.map((url, index) => (
-                                        <div key={index} className={styles.imagePreviewItem}>
-                                            <img src={url} alt="preview" className={styles.previewImage} />
-                                            <button type="button" className={styles.removeImageButton} onClick={() => setImageUrls(imageUrls.filter((_, i) => i !== index))}>&times;</button>
+                                    {existingImages.map((img) => (
+                                        <div key={img.id} className={styles.imagePreviewItem}>
+                                            <img src={img.imageUrl} alt="Listing" className={styles.previewImage} />
+                                            <button type="button" className={styles.removeImageButton} onClick={() => handleDeleteImage(img.id)}>×</button>
                                         </div>
                                     ))}
                                     <label className={styles.addPhotoButton}>
                                         <input type="file" multiple accept="image/*" onChange={handleFileChange} hidden />
-                                        <span>{isUploading ? "..." : "+"}</span>
+                                        <span>{isUploading ? "⏳" : "+"}</span>
                                     </label>
                                 </div>
                             </div>
-
+                            
                             <div className={styles.formGroup}>
                                 <label>Комунальні послуги</label>
-                                <select name="communalService" onChange={handleChange} value={formData.communalService}>
+                                <select name="communalService" value={formData.communalService} onChange={handleChange}>
                                     <option value={0}>Включено</option>
                                     <option value={1}>Окремо</option>
                                 </select>
@@ -201,16 +218,15 @@ const AddListingPage = () => {
                                     className={`${styles.amenityItem} ${formData.amenityIds.includes(amenity.id) ? styles.selected : ''}`}
                                     onClick={() => toggleAmenity(amenity.id)}
                                 >
-                                    {/* НАШ СТИЛІЗОВАНИЙ ЧЕКБОКС */}
                                     <div className={styles.amenityIndicator}></div>
-                                    <span>{amenity.title}</span>
+                                    <span>{amenity.name}</span>
                                 </div>
                             ))}
                         </div>
                     </div>
 
                     <button type="submit" className={styles.submitButton} disabled={isSubmitting || isUploading}>
-                        {isSubmitting ? "Збереження..." : "Опублікувати оголошення"}
+                        Зберегти зміни
                     </button>
                 </form>
             </div>
@@ -218,4 +234,4 @@ const AddListingPage = () => {
     );
 };
 
-export default AddListingPage;
+export default EditListingPage;

@@ -1,67 +1,91 @@
-// src/pages/MyListingsPage/MyListingsPage.jsx
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import { useAuth } from '../../context/AuthContext';
 import { useListings } from '../../context/ListingContext';
-import ListingCard from '../../components/listings/ListingCard/ListingCard'; // <--- Імпорт ListingCard
-import styles from './MyListingsPage.module.css'; // Створіть цей файл для стилів
-import { useNavigate } from 'react-router-dom'; // Для навігації після видалення/редагування
+import ListingCard from '../../components/listings/ListingCard/ListingCard';
+import { ListingService } from '../../api/services/ListingService';
+import styles from './MyListingsPage.module.css';
+import { useNavigate } from 'react-router-dom';
 
 const MyListingsPage = () => {
     const { isAuthenticated, currentUser } = useAuth();
-    const { listings, deleteListing } = useListings(); // Отримуємо всі оголошення та функцію видалення
+    const { deleteListing } = useListings(); 
+    const [userListings, setUserListings] = useState([]);
+    const [loading, setLoading] = useState(true);
     const navigate = useNavigate();
 
-    // Якщо користувач не авторизований, або currentUser.id відсутній
-    if (!isAuthenticated || !currentUser || !currentUser.id) {
+    // 1. Завантажуємо оголошення тільки поточного користувача
+    useEffect(() => {
+        const fetchMyListings = async () => {
+            if (isAuthenticated && currentUser?.id) {
+                try {
+                    setLoading(true);
+                    // Використовуємо ендпоінт api/listings/user/{userId}
+                    const data = await ListingService.getByUserId(currentUser.id);
+                    setUserListings(data);
+                } catch (err) {
+                    console.error("Помилка при завантаженні ваших оголошень:", err);
+                } finally {
+                    setLoading(false);
+                }
+            }
+        };
+
+        fetchMyListings();
+    }, [isAuthenticated, currentUser]);
+
+    // 2. Обробка видалення з локальним оновленням списку
+    const handleDelete = async (listingId) => {
+        if (window.confirm('Ви впевнені, що хочете видалити це оголошення?')) {
+            try {
+                await deleteListing(listingId);
+                // Оновлюємо локальний стейт, щоб оголошення зникло відразу
+                setUserListings(prev => prev.filter(l => l.id !== listingId));
+            } catch (err) {
+                alert("Не вдалося видалити оголошення.");
+            }
+        }
+    };
+
+    if (!isAuthenticated || !currentUser) {
         return (
             <div className={styles.myListingsPage}>
                 <h1 className={styles.title}>Мої оголошення</h1>
-                <p className={styles.message}>Будь ласка, увійдіть, щоб переглянути свої оголошення.</p>
-                <button className={styles.loginButton} onClick={() => navigate('/signin')}>
-                    Увійти
-                </button>
+                <p className={styles.message}>Будь ласка, увійдіть, щоб керувати своїми оголошеннями.</p>
+                <button className={styles.loginButton} onClick={() => navigate('/signin')}>Увійти</button>
             </div>
         );
     }
 
-    const userListings = listings.filter(listing => String(listing.ownerId) === String(currentUser.id));
-
-    const handleDelete = (listingId) => {
-        if (window.confirm('Ви впевнені, що хочете видалити це оголошення?')) {
-            deleteListing(listingId);
-            // Можливо, оновити сторінку або просто дозволити React оновити список
-        }
-    };
-
-    const handleEdit = (listingId) => {
-        navigate(`/edit-listing/${listingId}`); // Перенаправляємо на сторінку редагування
-    };
+    if (loading) return <div className={styles.loading}>Завантаження ваших оголошень...</div>;
 
     return (
         <div className={styles.myListingsPage}>
-            <h1 className={styles.title}>Мої оголошення</h1>
+            <div className={styles.headerRow}>
+                <h1 className={styles.title}>Мої оголошення</h1>
+                <button className={styles.addListingButton} onClick={() => navigate('/add-listing')}>
+                    + Додати нове
+                </button>
+            </div>
+
             {userListings.length === 0 ? (
                 <div className={styles.noListings}>
-                    <p>У вас ще немає оголошень.</p>
-                    <button className={styles.addListingButton} onClick={() => navigate('/add-listing')}>
-                        Додати перше оголошення
-                    </button>
+                    <p>Ви ще не опублікували жодного оголошення.</p>
                 </div>
             ) : (
                 <div className={styles.listingsGrid}>
                     {userListings.map((listing) => (
-                        <div key={listing.id} className={styles.listingItem}>
+                        <div key={listing.id} className={styles.listingWrapper}>
                             <ListingCard listing={listing} />
-                            <div className={styles.actions}>
+                            <div className={styles.adminActions}>
                                 <button
-                                    onClick={() => handleEdit(listing.id)}
-                                    className={`${styles.actionButton} ${styles.editButton}`}
+                                    onClick={() => navigate(`/edit-listing/${listing.id}`)}
+                                    className={styles.editBtn}
                                 >
                                     Редагувати
                                 </button>
                                 <button
                                     onClick={() => handleDelete(listing.id)}
-                                    className={`${styles.actionButton} ${styles.deleteButton}`}
+                                    className={styles.deleteBtn}
                                 >
                                     Видалити
                                 </button>

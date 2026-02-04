@@ -1,5 +1,4 @@
-import { HttpClient } from "../HttpClient";
-import AuthService from "./AuthService";
+import api from "../HttpClient";
 import {
   UserDto,
   CreateUserDto,
@@ -7,28 +6,26 @@ import {
 } from "../dto/UserDto";
 
 class UserService {
-  private httpClient = new HttpClient({
-    baseURL: "http://localhost:5113/api/users",
-  });
-
+  // Для отримання всіх користувачів (потрібні права адміна)
   async getAll(): Promise<UserDto[]> {
-    return await this.httpClient.get<UserDto[]>("/");
+    return await api.get<UserDto[]>("/users");
   }
 
   async getById(userId: string): Promise<UserDto> {
-    return await this.httpClient.get<UserDto>(`/${userId}`);
+    return await api.get<UserDto>(`/users/${userId}`);
   }
 
+  // РЕЄСТРАЦІЯ: тепер йде через /auth/register
   async create(data: CreateUserDto): Promise<UserDto> {
-    return await this.httpClient.post<UserDto, CreateUserDto>("/", data);
+    return await api.post<UserDto, CreateUserDto>("/auth/register", data);
   }
 
   async update(userId: string, data: UpdateUserDto): Promise<UserDto> {
-    return await this.httpClient.put<UserDto, UpdateUserDto>(`/${userId}`, data);
+    return await api.put<UserDto, UpdateUserDto>(`/users/${userId}`, data);
   }
 
   async delete(userId: string): Promise<void> {
-    await this.httpClient.delete<void>(`/${userId}`);
+    await api.delete<void>(`/users/${userId}`);
   }
 }
 

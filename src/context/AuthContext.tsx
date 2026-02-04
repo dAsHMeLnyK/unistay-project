@@ -1,56 +1,62 @@
 import React, { createContext, useState, useContext, useEffect, ReactNode } from "react";
-import AuthService from "../api/services/AuthService"; // Переконайтеся, що шлях правильний
+import AuthService from "../api/services/AuthService";
+import { jwtDecode } from "jwt-decode";
 
 interface AuthContextType {
   isAuthenticated: boolean;
-  userId: string | null; // Додаємо userId
+  userId: string | null;
+  userRole: string | null; // Додаємо роль
   login: (email: string, password: string) => Promise<boolean>;
   logout: () => void;
-  loading: boolean; // Додаємо стан завантаження
+  loading: boolean;
 }
 
-// Забезпечуємо, що значення за замовчуванням відповідає інтерфейсу
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
 
-export const AuthProvider: React.FC<{ children: ReactNode }> = ({
-  children,
-}) => {
+export const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) => {
   const [isAuthenticated, setIsAuthenticated] = useState<boolean>(false);
   const [userId, setUserId] = useState<string | null>(null);
-  const [loading, setLoading] = useState<boolean>(true); // Початковий стан: завантаження
+  const [userRole, setUserRole] = useState<string | null>(null);
+  const [loading, setLoading] = useState<boolean>(true);
+
+  const extractDataFromToken = () => {
+    const token = AuthService.getToken();
+    if (token) {
+      try {
+        const decoded: any = jwtDecode(token);
+        // В .NET ролі зазвичай зберігаються в ключі 'role' або 'http://schemas.microsoft.com/ws/2008/06/identity/claims/role'
+        const role = decoded.role || decoded["http://schemas.microsoft.com/ws/2008/06/identity/claims/role"];
+        setUserId(AuthService.getUserIdFromToken());
+        setUserRole(role);
+      } catch (e) {
+        console.error("Помилка декодування токена", e);
+      }
+    }
+  };
 
   useEffect(() => {
-    // При завантаженні компонента перевіряємо стан авторизації
-    const checkAuthStatus = () => {
-      const authenticated = AuthService.isAuthenticated();
-      setIsAuthenticated(authenticated);
-      if (authenticated) {
-        setUserId(AuthService.getUserIdFromToken());
-      } else {
-        setUserId(null); // Важливо скинути userId, якщо не авторизований
+    const initAuth = () => {
+      const authStatus = AuthService.isAuthenticated();
+      setIsAuthenticated(authStatus);
+      if (authStatus) {
+        extractDataFromToken();
       }
-      setLoading(false); // Завантаження завершено
+      setLoading(false);
     };
-
-    checkAuthStatus();
-    // Можна також додати слухача для змін localStorage, якщо потрібно реагувати на зміни з інших вкладок/вікон
-    // window.addEventListener('storage', checkAuthStatus);
-    // return () => window.removeEventListener('storage', checkAuthStatus);
-  }, []); // Пустий масив залежностей означає, що ефект запускається лише один раз при монтуванні
+    initAuth();
+  }, []);
 
   const login = async (email: string, password: string): Promise<boolean> => {
-    setLoading(true); // Починаємо завантаження
+    setLoading(true);
     try {
       const success = await AuthService.login(email, password);
-      setIsAuthenticated(success);
       if (success) {
-        setUserId(AuthService.getUserIdFromToken());
-      } else {
-        setUserId(null);
+        setIsAuthenticated(true);
+        extractDataFromToken();
       }
       return success;
     } finally {
-      setLoading(false); // Завжди завершуємо завантаження
+      setLoading(false);
     }
   };
 
@@ -58,21 +64,18 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({
     AuthService.logout();
     setIsAuthenticated(false);
     setUserId(null);
-    // Після виходу, можливо, потрібно перенаправити користувача на сторінку входу
-    // window.location.href = "/login"; // Можна зробити це в компоненті, який викликає logout
+    setUserRole(null);
   };
 
   return (
-    <AuthContext.Provider value={{ isAuthenticated, userId, login, logout, loading }}>
+    <AuthContext.Provider value={{ isAuthenticated, userId, userRole, login, logout, loading }}>
       {children}
     </AuthContext.Provider>
   );
 };
 
-export const useAuth = (): AuthContextType => {
+export const useAuth = () => {
   const context = useContext(AuthContext);
-  if (context === undefined) { // Змінено на undefined, оскільки createContext тепер ініціалізується undefined
-    throw new Error("useAuth must be used within an AuthProvider");
-  }
+  if (context === undefined) throw new Error("useAuth must be used within an AuthProvider");
   return context;
 };

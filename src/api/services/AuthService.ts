@@ -1,5 +1,5 @@
 import { jwtDecode } from "jwt-decode";
-import { HttpClient } from "../HttpClient";
+import api from "../HttpClient";
 import { LoginUserDtos } from "../dto/UserDto";
 
 interface AuthResultDto {
@@ -10,22 +10,20 @@ interface AuthResultDto {
 
 class AuthService {
   private static tokenKey = "token";
-  private httpClient: HttpClient;
-
-  constructor() {
-    this.httpClient = new HttpClient({ baseURL: "http://localhost:5113/api" });
-  }
 
   async login(email: string, password: string): Promise<boolean> {
     try {
-      const loginDto: LoginUserDtos = {
-        Email: email,
+      const loginData: LoginUserDtos = {
+        Email: email,    // Поля з великої літери згідно з LoginUserDtos на бекенді
         Password: password,
       };
-      const result = await this.httpClient.post<AuthResultDto>("/users/login", loginDto);
+      
+      // Змінюємо шлях на той, що в AuthController
+      const result = await api.post<AuthResultDto>("/auth/login", loginData);
       localStorage.setItem(AuthService.tokenKey, result.token);
       return true;
-    } catch {
+    } catch (error) {
+      console.error("Login error:", error);
       return false;
     }
   }
@@ -35,7 +33,14 @@ class AuthService {
   }
 
   isAuthenticated(): boolean {
-    return !!localStorage.getItem(AuthService.tokenKey);
+    const token = this.getToken();
+    if (!token) return false;
+    try {
+      const decoded: any = jwtDecode(token);
+      return decoded.exp * 1000 > Date.now();
+    } catch {
+      return false;
+    }
   }
 
   getToken(): string | null {
@@ -45,8 +50,12 @@ class AuthService {
   getUserIdFromToken(): string | null {
     const token = this.getToken();
     if (!token) return null;
-    const decodedToken: { userid: string } = jwtDecode(token);
-    return decodedToken.userid;
+    try {
+      const decodedToken: any = jwtDecode(token);
+      return decodedToken.userid || decodedToken.id || null; 
+    } catch {
+      return null;
+    }
   }
 }
 

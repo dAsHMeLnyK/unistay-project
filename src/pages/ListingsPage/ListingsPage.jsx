@@ -1,84 +1,95 @@
-// src/pages/ListingsPage/ListingsPage.jsx
-import React, { useState, useEffect } from 'react';
-import listingsData from '../../data/listings'; // <--- ЗАЛИШАЄМО ЦЕЙ ІМПОРТ
+import React, { useState, useEffect, useMemo } from 'react';
 import ListingCard from '../../components/listings/ListingCard/ListingCard';
 import FilterBar from '../../components/filters/FilterBar/FilterBar';
+import LoadingPage from '../LoadingPage/LoadingPage';
+import { useListings } from '../../context/ListingContext';
+import { ListingService } from '../../api/services/ListingService';
 import styles from './ListingsPage.module.css';
 
 const ListingsPage = () => {
-    const [listings, setListings] = useState([]);
+    const { listings, fetchListings, loading, error } = useListings();
+    const [displayListings, setDisplayListings] = useState([]);
+    const [isSearching, setIsSearching] = useState(false);
+    
     const [filters, setFilters] = useState({
         search: '',
         type: '',
-        utilityPaymentType: '',
-        ownerOccupancy: '',
-        neighborInfo: '',
+        utilityPaymentType: '', 
+        ownerOccupancy: '',     
+        neighborInfo: '',       
         minPrice: '',
         maxPrice: '',
     });
     const [showFilters, setShowFilters] = useState(true);
 
+    // Первинне завантаження
     useEffect(() => {
-        // Зчитуємо з localStorage
-        const storedListings = JSON.parse(localStorage.getItem('listings'));
-        if (storedListings && storedListings.length > 0) {
-            setListings(storedListings);
-        } else {
-            // Якщо в localStorage немає, використовуємо дані з файлу і зберігаємо їх
-            localStorage.setItem('listings', JSON.stringify(listingsData));
-            setListings(listingsData);
-        }
-    }, []); // Пустий масив залежностей означає, що ефект запускається один раз після першого рендеру
+        fetchListings();
+    }, [fetchListings]);
 
-    // ... (решта вашого коду handleFilterChange, handleResetFilters, handleSearchButtonClick, filteredListings)
+    // Синхронізація локального списку з глобальним
+    useEffect(() => {
+        setDisplayListings(listings);
+    }, [listings]);
 
     const handleFilterChange = (e) => {
         const { name, value } = e.target;
-        setFilters((prevFilters) => ({
-            ...prevFilters,
-            [name]: value,
-        }));
+        setFilters((prev) => ({ ...prev, [name]: value }));
     };
 
     const handleResetFilters = () => {
         setFilters({
-            search: '',
-            type: '',
-            utilityPaymentType: '',
-            ownerOccupancy: '',
-            neighborInfo: '',
-            minPrice: '',
-            maxPrice: '',
+            search: '', type: '', utilityPaymentType: '',
+            ownerOccupancy: '', neighborInfo: '',
+            minPrice: '', maxPrice: '',
         });
-        console.log('Фільтри скинуто');
+        setDisplayListings(listings);
     };
 
-    const handleSearchButtonClick = () => {
-        console.log('Кнопка "Шукати" натиснута. Поточні фільтри:', filters);
+    // ФУНКЦІЯ ПОШУКУ
+    const handleSearchButtonClick = async () => {
+        if (!filters.search.trim()) {
+            setDisplayListings(listings); // Якщо порожньо — показуємо все
+            return;
+        }
+
+        setIsSearching(true);
+        try {
+            const searchResults = await ListingService.search(filters.search);
+            setDisplayListings(searchResults);
+        } catch (err) {
+            console.error("Помилка пошуку:", err);
+        } finally {
+            setIsSearching(false);
+        }
     };
 
-    const filteredListings = listings.filter((listing) => {
-        const listingType = typeof listing.type === 'object' && listing.type !== null ? listing.type.name : listing.type;
-        const listingUtilityPaymentType = typeof listing.utilityPaymentType === 'object' && listing.utilityPaymentType !== null ? listing.utilityPaymentType.type : listing.utilityPaymentType;
-        const listingOwnerOccupancy = typeof listing.ownerOccupancy === 'object' && listing.ownerOccupancy !== null ? listing.ownerOccupancy.type : listing.ownerOccupancy;
-        const listingNeighborInfo = typeof listing.neighborInfo === 'object' && listing.neighborInfo !== null ? listing.neighborInfo.type : listing.neighborInfo;
+    const filteredListings = useMemo(() => {
+        return displayListings.filter((listing) => {
+            const price = parseFloat(listing.price);
+            const min = filters.minPrice ? parseFloat(filters.minPrice) : -Infinity;
+            const max = filters.maxPrice ? parseFloat(filters.maxPrice) : Infinity;
 
+            const matchesPrice = price >= min && price <= max;
+            const matchesType = filters.type !== '' ? String(listing.type) === filters.type : true;
+            
+            const matchesUtility = filters.utilityPaymentType !== '' 
+                ? listing.communalServices?.some(s => String(s) === filters.utilityPaymentType)
+                : true;
 
-        const matchesSearch =
-            listing.title.toLowerCase().includes(filters.search.toLowerCase()) ||
-            listing.address.toLowerCase().includes(filters.search.toLowerCase()) ||
-            listing.description.toLowerCase().includes(filters.search.toLowerCase());
+            const matchesOwners = filters.ownerOccupancy !== '' 
+                ? String(listing.owners) === filters.ownerOccupancy 
+                : true;
 
-        const matchesMinPrice = filters.minPrice ? listing.price >= parseFloat(filters.minPrice) : true;
-        const matchesMaxPrice = filters.maxPrice ? listing.price <= parseFloat(filters.maxPrice) : true;
-        const matchesType = filters.type ? listingType === filters.type : true;
-        const matchesUtilityPaymentType = filters.utilityPaymentType ? listingUtilityPaymentType === filters.utilityPaymentType : true;
-        const matchesOwnerOccupancy = filters.ownerOccupancy ? listingOwnerOccupancy === filters.ownerOccupancy : true;
-        const matchesNeighborInfo = filters.neighborInfo ? listingNeighborInfo === filters.neighborInfo : true;
+            const matchesNeighbors = filters.neighborInfo !== '' 
+                ? String(listing.neighbours) === filters.neighborInfo 
+                : true;
 
-        return matchesSearch && matchesMinPrice && matchesMaxPrice && matchesType &&
-               matchesUtilityPaymentType && matchesOwnerOccupancy && matchesNeighborInfo;
-    });
+            return matchesPrice && matchesType && matchesUtility && matchesOwners && matchesNeighbors;
+        });
+    }, [displayListings, filters]);
+
+    if (loading) return <LoadingPage />;
 
     return (
         <div className={styles.listingsPage}>
@@ -92,10 +103,15 @@ const ListingsPage = () => {
                             value={filters.search}
                             name="search"
                             onChange={handleFilterChange}
+                            onKeyDown={(e) => e.key === 'Enter' && handleSearchButtonClick()}
                             className={styles.searchInput}
                         />
-                        <button className={styles.searchButtonHeader} onClick={handleSearchButtonClick}>
-                            Шукати
+                        <button 
+                            className={styles.searchButtonHeader} 
+                            onClick={handleSearchButtonClick}
+                            disabled={isSearching}
+                        >
+                            {isSearching ? '...' : 'Шукати'}
                         </button>
                     </div>
                 </div>
@@ -108,15 +124,28 @@ const ListingsPage = () => {
                     onToggleFilters={() => setShowFilters(!showFilters)}
                 />
 
-                <div className={styles.listingsGrid}>
-                    {filteredListings.length > 0 ? (
-                        filteredListings.map((listing) => (
-                            <ListingCard key={listing.id} listing={listing} />
-                        ))
-                    ) : (
-                        <p className={styles.noListings}>Оголошень за вашими критеріями не знайдено.</p>
-                    )}
-                </div>
+                {error ? (
+                    <div className={styles.errorContainer}>
+                        <p className={styles.error}>Помилка завантаження: {error}</p>
+                        <button onClick={() => fetchListings()} className={styles.retryButton}>
+                            Спробувати ще раз
+                        </button>
+                    </div>
+                ) : (
+                    <div className={styles.listingsGrid}>
+                        {filteredListings.length > 0 ? (
+                            filteredListings.map((listing) => (
+                                <ListingCard key={listing.id} listing={listing} />
+                            ))
+                        ) : (
+                            <div className={styles.noResults}>
+                                <p className={styles.noListings}>
+                                    {isSearching ? 'Шукаємо...' : 'Оголошень не знайдено.'}
+                                </p>
+                            </div>
+                        )}
+                    </div>
+                )}
             </div>
         </div>
     );
