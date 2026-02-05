@@ -1,9 +1,22 @@
 import React, { useState, useEffect, useCallback } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
+import { MapContainer, TileLayer, Marker } from 'react-leaflet'; // Додаємо імпорти
+import L from 'leaflet';
 import { ListingService } from '../../api/services/ListingService';
 import styles from './ListingDetailsPage.module.css';
 
-// Компонент зручностей (виправлено a.name -> a.title)
+// Фікс іконок для Leaflet
+import markerIcon from 'leaflet/dist/images/marker-icon.png';
+import markerShadow from 'leaflet/dist/images/marker-shadow.png';
+
+let DefaultIcon = L.icon({
+    iconUrl: markerIcon,
+    shadowUrl: markerShadow,
+    iconSize: [25, 41],
+    iconAnchor: [12, 41]
+});
+
+// Компонент зручностей
 const ListingAmenities = ({ amenities }) => (
     <div className={styles.amenitiesBlock}>
         <h3 className={styles.sectionTitle}>Зручності</h3>
@@ -35,7 +48,7 @@ const ContactOwner = ({ user }) => (
 );
 
 const ListingDetailsPage = () => {
-    const { listingId } = useParams(); // Переконайтеся, що в App.js шлях /listings/:listingId
+    const { listingId } = useParams();
     const navigate = useNavigate();
     const [listing, setListing] = useState(null);
     const [loading, setLoading] = useState(true);
@@ -52,7 +65,6 @@ const ListingDetailsPage = () => {
             setIsFavorite(favorites.some(fav => String(fav.id) === String(listingId)));
         } catch (err) {
             console.error('Помилка завантаження:', err);
-            // navigate('/listings'); // Розкоментуйте після перевірки
         } finally {
             setLoading(false);
         }
@@ -82,8 +94,16 @@ const ListingDetailsPage = () => {
         setIsFavorite(!isFavorite);
     };
 
+    // Функція для відкриття Google Maps
+    const openInGoogleMaps = () => {
+        const url = `https://www.google.com/maps/search/?api=1&query=${listing.latitude},${listing.longitude}`;
+        window.open(url, '_blank');
+    };
+
     if (loading) return <div className={styles.loading}>Завантаження деталей...</div>;
     if (!listing) return <div className={styles.error}>Оголошення не знайдено.</div>;
+
+    const position = [listing.latitude, listing.longitude];
 
     return (
         <div className={styles.listingDetailsPage}>
@@ -158,28 +178,46 @@ const ListingDetailsPage = () => {
                 
                 <div className={styles.rightCol}>
                     <ContactOwner user={listing.user} />
+                    
+                    {/* КАРТА ЗАМІСТЬ ПЛЕЙСХОЛДЕРА */}
                     <div className={styles.mapContainer}>
-                        <div className={styles.mapPlaceholder}>
-                            <p>Місцезнаходження на мапі</p>
-                            <small>Координати: {listing.latitude.toFixed(4)}, {listing.longitude.toFixed(4)}</small>
+                        <h3 className={styles.sectionTitleSmall}>Місцезнаходження</h3>
+                        <div className={styles.actualMap}>
+                            <MapContainer 
+                                center={position} 
+                                zoom={15} 
+                                scrollWheelZoom={false} 
+                                style={{ height: '100%', width: '100%' }}
+                            >
+                                <TileLayer url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png" />
+                                <Marker position={position} icon={DefaultIcon} />
+                            </MapContainer>
                         </div>
+                        <button className={styles.googleMapsBtn} onClick={openInGoogleMaps}>
+                            Побудувати маршрут (Google Maps)
+                        </button>
                     </div>
                 </div>
             </div>
 
+            {/* Секція відгуків */}
             <section className={styles.reviewsSection}>
                 <h2 className={styles.sectionTitle}>Відгуки користувачів</h2>
                 {listing.reviews?.length > 0 ? (
-                    listing.reviews.map(review => (
-                        <div key={review.id} className={styles.reviewCard}>
-                            <div className={styles.reviewUser}>
-                                <strong>{review.user?.fullName || 'Анонім'}</strong>
-                                <div className={styles.reviewRating}>{'★'.repeat(review.rating)}{'☆'.repeat(5-review.rating)}</div>
+                    <div className={styles.reviewsGrid}>
+                        {listing.reviews.map(review => (
+                            <div key={review.id} className={styles.reviewCard}>
+                                <div className={styles.reviewUser}>
+                                    <strong>{review.user?.fullName || 'Анонім'}</strong>
+                                    <div className={styles.reviewRating}>
+                                        {'★'.repeat(review.rating)}{'☆'.repeat(5-review.rating)}
+                                    </div>
+                                </div>
+                                <p>{review.comment}</p>
+                                <small>{new Date(review.publicationDate).toLocaleDateString()}</small>
                             </div>
-                            <p>{review.comment}</p>
-                            <small>{new Date(review.publicationDate).toLocaleDateString()}</small>
-                        </div>
-                    ))
+                        ))}
+                    </div>
                 ) : (
                     <p className={styles.noReviews}>Відгуків ще немає. Будьте першим!</p>
                 )}

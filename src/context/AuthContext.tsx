@@ -5,7 +5,7 @@ import { jwtDecode } from "jwt-decode";
 interface AuthContextType {
   isAuthenticated: boolean;
   userId: string | null;
-  userRole: string | null; // Додаємо роль
+  userRole: string | null;
   login: (email: string, password: string) => Promise<boolean>;
   logout: () => void;
   loading: boolean;
@@ -24,12 +24,21 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
     if (token) {
       try {
         const decoded: any = jwtDecode(token);
-        // В .NET ролі зазвичай зберігаються в ключі 'role' або 'http://schemas.microsoft.com/ws/2008/06/identity/claims/role'
-        const role = decoded.role || decoded["http://schemas.microsoft.com/ws/2008/06/identity/claims/role"];
-        setUserId(AuthService.getUserIdFromToken());
-        setUserRole(role);
+        
+        // .NET ClaimTypes.Role
+        const role = decoded.role || 
+                     decoded["http://schemas.microsoft.com/ws/2008/06/identity/claims/role"];
+        
+        // .NET ClaimTypes.NameIdentifier (що використовується у вашому ListingsController)
+        const id = decoded["http://schemas.xmlsoap.org/ws/2005/05/identity/claims/nameidentifier"] ||
+                   decoded.nameid || 
+                   decoded.sub || 
+                   decoded.id;
+
+        setUserId(id ? id.toString().toLowerCase() : null);
+        setUserRole(role || null);
       } catch (e) {
-        console.error("Помилка декодування токена", e);
+        console.error("Token decoding error:", e);
       }
     }
   };

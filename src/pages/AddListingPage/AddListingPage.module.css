@@ -201,3 +201,187 @@
 @media (max-width: 992px) {
     .formColumns { grid-template-columns: 1fr; }
 }
+
+.addressPickerWrapper {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    width: 100%;
+}
+
+.searchBar {
+    display: flex;
+    gap: 10px;
+}
+
+.mapInput {
+    flex: 1;
+    /* Ваші стилі для круглих інпутів підтягнуться автоматично, 
+       якщо ми використаємо правильний клас */
+}
+
+.searchBtn {
+    background-color: #B17457;
+    color: white;
+    border: none;
+    border-radius: 20px;
+    padding: 0 20px;
+    cursor: pointer;
+    font-family: 'Afacad', sans-serif;
+}
+
+.mapContainerStyle {
+    height: 350px; 
+    width: 100%; 
+    margin-top: 10px; 
+    border-radius: 15px; 
+    overflow: hidden;
+    border: 2px solid #E0E0E0;
+}
+
+.mapHint {
+    font-size: 13px;
+    color: #888;
+    margin: 5px 0 0 5px;
+    font-style: italic;
+}
+
+.mapControls {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-top: 5px;
+}
+
+.expandBtn {
+    background: none;
+    border: none;
+    color: #B17457;
+    cursor: pointer;
+    font-size: 14px;
+    font-weight: 600;
+    text-decoration: underline;
+}
+
+/* СТИЛІ МОДАЛЬНОГО ВІКНА */
+.modalOverlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    background: rgba(0, 0, 0, 0.6);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 9999; /* Поверх усього */
+}
+
+.modalContent {
+    background: white;
+    width: 90%;
+    max-width: 900px;
+    height: 80vh;
+    border-radius: 20px;
+    padding: 20px;
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+    box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+}
+
+.modalHeader {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.closeModal {
+    font-size: 30px;
+    border: none;
+    background: none;
+    cursor: pointer;
+    color: #4A4947;
+}
+
+.fullScreenMap {
+    flex: 1;
+    border-radius: 12px;
+    overflow: hidden;
+    border: 1px solid #ddd;
+}
+
+.confirmBtn {
+    background-color: #B17457;
+    color: white;
+    border: none;
+    padding: 12px;
+    border-radius: 10px;
+    font-weight: 700;
+    cursor: pointer;
+}
+
+.modalTitleBlock {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+}
+
+.currentAddressPreview {
+    margin: 0;
+    color: #B17457; /* Ваш основний колір */
+    font-weight: 600;
+    font-size: 15px;
+    background: #fdf5f1;
+    padding: 4px 12px;
+    border-radius: 8px;
+    border-left: 4px solid #B17457;
+}
+
+.modalFooter {
+    display: flex;
+    justify-content: flex-end;
+    padding-top: 10px;
+}
+
+.searchBarContainer {
+    position: relative; /* Важливо для позиціонування списку */
+    width: 100%;
+}
+
+.suggestionsList {
+    position: absolute;
+    top: 100%;
+    left: 0;
+    right: 0;
+    background: white;
+    border: 1px solid #E0E0E0;
+    border-radius: 15px;
+    margin-top: 5px;
+    padding: 0;
+    list-style: none;
+    z-index: 1000;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+    max-height: 200px;
+    overflow-y: auto;
+}
+
+.suggestionsList li {
+    padding: 12px 20px;
+    cursor: pointer;
+    font-size: 14px;
+    border-bottom: 1px solid #f5f5f5;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    transition: background 0.2s;
+}
+
+.suggestionsList li:last-child {
+    border-bottom: none;
+}
+
+.suggestionsList li:hover {
+    background-color: #fdf5f1;
+    color: #B17457;
+}

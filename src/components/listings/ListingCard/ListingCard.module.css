@@ -1,24 +1,21 @@
-/* ДОДАНО: Стилі для обгортки Link */
 .cardLink {
-  text-decoration: none; /* Прибираємо підкреслення */
-  color: inherit;        /* Успадковуємо колір тексту */
-  display: block;        /* Робимо посилання блоковим, щоб воно охоплювало всю картку */
-  height: 100%;          /* Гарантуємо, що посилання займає всю висоту картки */
+  text-decoration: none;
+  color: inherit;
+  display: block;
+  height: 100%;
 }
 
-/* Ваш існуючий код стилів для .card та інших елементів залишається БЕЗ ЗМІН */
 .card {
-  background-color: #FAF7F0; /* Колір фону картки */
+  background-color: #FAF7F0;
   border-radius: 12px;
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.25);
   overflow: hidden;
-  width: 100%; /* Займає всю ширину свого батька (.listingItem) */
+  width: 100%;
   transition: transform 0.2s ease-in-out;
   font-family: 'Afacad', sans-serif;
-  /* height: 100%; <--- ЗАКОМЕНТОВАНО, БО ВИКОРИСТОВУЄМО aspect-ratio */
   display: flex;
   flex-direction: column;
-  aspect-ratio: 1 / 1; /* ДОДАНО: Робить картку квадратною (ширина до висоти 1:1) */
+  aspect-ratio: 1 / 1; /* Квадратна картка */
 }
 
 .card:hover {
@@ -28,9 +25,9 @@
 .imageContainer {
   position: relative;
   width: 100%;
-  height: 50%; /* Зображення займає 50% висоти картки */
+  height: 50%;
   overflow: hidden;
-  flex-shrink: 0; /* Щоб контейнер не зменшувався при стисканні */
+  flex-shrink: 0;
 }
 
 .image {
@@ -39,7 +36,7 @@
   left: 0;
   width: 100%;
   height: 100%;
-  object-fit: cover; /* Зберігає співвідношення сторін і обрізає, якщо необхідно */
+  object-fit: cover;
   border-radius: 12px 12px 0 0;
 }
 
@@ -47,28 +44,25 @@
   padding: 15px;
   display: flex;
   flex-direction: column;
-  height: 50%; /* Інформаційний блок займає 50% висоти картки */
-  justify-content: space-between; /* Розподіляє простір між елементами */
-  flex-grow: 1; /* ДОДАНО: Дозволяє інформаційному блоку займати весь доступний простір */
+  height: 50%;
+  justify-content: space-between;
+  flex-grow: 1;
 }
 
 .rating {
   font-size: 14px;
-  color: #D8D2C2;
   margin-bottom: 5px;
   text-align: left;
 }
 
-.rating .filledStar {
+.filledStar {
   color: #B17457;
+  font-weight: 700;
 }
 
-.rating .halfStar {
-  color: #B17457;
-}
-
-.rating .emptyStar {
+.noReviews {
   color: #D8D2C2;
+  font-size: 12px;
 }
 
 .title {
@@ -76,39 +70,38 @@
   font-weight: 600;
   color: #4A4947;
   margin: 0 0 5px 0;
-  white-space: normal;
-  overflow: hidden;
-  text-overflow: ellipsis;
-  text-align: left;
   line-height: 1.3;
-  max-height: 2.6em; /* 2 рядки * 1.3em line-height */
+  max-height: 2.6em;
   display: -webkit-box;
   -webkit-box-orient: vertical;
+  -webkit-line-clamp: 2; /* Обрізка на 2 рядку */
+  overflow: hidden;
 }
 
 .address {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  color: #888;
   font-size: 14px;
-  color: #4A4947;
-  margin-bottom: 5px;
+  margin: 8px 0;
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
-  text-align: left;
-  display: flex;
-  align-items: center;
-  gap: 5px;
 }
 
-.locationIcon {
-  font-size: 16px;
+.iconWrapper {
   color: #B17457;
+  display: flex;
+  align-items: center;
+  flex-shrink: 0;
 }
 
 .priceContainer {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  margin-top: auto; /* Додаємо auto margin-top, щоб прибити до низу */
+  margin-top: auto;
 }
 
 .price {
@@ -118,25 +111,38 @@
   margin: 0;
 }
 
-.heartIconOnly {
+/* Кнопка серця - ЧИСТА (без рамок) */
+.heartButton {
   background: none;
   border: none;
-  font-size: 24px; /* Збільшуємо розмір іконки */
-  color: #B17457; /* Колір НЕзафарбованого серця - помаранчевий */
+  outline: none; /* ПРИБИРАЄМО ОБВЕДЕННЯ */
   cursor: pointer;
   padding: 0;
-  transition: color 0.2s ease-in-out; /* Плавний перехід кольору */
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: transform 0.2s ease;
+  width: 40px;
+  height: 40px;
+  -webkit-tap-highlight-color: transparent;
 }
 
-.heartIconOnly:hover {
-  opacity: 0.8;
-}
-
-.heartIconOnly:focus { /* Прибираємо обведення при фокусі (кліку) */
+.heartButton:focus, 
+.heartButton:active {
   outline: none;
+  box-shadow: none;
 }
 
-/* Стиль для зафарбованого серця */
-.heartIconOnly.favorited {
-  color: #B17457; /* Колір зафарбованого серця - той самий помаранчевий */
+.heartButton svg {
+  width: 28px;
+  height: 28px;
+  transition: fill 0.3s ease;
+}
+
+.heartButton:hover {
+  transform: scale(1.15);
+}
+
+.heartButton.favorited {
+  color: #B17457;
 }

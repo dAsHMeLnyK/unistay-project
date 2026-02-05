@@ -440,3 +440,71 @@
         font-size: 16px;
     }
 }
+
+/* Оновлення блоку карти */
+.mapContainer {
+    margin-top: 20px;
+    background: white;
+    padding: 20px;
+    border-radius: 12px;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.08);
+}
+
+.sectionTitleSmall {
+    font-size: 18px;
+    font-weight: 600;
+    margin-bottom: 15px;
+    color: #4A4947;
+}
+
+.actualMap {
+    height: 250px; /* Висота карти в правій колонці */
+    width: 100%;
+    border-radius: 10px;
+    overflow: hidden;
+    border: 1px solid #D8D2C2;
+}
+
+.googleMapsBtn {
+    width: 100%;
+    margin-top: 12px;
+    padding: 10px;
+    background-color: transparent;
+    border: 2px solid #B17457;
+    color: #B17457;
+    border-radius: 8px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.2s;
+}
+
+.googleMapsBtn:hover {
+    background-color: #B17457;
+    color: white;
+}
+
+/* Корекція сітки для опису та правої колонки */
+.descriptionLayout {
+    display: grid;
+    grid-template-columns: 1.5fr 1fr; /* Робимо пропорцію як у верхнього блоку */
+    gap: 30px;
+    max-width: 1200px;
+    width: 100%;
+    margin-bottom: 40px;
+}
+
+/* Стилі для відгуків, щоб вони не розтягувалися */
+.reviewsSection {
+    max-width: 1200px;
+    width: 100%;
+    padding: 40px;
+    background: #F7F5F0;
+    border-radius: 12px;
+    box-sizing: border-box;
+}
+
+.reviewsGrid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+    gap: 20px;
+}

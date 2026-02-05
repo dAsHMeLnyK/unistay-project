@@ -2,88 +2,84 @@ import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
 import styles from './ListingCard.module.css';
 
+// SVG-іконка локації
+const LocationIcon = () => (
+    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+        <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"></path>
+        <circle cx="12" cy="10" r="3"></circle>
+    </svg>
+);
+
 const ListingCard = ({ listing }) => {
-  // 1. Обчислюємо середній рейтинг на основі відгуків (Reviews)
-  const calculateAverageRating = (reviews) => {
-    if (!reviews || reviews.length === 0) return 0;
-    const sum = reviews.reduce((acc, review) => acc + review.rating, 0);
-    return sum / reviews.length;
-  };
+    const calculateAverageRating = (reviews) => {
+        if (!reviews || reviews.length === 0) return 0;
+        const sum = reviews.reduce((acc, review) => acc + (review.rating || 0), 0);
+        return sum / reviews.length;
+    };
 
-  // 2. Отримуємо дані з DTO або використовуємо значення за замовчуванням
-  const id = listing?.id || 'default-id';
-  const title = listing?.title || 'Заголовок оголошення';
-  const address = listing?.address || 'Адреса житла';
-  const price = listing?.price || 0;
-  
-  // Беремо першу картинку з масиву ListingImages
-  const imageUrl = listing?.listingImages?.[0]?.imageUrl || 'https://via.placeholder.com/300x200?text=No+Image';
-  const averageRating = calculateAverageRating(listing?.reviews);
+    const id = listing?.id;
+    const title = listing?.title || 'Без назви';
+    const address = listing?.address || 'Адреса не вказана';
+    const price = listing?.price || 0;
+    const imageUrl = listing?.listingImages?.[0]?.imageUrl || 'https://via.placeholder.com/300x200?text=No+Image';
+    const averageRating = calculateAverageRating(listing?.reviews);
 
-  const [isFavorite, setIsFavorite] = useState(() => {
-    const favorites = JSON.parse(localStorage.getItem('favorites')) || [];
-    return favorites.some(fav => fav.id === id);
-  });
+    const [isFavorite, setIsFavorite] = useState(() => {
+        const favorites = JSON.parse(localStorage.getItem('favorites')) || [];
+        return favorites.some(fav => fav.id === id);
+    });
 
-  const handleFavoriteClick = (e) => {
-    e.preventDefault();
-    e.stopPropagation();
-    
-    let favorites = JSON.parse(localStorage.getItem('favorites')) || [];
-    if (isFavorite) {
-      favorites = favorites.filter(fav => fav.id !== id);
-    } else {
-      favorites.push({ id, title, address, price, imageUrl, rating: averageRating });
-    }
-    localStorage.setItem('favorites', JSON.stringify(favorites));
-    setIsFavorite(!isFavorite);
-  };
+    const handleFavoriteClick = (e) => {
+        e.preventDefault();
+        e.stopPropagation();
+        let favorites = JSON.parse(localStorage.getItem('favorites')) || [];
+        if (isFavorite) {
+            favorites = favorites.filter(fav => fav.id !== id);
+        } else {
+            favorites.push({ id, title, address, price, imageUrl, rating: averageRating });
+        }
+        localStorage.setItem('favorites', JSON.stringify(favorites));
+        setIsFavorite(!isFavorite);
+    };
 
-  const renderStars = (rating) => {
-    const totalStars = 5;
-    const filledStars = Math.floor(rating);
-    const hasHalfStar = rating - filledStars >= 0.5;
-    const stars = [];
+    return (
+        <Link to={`/listings/${id}`} className={styles.cardLink}>
+            <div className={styles.card}>
+                <div className={styles.imageContainer}>
+                    <img src={imageUrl} alt={title} className={styles.image} />
+                </div>
+                <div className={styles.info}>
+                    <div className={styles.rating}>
+                        {averageRating > 0 ? (
+                            <span className={styles.filledStar}>★ {averageRating.toFixed(1)}</span>
+                        ) : (
+                            <span className={styles.noReviews}>Немає відгуків</span>
+                        )}
+                    </div>
 
-    for (let i = 0; i < filledStars; i++) {
-      stars.push(<span key={`filled-${i}`} className={styles.filledStar}>&#9733;</span>);
-    }
-    if (hasHalfStar) {
-      stars.push(<span key="half" className={styles.halfStar}>&#9733;</span>);
-    }
-    for (let i = stars.length; i < totalStars; i++) {
-      stars.push(<span key={`empty-${i}`} className={styles.emptyStar}>&#9733;</span>);
-    }
-    return stars;
-  };
+                    <h3 className={styles.title}>{title}</h3>
+                    
+                    <p className={styles.address}>
+                        <span className={styles.iconWrapper}><LocationIcon /></span>
+                        {address}
+                    </p>
 
-  return (
-    <Link to={`/listings/${id}`} className={styles.cardLink}>
-      <div className={styles.card}>
-        <div className={styles.imageContainer}>
-          <img src={imageUrl} alt={title} className={styles.image} />
-        </div>
-        <div className={styles.info}>
-          <div className={styles.rating}>
-            {averageRating > 0 ? renderStars(averageRating) : <span className={styles.noReviews}>Немає відгуків</span>}
-          </div>
-          <h3 className={styles.title}>{title}</h3>
-          <p className={styles.address}>
-            <span className={styles.locationIcon}>&#x2302;</span> {address}
-          </p>
-          <div className={styles.priceContainer}>
-            <p className={styles.price}>{price} грн</p>
-            <button
-              className={`${styles.heartIconOnly} ${isFavorite ? styles.favorited : ''}`}
-              onClick={handleFavoriteClick}
-            >
-              <span>{isFavorite ? '♥' : '♡'}</span>
-            </button>
-          </div>
-        </div>
-      </div>
-    </Link>
-  );
+                    <div className={styles.priceContainer}>
+                        <p className={styles.price}>{price.toLocaleString()} грн</p>
+                        
+                        <button
+                            className={`${styles.heartButton} ${isFavorite ? styles.favorited : ''}`}
+                            onClick={handleFavoriteClick}
+                        >
+                            <svg viewBox="0 0 24 24" fill={isFavorite ? "#B17457" : "none"} stroke="#B17457" strokeWidth="2">
+                                <path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"></path>
+                            </svg>
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </Link>
+    );
 };
 
 export default ListingCard;
