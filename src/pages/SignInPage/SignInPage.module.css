@@ -1,11 +1,28 @@
-/* src/pages/SignInPage/SignInPage.module.css */
+.forgotPasswordWrapper {
+  text-align: right;
+  margin-bottom: 20px;
+}
+
 .forgotPasswordLink {
-  color: #B17457;
+  color: var(--accent-color);
   text-decoration: none;
   font-size: 14px;
-  transition: color 0.2s;
+  font-weight: 600;
+  transition: color var(--transition-fast);
 }
 
 .forgotPasswordLink:hover {
-  color: #9c5e44;
+  color: var(--accent-hover);
+}
+
+.errorContainer {
+  color: #d93025;
+  background-color: #fde7e9;
+  padding: 12px;
+  border-radius: 12px;
+  margin-bottom: 20px;
+  font-size: 14px;
+  text-align: center;
+  border: 1px solid #f8c9cc;
+  font-weight: 500;
 }

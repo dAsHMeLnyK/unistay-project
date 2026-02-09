@@ -31,23 +31,6 @@
     opacity: 0.8;
 }
 
-.homeButton {
-    background-color: #B17457;
-    color: white;
-    padding: 15px 40px;
-    border: none;
-    border-radius: 1000px;
-    font-size: 18px;
-    font-weight: 600;
-    cursor: pointer;
-    transition: transform 0.2s ease;
-}
-
-.homeButton:hover {
-    transform: translateY(-3px);
-    box-shadow: 0 5px 15px rgba(177, 116, 87, 0.3);
-}
-
 /* Маленька анімація будиночка */
 .houseIllustration {
     width: 100px;

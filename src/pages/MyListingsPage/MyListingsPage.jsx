@@ -1,34 +1,26 @@
 import React, { useState, useEffect } from 'react';
+import { useNavigate } from 'react-router-dom';
+import { FiEdit2, FiTrash2, FiPlus } from 'react-icons/fi';
+
 import { useAuth } from '../../context/AuthContext';
 import { ListingService } from '../../api/services/ListingService';
-import ListingCard from '../../components/listings/ListingCard/ListingCard';
-import LoadingPage from '../LoadingPage/LoadingPage';
-import styles from './MyListingsPage.module.css';
-import { useNavigate } from 'react-router-dom';
 import { getNoun } from '../../utils/wordDeclension';
 
-const Icons = {
-    Edit: () => (
-        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-            <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"></path>
-            <path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"></path>
-        </svg>
-    ),
-    Delete: () => (
-        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-            <polyline points="3 6 5 6 21 6"></polyline>
-            <path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path>
-            <line x1="10" y1="11" x2="10" y2="17"></line>
-            <line x1="14" y1="11" x2="14" y2="17"></line>
-        </svg>
-    )
-};
+import ListingCard from '../../components/listings/ListingCard/ListingCard';
+import LoadingPage from '../LoadingPage/LoadingPage';
+import Button from '../../components/common/Button/Button';
+import ConfirmModal from '../../components/common/ConfirmModal/ConfirmModal'; // Імпорт нової модалки
+import styles from './MyListingsPage.module.css';
 
 const MyListingsPage = () => {
     const { isAuthenticated, userId, loading: authLoading } = useAuth();
     const [userListings, setUserListings] = useState([]);
     const [pageLoading, setPageLoading] = useState(true);
     const [deletingId, setDeletingId] = useState(null);
+    
+    // Стан для керування модальним вікном
+    const [modalConfig, setModalConfig] = useState({ isOpen: false, targetId: null });
+    
     const navigate = useNavigate();
 
     useEffect(() => {
@@ -52,77 +44,114 @@ const MyListingsPage = () => {
         fetchMyListings();
     }, [isAuthenticated, userId, authLoading]);
 
+    // Тільки відкриває модалку
+    const handleDeleteClick = (e, id) => {
+        e.stopPropagation();
+        setModalConfig({ isOpen: true, targetId: id });
+    };
+
+    // Реальне видалення після підтвердження
+    const handleConfirmDelete = async () => {
+        const id = modalConfig.targetId;
+        if (!id) return;
+
+        setDeletingId(id);
+        try {
+            await ListingService.delete(id);
+            setUserListings(prev => prev.filter(l => l.id !== id));
+            setModalConfig({ isOpen: false, targetId: null });
+        } catch (err) {
+            console.error("Помилка видалення:", err);
+            alert("Не вдалося видалити оголошення.");
+        } finally {
+            setDeletingId(null);
+        }
+    };
+
     if (authLoading || pageLoading) return <LoadingPage />;
+
+    const EmptyState = ({ title, text, btnText, onBtnClick, restricted = false }) => (
+        <div className={styles.emptyState}>
+            <div className={styles.houseIllustration}>
+                <div className={styles.roof}></div>
+                <div className={styles.base}><div className={styles.door}></div></div>
+            </div>
+            <h3>{title}</h3>
+            <p>{text}</p>
+            <Button onClick={onBtnClick} variant={restricted ? "outline" : "primary"}>
+                {btnText}
+            </Button>
+        </div>
+    );
 
     return (
         <div className={styles.myListingsPage}>
             <div className={styles.pageContentWrapper}>
-                <header className={styles.header}>
-                    <div className={styles.titleGroup}>
-                        <h1 className={styles.title}>Мої оголошення</h1>
-                        <span className={styles.countBadge}>
-                            {userListings.length} {getNoun(userListings.length, "об'єкт", "об'єкти", "об'єктів")}
-                        </span>
+                <header className={styles.pageHeader}>
+                    <div className={styles.headerTopLine}>
+                        <div className={styles.titleWrapper}>
+                            <h1 className="page-title" style={{ textAlign: 'left', margin: 0 }}>
+                                Мої оголошення
+                            </h1>
+                            {isAuthenticated && userListings.length > 0 && (
+                                <span className={styles.countBadge}>
+                                    {userListings.length} {getNoun(userListings.length, "об'єкт", "об'єкти", "об'єктів")}
+                                </span>
+                            )}
+                        </div>
+                        {isAuthenticated && (
+                            <Button
+                                onClick={() => navigate('/add-listing')}
+                                className={styles.addListingBtn}
+                            >
+                                <FiPlus /> Додати оголошення
+                            </Button>
+                        )}
                     </div>
-                    <button className={styles.addListingButton} onClick={() => navigate('/add-listing')}>
-                        + Додати оголошення
-                    </button>
+                    <div className={styles.headerSeparator}></div>
                 </header>
 
                 {!isAuthenticated ? (
-                    <div className={styles.emptyState}>
-                        <div className={styles.houseIllustration}>
-                            <div className={styles.roof}></div>
-                            <div className={styles.base}><div className={styles.door}></div></div>
-                        </div>
-                        <h3>Доступ обмежено</h3>
-                        <p>Будь ласка, увійдіть, щоб керувати вашими оголошеннями.</p>
-                        <button className={styles.primaryBtn} onClick={() => navigate('/login')}>Увійти</button>
-                    </div>
+                    <EmptyState 
+                        title="Доступ обмежено"
+                        text="Будь ласка, увійдіть, щоб керувати вашими оголошеннями."
+                        btnText="Увійти до кабінету"
+                        onBtnClick={() => navigate('/signin')}
+                        restricted
+                    />
                 ) : userListings.length === 0 ? (
-                    <div className={styles.emptyState}>
-                        <div className={styles.houseIllustration}>
-                            <div className={styles.roof}></div>
-                            <div className={styles.base}><div className={styles.door}></div></div>
-                        </div>
-                        <h3>У вас ще немає оголошень</h3>
-                        <p>Опублікуйте своє перше оголошення, щоб почати пошук орендарів.</p>
-                        <button className={styles.primaryBtn} onClick={() => navigate('/add-listing')}>
-                            Створити оголошення
-                        </button>
-                    </div>
+                    <EmptyState 
+                        title="У вас ще немає оголошень"
+                        text="Опублікуйте своє перше оголошення, щоб почати пошук орендарів."
+                        btnText="Створити перше оголошення"
+                        onBtnClick={() => navigate('/add-listing')}
+                    />
                 ) : (
                     <div className={styles.listingsGrid}>
                         {userListings.map((listing) => (
-                            <div key={listing.id} className={styles.listingWrapper}>
+                            <div 
+                                key={listing.id} 
+                                className={`${styles.listingWrapper} ${deletingId === listing.id ? styles.isDeleting : ''}`}
+                            >
                                 <div className={styles.cardInternalWrapper}>
                                     <ListingCard listing={listing} />
                                 </div>
                                 <div className={styles.adminActions}>
                                     <button 
                                         className={styles.editBtn} 
-                                        onClick={(e) => { e.preventDefault(); navigate(`/edit-listing/${listing.id}`); }}
+                                        onClick={() => navigate(`/edit-listing/${listing.id}`)}
+                                        disabled={deletingId === listing.id}
                                     >
-                                        <Icons.Edit />
+                                        <FiEdit2 size={16} />
                                         <span>Редагувати</span>
                                     </button>
                                     <button 
                                         className={styles.deleteBtn} 
-                                        onClick={(e) => {
-                                            e.preventDefault();
-                                            if(window.confirm('Видалити це оголошення?')) {
-                                                setDeletingId(listing.id);
-                                                ListingService.delete(listing.id)
-                                                    .then(() => {
-                                                        setUserListings(prev => prev.filter(l => l.id !== listing.id));
-                                                    })
-                                                    .finally(() => setDeletingId(null));
-                                            }
-                                        }}
+                                        onClick={(e) => handleDeleteClick(e, listing.id)}
                                         disabled={deletingId === listing.id}
                                     >
-                                        <Icons.Delete />
-                                        <span>{deletingId === listing.id ? '...' : 'Видалити'}</span>
+                                        <FiTrash2 size={16} />
+                                        <span>Видалити</span>
                                     </button>
                                 </div>
                             </div>
@@ -130,6 +159,16 @@ const MyListingsPage = () => {
                     </div>
                 )}
             </div>
+
+            {/* Додаємо компонент модалки в кінець */}
+            <ConfirmModal 
+                isOpen={modalConfig.isOpen}
+                title="Видалити оголошення?"
+                message="Ви впевнені? Цю дію неможливо буде скасувати, і оголошення назавжди зникне з бази даних."
+                onConfirm={handleConfirmDelete}
+                onCancel={() => setModalConfig({ isOpen: false, targetId: null })}
+                isLoading={deletingId !== null}
+            />
         </div>
     );
 };

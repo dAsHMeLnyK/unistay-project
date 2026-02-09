@@ -1,0 +1,80 @@
+.container {
+    width: 100%;
+}
+
+.amenitiesGrid {
+    display: grid;
+    /* Адаптивна сітка: елементи підлаштовуються під ширину */
+    grid-template-columns: repeat(auto-fill, minmax(170px, 1fr));
+    gap: 12px;
+}
+
+.amenityItem {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 10px 16px;
+    background-color: var(--bg-input); /* Кремовий фон */
+    border: 1.5px solid var(--border-color);
+    border-radius: 50px; /* Повне заокруглення як у інпутів */
+    cursor: pointer;
+    transition: all var(--transition-fast);
+    user-select: none;
+}
+
+.amenityItem:hover {
+    border-color: var(--accent-color);
+    background-color: #ffffff;
+}
+
+.selected {
+    background-color: #fdf5f1 !important; /* Дуже легкий акцентний колір */
+    border-color: var(--accent-color);
+}
+
+.checkbox {
+    width: 20px;
+    height: 20px;
+    border-radius: 50%;
+    border: 2px solid var(--border-color);
+    background-color: #ffffff;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+    transition: all 0.2s;
+}
+
+.selected .checkbox {
+    border-color: var(--accent-color);
+    background-color: var(--accent-color);
+}
+
+.checkIcon {
+    color: white;
+    font-size: 14px;
+    stroke-width: 4px; /* Робимо галочку жирнішою */
+}
+
+.title {
+    font-size: 14px;
+    font-weight: 500;
+    color: var(--text-main);
+}
+
+.selected .title {
+    color: var(--accent-color);
+    font-weight: 600;
+}
+
+.loadingText {
+    font-size: 14px;
+    color: #888;
+    font-style: italic;
+}
+
+@media (max-width: 480px) {
+    .amenitiesGrid {
+        grid-template-columns: 1fr 1fr; /* На мобільних у два стовпчики */
+    }
+}

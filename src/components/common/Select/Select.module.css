@@ -1,0 +1,80 @@
+.customSelectContainer {
+    position: relative;
+    width: 100%;
+    font-family: 'Afacad', sans-serif;
+}
+
+.selectHeader {
+    width: 100%;
+    /* Зменшуємо вертикальний паддінг з 12px до 8px-10px */
+    padding: 9px 18px; 
+    background-color: var(--bg-input);
+    border: 1.5px solid var(--border-color);
+    border-radius: 50px;
+    cursor: pointer;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    font-size: 15px;
+    font-weight: 500;
+    color: var(--text-main);
+    transition: all var(--transition-fast);
+    /* Замість min-height: 44px ставимо box-sizing */
+    box-sizing: border-box;
+}
+
+.selectHeader:hover, .selectHeader.open {
+    border-color: var(--accent-color);
+    background-color: #ffffff;
+    box-shadow: 0 4px 12px rgba(177, 116, 87, 0.08);
+}
+
+.placeholder {
+    color: #a0a0a0;
+}
+
+.arrowIcon {
+    color: var(--accent-color);
+    font-size: 16px; /* Трохи менша іконка */
+    transition: transform 0.3s ease;
+}
+
+.arrowIcon.rotated {
+    transform: rotate(180deg);
+}
+
+.optionsList {
+    position: absolute;
+    top: calc(100% + 5px);
+    left: 0;
+    width: 100%;
+    background: #ffffff;
+    border: 1.5px solid var(--border-color);
+    border-radius: 18px;
+    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
+    z-index: 1000;
+    padding: 6px;
+    margin: 0;
+    list-style: none;
+    max-height: 200px;
+    overflow-y: auto;
+}
+
+.optionItem {
+    padding: 8px 14px; /* Компактніші пункти меню */
+    border-radius: 10px;
+    cursor: pointer;
+    font-size: 14px;
+    color: var(--text-main);
+    transition: all 0.2s ease;
+}
+
+.optionItem:hover {
+    background-color: rgba(177, 116, 87, 0.1);
+    color: var(--accent-color);
+}
+
+.optionItem.active {
+    background-color: var(--accent-color);
+    color: #ffffff;
+}

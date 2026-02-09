@@ -1,35 +1,43 @@
 .inputWrapper {
   display: flex;
   align-items: center;
-  /* width: 100%; */ /* Можливо, краще задавати ширину ззовні */
-  background-color: #F8F5F1; /* Колір фону, як у Figma */
-  border-radius: 1000px; /* Заокруглені кути */
-  padding: 12px 20px; /* Відступи всередині інпута */
-  margin-bottom: 20px; /* Відступ знизу, між полями */
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05); /* Легка тінь */
+  background-color: var(--bg-input); /* ПОВЕРНУЛИ ВАШ КОЛІР */
+  border: 1.5px solid var(--border-color);
+  border-radius: 50px;
+  padding: 12px 20px;
+  margin-bottom: 20px;
+  box-shadow: inset 0 1px 2px rgba(0, 0, 0, 0.02);
+  transition: all var(--transition-fast);
+}
+
+.inputWrapper:focus-within {
+  border-color: var(--accent-color);
+  background-color: #FFFFFF; /* При фокусі стає білим для зручності читання — це стандарт UI */
+  box-shadow: 0 0 0 4px rgba(177, 116, 87, 0.08);
 }
 
 .inputField {
-  flex-grow: 1; /* Займати всю доступну ширину */
+  flex-grow: 1;
   border: none;
   background-color: transparent;
-  outline: none; /* Прибираємо стандартний outline при фокусі */
+  outline: none;
   font-size: 16px;
-  color: #4A4947; /* Колір тексту */
-  font-family: 'Afacad', sans-serif; /* Використовуємо ваш шрифт */
+  color: var(--text-main); /* СИСТЕМНИЙ КОЛІР */
+  font-family: 'Afacad', sans-serif;
+  font-weight: 500;
 }
 
 .inputField::placeholder {
-  color: #8C8C8C; /* Колір плейсхолдера */
+  color: var(--text-muted); /* СИСТЕМНИЙ КОЛІР */
 }
 
-/* .inputField:focus {
-  /* Можете додати легкий outline або змінити тінь при фокусі, якщо потрібно */
-  /* box-shadow: 0 0 0 2px #B17457; 
-} */
-
 .icon {
-  margin-right: 12px; /* Відступ між іконкою та текстом */
-  color: #8C8C8C; /* Колір іконки */
-  font-size: 20px; /* Розмір іконки */
+  margin-right: 12px;
+  color: var(--text-muted); /* СИСТЕМНИЙ КОЛІР */
+  font-size: 20px;
+  transition: color var(--transition-fast);
+}
+
+.inputWrapper:focus-within .icon {
+  color: var(--accent-color); /* СИСТЕМНИЙ КОЛІР */
 }

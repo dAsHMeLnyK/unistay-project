@@ -1,6 +1,7 @@
 import React from 'react';
 import { useNavigate } from 'react-router-dom';
 import styles from './NotFoundPage.module.css';
+import Button from '../../components/common/Button/Button';
 
 const NotFoundPage = () => {
     const navigate = useNavigate();
@@ -20,12 +21,13 @@ const NotFoundPage = () => {
                 <p className={styles.description}>
                     Схоже, за цією адресою ніхто не живе. Можливо, ви помилилися посиланням або оголошення було видалено.
                 </p>
-                <button 
-                    className={styles.homeButton} 
+                <Button 
+                    variant="primary" 
                     onClick={() => navigate('/')}
+                    className={styles.homeButtonWidth}
                 >
                     Повернутися на головну
-                </button>
+                </Button>
             </div>
         </div>
     );

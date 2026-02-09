@@ -1,109 +1,107 @@
 .myListingsPage {
-    background-color: #FAF7F0;
-    min-height: calc(100vh - var(--navbar-height, 80px));
+    background-color: var(--bg-filters);
+    min-height: calc(100vh - 80px);
     width: 100%;
-    display: flex;
-    justify-content: center;
-    align-items: flex-start;
-    font-family: 'Afacad', sans-serif;
-    color: #4A4947;
-    box-sizing: border-box;
-    padding: 40px 0;
+    padding: 60px 0;
 }
 
 .pageContentWrapper {
     max-width: 1200px;
     width: 100%;
     padding: 0 40px;
-    box-sizing: border-box;
     margin: 0 auto;
 }
 
-.header {
-    display: flex;
-    justify-content: space-between;
-    align-items: flex-end;
+/* КОНТЕЙНЕР ХЕДЕРУ */
+.pageHeader {
+    width: 100%;
     margin-bottom: 40px;
-    border-bottom: 2px solid #F0EBE3;
-    padding-bottom: 20px;
-}
-
-.titleGroup {
     display: flex;
     flex-direction: column;
-    gap: 8px;
+    gap: 20px;
 }
 
-.title {
-    font-size: 36px;
-    color: #4A4947;
-    margin: 0;
-    font-weight: 700;
+.headerTopLine {
+    display: flex;
+    justify-content: space-between; /* Розносить заголовок вліво, кнопку вправо */
+    align-items: center; /* Вирівнює їх строго по центру відносно один одного */
+    width: 100%;
+}
+
+.titleWrapper {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+/* Лінія-розділювач під заголовком */
+.headerSeparator {
+    width: 100%;
+    height: 1.5px;
+    background-color: var(--border-color);
+    opacity: 0.6;
+}
+
+.addListingBtn {
+    width: auto !important;
+    min-width: 200px;
+    padding: 12px 28px !important;
+    white-space: nowrap;
+    display: flex !important;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
 }
 
 .countBadge {
-    background: #F0EBE3;
-    color: #B17457;
-    padding: 4px 12px;
-    border-radius: 20px;
+    background: rgba(177, 116, 87, 0.1);
+    color: var(--accent-color);
+    padding: 4px 14px;
+    border-radius: 50px;
     font-size: 14px;
-    font-weight: 600;
+    font-weight: 700;
     width: fit-content;
 }
 
-.addListingButton {
-    background-color: #B17457;
-    color: white;
-    border: none;
-    padding: 14px 28px;
-    border-radius: 50px;
-    font-weight: 700;
-    font-size: 16px;
-    cursor: pointer;
-    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-}
-
+/* СІТКА КАРТОК */
 .listingsGrid {
     display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+    grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
     gap: 35px;
 }
 
-/* ОСНОВНА ОБГОРТКА: тепер тінь тільки тут */
 .listingWrapper {
-    display: flex;
-    flex-direction: column;
-    background: #FAF7F0; /* Змінено з white на ваш фон */
-    border-radius: 20px;
-    box-shadow: 0 10px 25px rgba(0,0,0,0.08); /* М'якша тінь */
+    background-color: var(--bg-input);
+    border-radius: 24px;
+    border: 1.5px solid transparent; 
+    box-shadow: 0 8px 25px rgba(0, 0, 0, 0.04);
     overflow: hidden;
-    transition: transform 0.3s ease;
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
 .listingWrapper:hover {
-    transform: translateY(-5px);
+    transform: translateY(-8px);
+    border-color: rgba(177, 116, 87, 0.3); 
+    box-shadow: 0 15px 45px rgba(177, 116, 87, 0.12);
 }
 
-/* ФІКС ВНУТРІШНЬОЇ КАРТКИ: прибираємо її власні тіні та фони */
-.cardInternalWrapper [class*="card"] {
+.cardInternalWrapper :global(.listing-card) {
     box-shadow: none !important;
     background: transparent !important;
-    border-radius: 0 !important;
-    transform: none !important; /* щоб не дьоргалась окремо від обгортки */
+    border: none !important;
 }
 
+/* КНОПКИ КЕРУВАННЯ */
 .adminActions {
     display: grid;
     grid-template-columns: 1fr 1fr;
-    gap: 10px;
-    padding: 20px 15px 15px;
-    background: #FAF7F0; /* Змінено на ваш фон */
-    border-top: 1px solid #F0EBE3; /* Залишаємо тонку лінію для розділення */
+    gap: 1px;
+    background: var(--border-color);
+    border-top: 1.5px solid var(--border-color);
 }
 
 .editBtn, .deleteBtn {
-    padding: 10px;
-    border-radius: 12px;
+    padding: 14px;
     border: none;
     font-size: 14px;
     font-weight: 600;
@@ -112,79 +110,42 @@
     align-items: center;
     justify-content: center;
     gap: 8px;
+    background-color: var(--bg-input);
+    color: var(--text-main);
     transition: all 0.2s ease;
+    font-family: 'Afacad', sans-serif;
 }
 
-.editBtn { background: #E0E0E0; color: #4A4947; }
-.deleteBtn { background: #f8d7da; color: #dc3545; }
-
-.editBtn:hover, .deleteBtn:hover {
-    opacity: 0.8;
+.editBtn:hover {
+    background-color: #ffffff;
+    color: var(--accent-color);
 }
 
-/* Решта стилів для іконок та empty state */
-.editBtn svg, .deleteBtn svg { flex-shrink: 0; }
-.editBtn:focus, .deleteBtn:focus { outline: none; }
+.deleteBtn { color: #cc4444; }
+.deleteBtn:hover {
+    background-color: #fff1f1;
+    color: #e53e3e;
+}
 
+/* EMPTY STATE */
 .emptyState {
     display: flex;
     flex-direction: column;
     align-items: center;
-    justify-content: center;
-    padding: 80px 20px;
+    padding: 100px 40px;
     text-align: center;
-    background: #FAF7F0;
-    border-radius: 30px;
-    border: 2px dashed #E0DCD0;
-    margin-top: 20px;
+    background: rgba(255, 255, 255, 0.3);
+    border-radius: 40px;
+    border: 2px dashed var(--border-color);
 }
 
-.houseIllustration {
-    width: 80px;
-    height: 80px;
-    margin-bottom: 24px;
-    position: relative;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
+@media (max-width: 768px) {
+    .headerTopLine {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 24px;
+    }
+    .addListingBtn {
+        width: 100% !important;
+    }
 }
-
-.roof {
-    width: 0;
-    height: 0;
-    border-left: 40px solid transparent;
-    border-right: 40px solid transparent;
-    border-bottom: 30px solid #4A4947;
-}
-
-.base {
-    width: 60px;
-    height: 40px;
-    background-color: #B17457;
-    position: relative;
-    display: flex;
-    justify-content: center;
-    align-items: flex-end;
-    border-radius: 0 0 4px 4px;
-}
-
-.door {
-    width: 16px;
-    height: 22px;
-    background-color: #FAF7F0;
-    border-radius: 3px 3px 0 0;
-}
-
-.primaryBtn {
-    background: #B17457;
-    color: #fff;
-    border: none;
-    padding: 12px 30px;
-    border-radius: 30px;
-    font-weight: 700;
-    cursor: pointer;
-    margin-top: 20px;
-    transition: background 0.2s;
-}
-
-.primaryBtn:hover { background: #9c5e44; }

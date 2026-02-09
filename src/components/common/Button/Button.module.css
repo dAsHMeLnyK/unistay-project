@@ -1,41 +1,62 @@
 .button {
-  padding: 12px 24px; /* Трохи зменшено вертикальні та горизонтальні відступи */
-  border: none;
-  border-radius: 1000px; /* Заокруглення "пігулкою" */
-  font-size: 16px; /* Зменшено розмір шрифту */
-  cursor: pointer;
-  transition: background-color 0.2s, transform 0.1s;
-  font-weight: 500;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  padding: 12px 28px;
+  border-radius: 50px;
   font-family: 'Afacad', sans-serif;
-  min-width: 180px; /* Трохи зменшено мінімальну ширину */
-  height: auto; /* Автоматична висота */
+  font-size: 17px;
+  font-weight: 700;
+  cursor: pointer;
+  transition: all var(--transition-fast);
+  border: 2px solid transparent;
+  width: 100%;
 }
 
-.button:active {
-  transform: scale(0.98);
-}
-
+/* Головна кнопка (Коричнева) */
 .primary {
-  background-color: #B17457;
-  color: #FAF7F0;
+  background-color: var(--accent-color);
+  color: var(--bg-main);
 }
 
 .primary:hover:not(:disabled) {
-  background-color: #9c5e44;
+  background-color: var(--accent-hover);
+  transform: var(--hover-lift);
+  box-shadow: 0 8px 20px rgba(177, 116, 87, 0.25);
 }
 
+/* Другорядна кнопка (Прозора з рамкою) */
+.outline {
+  background-color: transparent;
+  border-color: var(--accent-color);
+  color: var(--accent-color);
+}
+
+.outline:hover:not(:disabled) {
+  background-color: var(--accent-color);
+  color: #FAF7F0;
+  transform: var(--hover-lift);
+}
+
+/* Кнопка Скасувати (Нейтральна) */
 .secondary {
   background-color: transparent;
-  color: #B17457;
-  border: 1px solid #B17457;
+  border-color: var(--border-color);
+  color: var(--text-main);
 }
 
 .secondary:hover:not(:disabled) {
-  background-color: #FAF7F0;
+  background-color: var(--bg-input);
+  border-color: var(--text-muted);
+  transform: var(--hover-lift);
 }
 
+/* Стан заблокованої кнопки */
 .button:disabled {
-  background-color: #D8D2C2;
-  color: #4A4947;
+  background-color: var(--border-color);
+  border-color: var(--border-color);
+  color: var(--text-muted);
   cursor: not-allowed;
+  transform: none;
 }

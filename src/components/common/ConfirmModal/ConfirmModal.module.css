@@ -1,0 +1,105 @@
+.modalOverlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: rgba(74, 73, 71, 0.4); /* Використав ваш --text-main для затінення */
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 2000;
+    backdrop-filter: blur(4px);
+    animation: fadeIn 0.2s ease;
+}
+
+.modalContent {
+    background-color: var(--bg-input); /* Ваш колір фону */
+    padding: 40px;
+    border-radius: 24px; /* Як у карток оголошень */
+    width: 90%;
+    max-width: 420px;
+    position: relative;
+    border: 1.5px solid var(--border-color);
+    box-shadow: 0 15px 45px rgba(0, 0, 0, 0.08);
+    animation: slideUp 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.closeBtn {
+    position: absolute;
+    top: 20px;
+    right: 20px;
+    background: none;
+    border: none;
+    font-size: 22px;
+    color: var(--text-muted);
+    cursor: pointer;
+    transition: var(--transition-fast);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.closeBtn:hover {
+    color: var(--text-main);
+    transform: rotate(90deg);
+}
+
+.iconWrapper {
+    width: 64px;
+    height: 64px;
+    background: rgba(204, 68, 68, 0.1); /* Прозорий червоний */
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin: 0 auto 20px;
+}
+
+.warningIcon {
+    font-size: 30px;
+    color: var(--danger-color);
+}
+
+.title {
+    font-size: 1.5rem;
+    font-weight: 700;
+    color: var(--text-main);
+    margin-bottom: 12px;
+    text-align: center;
+}
+
+.message {
+    color: var(--text-muted);
+    line-height: 1.6;
+    text-align: center;
+    margin-bottom: 30px;
+}
+
+.actions {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 15px;
+}
+
+/* Кнопка видалення в модалці */
+.deleteBtnAction {
+    background-color: var(--danger-color) !important;
+    border-color: var(--danger-color) !important;
+    color: white !important;
+}
+
+.deleteBtnAction:hover {
+    background-color: var(--danger-hover) !important;
+    transform: var(--hover-lift);
+}
+
+@keyframes fadeIn {
+    from { opacity: 0; }
+    to { opacity: 1; }
+}
+
+@keyframes slideUp {
+    from { transform: translateY(30px); opacity: 0; }
+    to { transform: translateY(0); opacity: 1; }
+}

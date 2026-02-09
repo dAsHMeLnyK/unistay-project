@@ -1,0 +1,23 @@
+.layoutWrapper {
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+  width: 100%;
+}
+
+.mainContainer {
+  flex: 1;
+  padding-top: 100px; /* Відступ під Navbar */
+  width: 100%;
+  display: flex;
+  justify-content: center; /* Центруємо вміст */
+}
+
+/* Додайте цей клас прямо сюди, щоб він точно працював */
+.contentContainer {
+  max-width: 1240px;
+  width: 100%;
+  margin: 0 auto;
+  padding: 0 20px;
+  box-sizing: border-box;
+}

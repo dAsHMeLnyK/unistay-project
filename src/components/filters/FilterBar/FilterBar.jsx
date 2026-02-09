@@ -1,69 +1,87 @@
 import React from 'react';
 import styles from './FilterBar.module.css';
+import Button from '../../common/Button/Button';
+import Select from '../../common/Select/Select';
+import { 
+    FiFilter, FiHome, FiZap, FiUsers, 
+    FiUserCheck, FiChevronDown, FiChevronUp, FiRefreshCw 
+} from 'react-icons/fi';
 
 const FilterBar = ({ filters, onFilterChange, onResetFilters, showFilters, onToggleFilters }) => {
+    
+    const options = {
+        type: [
+            { value: "", label: "Усі типи" },
+            { value: "1", label: "Квартира" },
+            { value: "2", label: "Кімната" },
+            { value: "0", label: "Будинок" }
+        ],
+        utility: [
+            { value: "", label: "Усі варіанти" },
+            { value: "1", label: "Окремо" },
+            { value: "0", label: "Включено" }
+        ],
+        owners: [
+            { value: "", label: "Усі" },
+            { value: "0", label: "З господарями" },
+            { value: "1", label: "Без господарів" }
+        ],
+        neighbors: [
+            { value: "", label: "Усі" },
+            { value: "0", label: "З сусідами" },
+            { value: "1", label: "Без сусідів" }
+        ]
+    };
+
     return (
         <div className={styles.filterBarContainer}>
             <div className={styles.headerControls}>
-                <button className={styles.filterToggleButton} onClick={onToggleFilters}>
-                    Фільтри {showFilters ? '▲' : '▼'}
-                </button>
+                <Button 
+                    variant={showFilters ? 'primary' : 'outline'} 
+                    onClick={onToggleFilters}
+                    className={styles.filterToggleButton}
+                >
+                    <FiFilter />
+                    Фільтри {showFilters ? <FiChevronUp /> : <FiChevronDown />}
+                </Button>
             </div>
 
             {showFilters && (
                 <div className={styles.filtersSection}>
                     <div className={styles.filterRow}>
-                        {/* Тип житла: House=0, Apartment=1, Room=2 */}
                         <div className={styles.formGroup}>
-                            <label htmlFor="type">Тип житла</label>
-                            <select id="type" name="type" value={filters.type} onChange={onFilterChange}>
-                                <option value="">Усі</option>
-                                <option value="1">Квартира</option>
-                                <option value="2">Кімната</option>
-                                <option value="0">Будинок</option>
-                            </select>
+                            <label><FiHome className={styles.labelIcon} /> Тип житла</label>
+                            <Select name="type" value={filters.type} onChange={onFilterChange} options={options.type} />
                         </div>
 
-                        {/* Комунальні: Included=0, Separate=1 */}
                         <div className={styles.formGroup}>
-                            <label htmlFor="utilityPaymentType">Комунальні послуги</label>
-                            <select id="utilityPaymentType" name="utilityPaymentType" value={filters.utilityPaymentType} onChange={onFilterChange}>
-                                <option value="">Усі</option>
-                                <option value="1">Окремо</option>
-                                <option value="0">Включено</option>
-                            </select>
+                            <label><FiZap className={styles.labelIcon} /> Комунальні</label>
+                            <Select name="utilityPaymentType" value={filters.utilityPaymentType} onChange={onFilterChange} options={options.utility} />
                         </div>
 
-                        {/* Власники: With=0, Without=1 */}
                         <div className={styles.formGroup}>
-                            <label htmlFor="ownerOccupancy">Власники</label>
-                            <select id="ownerOccupancy" name="ownerOccupancy" value={filters.ownerOccupancy} onChange={onFilterChange}>
-                                <option value="">Усі</option>
-                                <option value="0">З господарями</option>
-                                <option value="1">Без господарів</option>
-                            </select>
+                            <label><FiUserCheck className={styles.labelIcon} /> Власники</label>
+                            <Select name="ownerOccupancy" value={filters.ownerOccupancy} onChange={onFilterChange} options={options.owners} />
                         </div>
 
-                        {/* Сусіди: With=0, Without=1 */}
                         <div className={styles.formGroup}>
-                            <label htmlFor="neighborInfo">Сусіди</label>
-                            <select id="neighborInfo" name="neighborInfo" value={filters.neighborInfo} onChange={onFilterChange}>
-                                <option value="">Усі</option>
-                                <option value="0">З сусідами</option>
-                                <option value="1">Без сусідів</option>
-                            </select>
+                            <label><FiUsers className={styles.labelIcon} /> Сусіди</label>
+                            <Select name="neighborInfo" value={filters.neighborInfo} onChange={onFilterChange} options={options.neighbors} />
                         </div>
 
                         <div className={`${styles.formGroup} ${styles.priceRangeGroup}`}>
-                            <label>Ціна</label>
+                            <label>Ціна (грн)</label>
                             <div className={styles.priceInputs}>
-                                <input type="number" name="minPrice" value={filters.minPrice} onChange={onFilterChange} placeholder="Від" />
-                                <input type="number" name="maxPrice" value={filters.maxPrice} onChange={onFilterChange} placeholder="До" />
+                                <input type="number" name="minPrice" value={filters.minPrice} onChange={onFilterChange} placeholder="Від" className={styles.priceInput} />
+                                <input type="number" name="maxPrice" value={filters.maxPrice} onChange={onFilterChange} placeholder="До" className={styles.priceInput} />
                             </div>
                         </div>
                     </div>
+
                     <div className={styles.filterButtons}>
-                        <button className={styles.resetButton} onClick={onResetFilters}>Скинути фільтри</button>
+                        <Button variant="outline" onClick={onResetFilters} className={styles.resetButton}>
+                            <FiRefreshCw /> Скинути фільтри
+                        </Button>
                     </div>
                 </div>
             )}

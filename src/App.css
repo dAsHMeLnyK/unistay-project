@@ -1,37 +1,46 @@
-#root {
-  /* Прибираємо max-width та padding, щоб дозволити додатку займати всю ширину */
-  /* max-width: 1280px; */
-  /* margin: 0 auto; */
-  /* padding: 2rem; */
-  text-align: center; /* Це можна залишити, якщо потрібно глобальне центрування тексту */
+/* App.css */
 
-  /* Додаємо ширину 100% та min-height, щоб #root займав весь простір */
-  width: 100%; /* <--- ДОДАНО */
-  min-height: 100vh; /* <--- ДОДАНО: Щоб #root займав всю висоту вікна */
+/* Контейнер заголовка (використовуйте на кожній сторінці) */
+.page-title-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  margin-bottom: 45px;
+  gap: 12px;
+  width: 100%;
 }
 
-/* Решта ваших стилів App.css залишається без змін */
-
-
-@keyframes logo-spin {
-  from {
-    transform: rotate(0deg);
-  }
-  to {
-    transform: rotate(360deg);
-  }
+.page-title {
+  font-family: 'Afacad', sans-serif;
+  font-size: 42px;
+  font-weight: 600;
+  color: var(--text-main);
+  letter-spacing: -0.01em;
+  margin: 0;
 }
 
-@media (prefers-reduced-motion: no-preference) {
-  a:nth-of-type(2) .logo {
-    animation: logo-spin infinite 20s linear;
-  }
+.page-subtitle {
+  font-size: 18px;
+  color: #8C8C8C;
+  max-width: 600px;
+  line-height: 1.5;
+  margin: 0;
 }
 
-.card {
-  padding: 2em;
+/* Глобальна сітка для карток (використовуйте всюди) */
+.cards-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+  gap: 30px;
+  margin-top: 30px;
 }
 
-.read-the-docs {
-  color: #888;
+/* App.css */
+.content-card {
+  background: #ffffff;
+  border-radius: 16px;
+  border: 1px solid var(--border-color);
+  padding: 24px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.03);
 }

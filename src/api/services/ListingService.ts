@@ -34,6 +34,10 @@ export const ListingService = {
     return await api.post("/listings", data);
   },
 
+  update: async (id: string, data: Partial<CreateListingDto>): Promise<ListingDto> => {
+    return await api.put(`/listings/${id}`, data);
+  },
+
   // Додати зображення до оголошення
   addImage: async (listingId: string, imageUrl: string): Promise<any> => {
     return await api.post(`/listings/${listingId}/images`, { imageUrl });

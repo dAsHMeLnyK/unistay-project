@@ -1,12 +1,13 @@
-import React, { useState, useEffect, useRef, useCallback } from 'react';
+import React, { useState, useEffect, useRef, useCallback, useMemo } from 'react';
 import { MapContainer, TileLayer, Marker, useMapEvents, useMap } from 'react-leaflet';
 import L from 'leaflet';
-import styles from './AddListingPage.module.css';
+import { FiSearch, FiMaximize2, FiMapPin } from 'react-icons/fi';
+import styles from './AddressPicker.module.css';
 
-// Іконки Leaflet
 import markerIcon from 'leaflet/dist/images/marker-icon.png';
 import markerShadow from 'leaflet/dist/images/marker-shadow.png';
 
+// Налаштування іконки маркера
 let DefaultIcon = L.icon({
     iconUrl: markerIcon,
     shadowUrl: markerShadow,
@@ -15,15 +16,18 @@ let DefaultIcon = L.icon({
 });
 L.Marker.prototype.options.icon = DefaultIcon;
 
+// Допоміжний компонент для керування виглядом карти
 function ChangeView({ center, zoom }) {
     const map = useMap();
-    map.setView(center, zoom || 16);
+    useEffect(() => {
+        map.setView(center, zoom || 16);
+    }, [center, zoom, map]);
     return null;
 }
 
-const AddressPicker = ({ onAddressChange, lat, lng }) => {
-    const [position, setPosition] = useState([lat, lng]);
-    const [searchQuery, setSearchQuery] = useState('');
+const AddressPicker = ({ onAddressChange, lat, lng, address }) => {
+    const [position, setPosition] = useState([lat || 50.3291, lng || 26.5126]);
+    const [searchQuery, setSearchQuery] = useState(address || '');
     const [isModalOpen, setIsModalOpen] = useState(false);
     const [suggestions, setSuggestions] = useState([]);
     const [showSuggestions, setShowSuggestions] = useState(false);
@@ -31,6 +35,20 @@ const AddressPicker = ({ onAddressChange, lat, lng }) => {
 
     const OSTROH_BOUNDS = "26.4819,50.3121,26.5542,50.3475";
 
+    // Оновлюємо внутрішній стан, тільки якщо пропси реально змінилися (наприклад, при завантаженні з БД)
+    useEffect(() => {
+        if (lat && lng && (lat !== position[0] || lng !== position[1])) {
+            setPosition([lat, lng]);
+        }
+    }, [lat, lng]);
+
+    useEffect(() => {
+        if (address !== undefined && address !== searchQuery) {
+            setSearchQuery(address);
+        }
+    }, [address]);
+
+    // Закриття підказок при кліку поза полем
     useEffect(() => {
         const handleClickOutside = (event) => {
             if (suggestionsRef.current && !suggestionsRef.current.contains(event.target)) {
@@ -57,7 +75,7 @@ const AddressPicker = ({ onAddressChange, lat, lng }) => {
         } catch (error) {
             console.error("Nominatim error:", error);
         }
-    }, [OSTROH_BOUNDS]);
+    }, []);
 
     const handleInputChange = (e) => {
         setSearchQuery(e.target.value);
@@ -68,25 +86,16 @@ const AddressPicker = ({ onAddressChange, lat, lng }) => {
         const nLat = parseFloat(item.lat);
         const nLon = parseFloat(item.lon);
         setPosition([nLat, nLon]);
-        
         const parts = item.display_name.split(',');
         const shortName = parts[0] + (parts[1] ? ', ' + parts[1] : '');
-        
         setSearchQuery(shortName);
         onAddressChange(shortName, nLat, nLon);
         setShowSuggestions(false);
     };
 
-    const handleKeyDown = (e) => {
-        if (e.key === 'Enter') {
-            e.preventDefault(); // ВАЖЛИВО: щоб не сабмітити форму
-            if (suggestions.length > 0) selectSuggestion(suggestions[0]);
-        } else if (e.key === 'Escape') {
-            setShowSuggestions(false);
-        }
-    };
-
     const updateLocation = async (newLat, newLng) => {
+        if (newLat === position[0] && newLng === position[1]) return;
+        
         setPosition([newLat, newLng]);
         try {
             const response = await fetch(
@@ -104,49 +113,71 @@ const AddressPicker = ({ onAddressChange, lat, lng }) => {
     };
 
     const MapEvents = () => {
-        useMapEvents({ click(e) { updateLocation(e.latlng.lat, e.latlng.lng); } });
+        useMapEvents({ 
+            click(e) { updateLocation(e.latlng.lat, e.latlng.lng); } 
+        });
         return null;
     };
 
-    const RenderMap = ({ zoomLevel }) => (
-        <MapContainer center={position} zoom={zoomLevel} scrollWheelZoom={true} style={{ height: '100%', width: '100%' }}>
+    // Оптимізація: Карта не перемальовується при зміні formData.title або formData.description
+    const MapView = useCallback(({ zoomLevel }) => (
+        <MapContainer 
+            center={position} 
+            zoom={zoomLevel} 
+            scrollWheelZoom={false} // ФІКС: вимкнено зум при скролі сторінки
+            style={{ height: '100%', width: '100%' }}
+        >
             <TileLayer url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png" />
-            <Marker position={position} draggable={true} eventHandlers={{
-                dragend: (e) => updateLocation(e.target.getLatLng().lat, e.target.getLatLng().lng)
-            }} />
+            <Marker 
+                position={position} 
+                draggable={true} 
+                eventHandlers={{
+                    dragend: (e) => updateLocation(e.target.getLatLng().lat, e.target.getLatLng().lng)
+                }} 
+            />
             <MapEvents />
             <ChangeView center={position} zoom={zoomLevel} />
         </MapContainer>
-    );
+    ), [position]);
+
+    // Використовуємо useMemo для прев'ю карти, щоб вона була стабільною
+    const memoizedMapPreview = useMemo(() => <MapView zoomLevel={15} />, [position, MapView]);
 
     return (
         <div className={styles.addressPickerWrapper}>
             <div className={styles.searchBarContainer} ref={suggestionsRef}>
-                <input 
-                    type="text" 
-                    className={styles.mapInput}
-                    value={searchQuery}
-                    onChange={handleInputChange}
-                    onKeyDown={handleKeyDown}
-                    onFocus={() => searchQuery.length >= 3 && setShowSuggestions(true)}
-                    placeholder="Введіть вулицю та номер будинку..."
-                />
+                <div className={styles.inputWrapper}>
+                    <FiSearch className={styles.searchIcon} />
+                    <input 
+                        type="text" 
+                        className={styles.mapInput}
+                        value={searchQuery}
+                        onChange={handleInputChange}
+                        onKeyDown={(e) => e.key === 'Enter' && e.preventDefault()}
+                        onFocus={() => searchQuery.length >= 3 && setShowSuggestions(true)}
+                        placeholder="Вулиця та номер будинку в Острозі..."
+                    />
+                </div>
                 {showSuggestions && suggestions.length > 0 && (
                     <ul className={styles.suggestionsList}>
                         {suggestions.map((item, i) => (
-                            <li key={i} onClick={() => selectSuggestion(item)}>📍 {item.display_name}</li>
+                            <li key={i} onClick={() => selectSuggestion(item)}>
+                                <FiMapPin className={styles.pinIcon} /> {item.display_name}
+                            </li>
                         ))}
                     </ul>
                 )}
             </div>
 
             <div className={styles.mapControls}>
-                <p className={styles.mapHint}>* Клікніть на будівлю для точності</p>
-                <button type="button" className={styles.expandBtn} onClick={() => setIsModalOpen(true)}>На весь екран ⤢</button>
+                <p className={styles.mapHint}>* Клікніть на будівлю на карті для точності</p>
+                <button type="button" className={styles.expandBtn} onClick={() => setIsModalOpen(true)}>
+                    <FiMaximize2 /> На весь екран
+                </button>
             </div>
             
-            <div className={styles.mapContainerStyle}>
-                <RenderMap zoomLevel={15} />
+            <div className={styles.mapPreviewContainer}>
+                {memoizedMapPreview}
             </div>
 
             {isModalOpen && (
@@ -154,16 +185,18 @@ const AddressPicker = ({ onAddressChange, lat, lng }) => {
                     <div className={styles.modalContent}>
                         <div className={styles.modalHeader}>
                             <div className={styles.modalTitleBlock}>
-                                <h3>Локація в Острозі</h3>
-                                <p className={styles.currentAddressPreview}>{searchQuery || "Оберіть точку"}</p>
+                                <h3>Оберіть точне місце</h3>
+                                <p className={styles.currentAddressPreview}>{searchQuery || "Оберіть точку на карті"}</p>
                             </div>
                             <button onClick={() => setIsModalOpen(false)} className={styles.closeModal}>&times;</button>
                         </div>
                         <div className={styles.fullScreenMap}>
-                            <RenderMap zoomLevel={18} />
+                            <MapView zoomLevel={18} />
                         </div>
                         <div className={styles.modalFooter}>
-                            <button type="button" onClick={() => setIsModalOpen(false)} className={styles.confirmBtn}>Готово</button>
+                            <button type="button" onClick={() => setIsModalOpen(false)} className={styles.confirmBtn}>
+                                Підтвердити локацію
+                            </button>
                         </div>
                     </div>
                 </div>
