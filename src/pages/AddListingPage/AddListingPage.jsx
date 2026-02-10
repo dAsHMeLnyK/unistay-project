@@ -50,15 +50,30 @@ const AddListingPage = () => {
     return (
         <div className={styles.addListingPage}>
             <div className={styles.pageContentWrapper}>
-                <h1>Створити оголошення</h1>
+                {/* УНІФІКОВАНИЙ ЗАГОЛОВОК */}
+                <header className="page-header">
+                    <h1 className="page-title">Створити оголошення</h1>
+                    <p className="page-subtitle">
+                        Опишіть ваше житло якомога детальніше, щоб зацікавити порядних орендарів
+                    </p>
+                </header>
+
                 <ListingForm 
-                    formData={formData} setFormData={setFormData} onSubmit={handleSubmit}
-                    dbAmenities={dbAmenities} imageUrls={imageUrls} setImageUrls={setImageUrls}
-                    isUploading={isUploading} setIsUploading={setIsUploading}
-                    isSubmitting={isSubmitting} submitText="Опублікувати"
+                    formData={formData} 
+                    setFormData={setFormData} 
+                    onSubmit={handleSubmit}
+                    onCancel={() => navigate(-1)} // Додаємо можливість скасування
+                    dbAmenities={dbAmenities} 
+                    imageUrls={imageUrls} 
+                    setImageUrls={setImageUrls}
+                    isUploading={isUploading} 
+                    setIsUploading={setIsUploading}
+                    isSubmitting={isSubmitting} 
+                    submitText="Опублікувати оголошення"
                 />
             </div>
         </div>
     );
 };
+
 export default AddListingPage;

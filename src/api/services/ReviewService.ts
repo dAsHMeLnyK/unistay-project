@@ -1,41 +1,26 @@
-import { HttpClient } from "../HttpClient";
-import {
-  ReviewDto,
-  CreateReviewDto,
-  UpdateReviewDto,
-} from "../dto/ReviewDto";
+import api from "../HttpClient";
+import { ReviewDto } from "../dto/ReviewDto";
 
-class ReviewService {
-  private httpClient = new HttpClient({
-    baseURL: "http://localhost:5113/api",
-  });
+const ReviewService = {
+  getForListing: async (listingId: string): Promise<ReviewDto[]> => {
+    return await api.get(`/listings/${listingId}/reviews`);
+  },
 
-  async getById(reviewId: string): Promise<ReviewDto> {
-    return await this.httpClient.get<ReviewDto>(`/reviews/${reviewId}`);
+  createForListing: async (listingId: string, data: { rating: number; comment: string }): Promise<ReviewDto> => {
+    // Синхронізовано з CreateReviewCommand на бекенді
+    const payload = {
+      ListingId: listingId,
+      Rating: data.rating,
+      Comment: data.comment
+    };
+    
+    return await api.post(`/listings/${listingId}/reviews`, payload);
+  },
+
+  delete: async (reviewId: string): Promise<void> => {
+    // Відповідає DeleteReviewCommand
+    await api.delete(`/reviews/${reviewId}`);
   }
+};
 
-  async getForListing(listingId: string): Promise<ReviewDto[]> {
-    return await this.httpClient.get<ReviewDto[]>(`/listings/${listingId}/reviews`);
-  }
-
-  async getByUser(userId: string): Promise<ReviewDto[]> {
-    return await this.httpClient.get<ReviewDto[]>(`/users/${userId}/reviews`);
-  }
-
-  async createForListing(listingId: string, data: Omit<CreateReviewDto, "listingId">): Promise<ReviewDto> {
-    return await this.httpClient.post<ReviewDto, Omit<CreateReviewDto, "listingId">>(
-      `/listings/${listingId}/reviews`,
-      data
-    );
-  }
-
-  async update(reviewId: string, data: UpdateReviewDto): Promise<ReviewDto> {
-    return await this.httpClient.put<ReviewDto, UpdateReviewDto>(`/reviews/${reviewId}`, data);
-  }
-
-  async delete(reviewId: string): Promise<void> {
-    await this.httpClient.delete<void>(`/reviews/${reviewId}`);
-  }
-}
-
-export default new ReviewService();
+export default ReviewService;

@@ -9,7 +9,7 @@ import { getNoun } from '../../utils/wordDeclension';
 import ListingCard from '../../components/listings/ListingCard/ListingCard';
 import LoadingPage from '../LoadingPage/LoadingPage';
 import Button from '../../components/common/Button/Button';
-import ConfirmModal from '../../components/common/ConfirmModal/ConfirmModal'; // Імпорт нової модалки
+import ConfirmModal from '../../components/common/ConfirmModal/ConfirmModal';
 import styles from './MyListingsPage.module.css';
 
 const MyListingsPage = () => {
@@ -17,8 +17,6 @@ const MyListingsPage = () => {
     const [userListings, setUserListings] = useState([]);
     const [pageLoading, setPageLoading] = useState(true);
     const [deletingId, setDeletingId] = useState(null);
-    
-    // Стан для керування модальним вікном
     const [modalConfig, setModalConfig] = useState({ isOpen: false, targetId: null });
     
     const navigate = useNavigate();
@@ -44,24 +42,20 @@ const MyListingsPage = () => {
         fetchMyListings();
     }, [isAuthenticated, userId, authLoading]);
 
-    // Тільки відкриває модалку
     const handleDeleteClick = (e, id) => {
         e.stopPropagation();
         setModalConfig({ isOpen: true, targetId: id });
     };
 
-    // Реальне видалення після підтвердження
     const handleConfirmDelete = async () => {
         const id = modalConfig.targetId;
         if (!id) return;
-
         setDeletingId(id);
         try {
             await ListingService.delete(id);
             setUserListings(prev => prev.filter(l => l.id !== id));
             setModalConfig({ isOpen: false, targetId: null });
         } catch (err) {
-            console.error("Помилка видалення:", err);
             alert("Не вдалося видалити оголошення.");
         } finally {
             setDeletingId(null);
@@ -69,20 +63,6 @@ const MyListingsPage = () => {
     };
 
     if (authLoading || pageLoading) return <LoadingPage />;
-
-    const EmptyState = ({ title, text, btnText, onBtnClick, restricted = false }) => (
-        <div className={styles.emptyState}>
-            <div className={styles.houseIllustration}>
-                <div className={styles.roof}></div>
-                <div className={styles.base}><div className={styles.door}></div></div>
-            </div>
-            <h3>{title}</h3>
-            <p>{text}</p>
-            <Button onClick={onBtnClick} variant={restricted ? "outline" : "primary"}>
-                {btnText}
-            </Button>
-        </div>
-    );
 
     return (
         <div className={styles.myListingsPage}>
@@ -103,6 +83,7 @@ const MyListingsPage = () => {
                             <Button
                                 onClick={() => navigate('/add-listing')}
                                 className={styles.addListingBtn}
+                                variant="primary"
                             >
                                 <FiPlus /> Додати оголошення
                             </Button>
@@ -111,23 +92,13 @@ const MyListingsPage = () => {
                     <div className={styles.headerSeparator}></div>
                 </header>
 
-                {!isAuthenticated ? (
-                    <EmptyState 
-                        title="Доступ обмежено"
-                        text="Будь ласка, увійдіть, щоб керувати вашими оголошеннями."
-                        btnText="Увійти до кабінету"
-                        onBtnClick={() => navigate('/signin')}
-                        restricted
-                    />
-                ) : userListings.length === 0 ? (
-                    <EmptyState 
-                        title="У вас ще немає оголошень"
-                        text="Опублікуйте своє перше оголошення, щоб почати пошук орендарів."
-                        btnText="Створити перше оголошення"
-                        onBtnClick={() => navigate('/add-listing')}
-                    />
+                {userListings.length === 0 ? (
+                    <div className={styles.emptyState}>
+                        <p className="page-subtitle">У вас ще немає створених оголошень.</p>
+                        <Button onClick={() => navigate('/add-listing')}>Створити перше</Button>
+                    </div>
                 ) : (
-                    <div className={styles.listingsGrid}>
+                    <div className="cards-grid">
                         {userListings.map((listing) => (
                             <div 
                                 key={listing.id} 
@@ -160,11 +131,10 @@ const MyListingsPage = () => {
                 )}
             </div>
 
-            {/* Додаємо компонент модалки в кінець */}
             <ConfirmModal 
                 isOpen={modalConfig.isOpen}
                 title="Видалити оголошення?"
-                message="Ви впевнені? Цю дію неможливо буде скасувати, і оголошення назавжди зникне з бази даних."
+                message="Ви впевнені? Цю дію неможливо буде скасувати."
                 onConfirm={handleConfirmDelete}
                 onCancel={() => setModalConfig({ isOpen: false, targetId: null })}
                 isLoading={deletingId !== null}

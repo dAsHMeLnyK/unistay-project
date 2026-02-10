@@ -1,6 +1,5 @@
 import { UserSummaryDto } from "./UserDto";
 
-
 export interface ReviewDto {
   id: string;
   listingId: string;
@@ -8,16 +7,16 @@ export interface ReviewDto {
   user?: UserSummaryDto | null;
   rating: number;
   comment: string;
-  publicationDate: string; // ISO string
+  publicationDate: string;
 }
 
 export interface CreateReviewDto {
-  listingId: string;
-  rating: number;
-  comment: string;
+  ListingId: string;  // Велика літера для відповідності C# record
+  Rating: number;
+  Comment: string;
 }
 
 export interface UpdateReviewDto {
-  rating: number;
-  comment: string;
+  Rating?: number;
+  Comment?: string;
 }

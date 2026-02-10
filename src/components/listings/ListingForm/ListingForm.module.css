@@ -42,21 +42,81 @@
     color: var(--text-main);
 }
 
-.customInput, .customTextarea {
-    width: 100%;
-    padding: 12px 20px;
+/* СИСТЕМНИЙ СТИЛЬ ОБГОРТКИ */
+.inputWrapper {
+    display: flex;
+    align-items: center;
+    background-color: var(--bg-input);
     border: 1.5px solid var(--border-color);
     border-radius: 50px;
-    background-color: var(--bg-input);
-    font-family: inherit;
-    outline: none;
-    box-sizing: border-box;
+    padding: 12px 20px;
+    box-shadow: inset 0 1px 2px rgba(0, 0, 0, 0.02);
+    transition: all 0.2s ease;
 }
 
-.customTextarea {
-    border-radius: 20px;
+/* МАГІЯ ФОКУСУ: Стає білим */
+.inputWrapper:focus-within {
+    border-color: var(--accent-color);
+    background-color: #FFFFFF;
+    box-shadow: 0 0 0 4px rgba(177, 116, 87, 0.08);
+}
+
+/* ДЛЯ TEXTAREA (окрема обгортка з меншим радіусом) */
+/* Замість composes просто дублюємо потрібні стилі або додаємо клас до елемента */
+.textareaWrapper {
+    display: flex;
+    align-items: center;
+    background-color: var(--bg-input);
+    border: 1.5px solid var(--border-color);
+    box-shadow: inset 0 1px 2px rgba(0, 0, 0, 0.02);
+    transition: all 0.2s ease;
+    border-radius: 20px; /* Специфічне закруглення для textarea */
+    padding: 15px 20px;
+}
+
+.textareaWrapper:focus-within {
+    border-color: var(--accent-color);
+    background-color: #FFFFFF;
+    box-shadow: 0 0 0 4px rgba(177, 116, 87, 0.08);
+}
+
+.inputField {
+    flex-grow: 1;
+    border: none;
+    background-color: transparent;
+    outline: none;
+    font-size: 16px;
+    color: var(--text-main);
+    font-family: 'Afacad', sans-serif;
+    font-weight: 500;
+    width: 100%;
+}
+
+.inputField::placeholder {
+    color: var(--text-muted);
+    opacity: 0.6;
+}
+
+.inputField[name="description"] {
     min-height: 140px;
     resize: none;
+}
+
+/* ЛІЧИЛЬНИК */
+.labelWithCounter {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 8px;
+}
+
+.labelWithCounter label { margin-bottom: 0; }
+
+.charCounter {
+    font-size: 12px;
+    font-weight: 600;
+    color: var(--text-muted);
+    opacity: 0.7;
 }
 
 .priceInputWrapper {
@@ -77,56 +137,30 @@
 
 .submitWrapper {
     display: flex;
-    justify-content: center; /* Центруємо кнопки */
+    justify-content: center;
     gap: 20px;
     margin-top: 40px;
     padding-bottom: 50px;
     width: 100%;
 }
 
-/* Обмежуємо ширину кнопки "Опублікувати" */
-.submitBtnWidth {
-    max-width: 300px !important; /* Тепер вона не буде ширшою за 300px */
-}
-
-/* Обмежуємо ширину кнопки "Скасувати" (якщо вона є) */
-.cancelBtnWidth {
-    max-width: 200px !important;
-}
-
-/* На мобільних пристроях робимо їх знову на всю ширину для зручності */
-@media (max-width: 600px) {
-    .submitWrapper {
-        flex-direction: column-reverse; /* На мобілці Скасувати буде знизу */
-        align-items: center;
-    }
-    
-    .submitBtnWidth, .cancelBtnWidth {
-        max-width: 100% !important;
-        width: 100%;
-    }
-}
-
-.finalSubmitBtn {
-    width: 100% !important;
-    max-width: 380px !important;
-}
+.submitBtnWidth { max-width: 300px !important; }
+.cancelBtnWidth { max-width: 200px !important; }
 
 @media (max-width: 900px) {
-    .formColumns {
-        grid-template-columns: 1fr;
-    }
-    .submitWrapper {
-        flex-direction: column-reverse;
-    }
+    .formColumns { grid-template-columns: 1fr; }
 }
 
-.priceInputCompact::-webkit-outer-spin-button,
-.priceInputCompact::-webkit-inner-spin-button {
+@media (max-width: 600px) {
+    .submitWrapper { flex-direction: column-reverse; align-items: center; }
+    .submitBtnWidth, .cancelBtnWidth { max-width: 100% !important; width: 100%; }
+}
+
+/* ПРИБИРАЄМО СТРІЛКИ В ЦІНІ */
+.inputField::-webkit-outer-spin-button,
+.inputField::-webkit-inner-spin-button {
   -webkit-appearance: none;
+  appearance: none;
   margin: 0;
 }
-
-.priceInputCompact[type=number] {
-  -moz-appearance: textfield;
-}
+.inputField[type=number] { -moz-appearance: textfield; }

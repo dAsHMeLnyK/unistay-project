@@ -85,9 +85,11 @@ const ListingsPage = () => {
 
     return (
         <div className={styles.listingsPage}>
-            <header className="page-title-container">
+            {/* НОВИЙ УНІФІКОВАНИЙ ЗАГОЛОВОК */}
+            <header className="page-header">
                 <h1 className="page-title">Усі оголошення</h1>
-
+                <p className="page-subtitle">Знайдіть ідеальне житло в Острозі серед актуальних пропозицій</p>
+                
                 <div className={styles.searchBar}>
                     <Input
                         icon={FiSearch}
@@ -100,6 +102,7 @@ const ListingsPage = () => {
                         className={styles.customSearchInput}
                     />
                     <Button 
+                        variant="primary" // Вказуємо явно варіант
                         className={styles.customSearchButton}
                         onClick={handleSearchButtonClick}
                         disabled={isSearching}
@@ -119,7 +122,6 @@ const ListingsPage = () => {
 
             {error ? (
                 <div className={styles.errorContainer}>
-                    {/* Тут залишаємо клас page-subtitle для стилізації помилки як тексту */}
                     <p className="page-subtitle">Помилка завантаження: {error}</p>
                     <Button variant="outline" onClick={() => fetchListings()}>
                         Спробувати ще раз
@@ -134,7 +136,7 @@ const ListingsPage = () => {
                     ) : (
                         <div className={styles.noResults}>
                             <p className="page-subtitle">
-                                {isSearching ? 'Шукаємо...' : 'На жаль, оголошень не знайдено.'}
+                                {isSearching ? 'Шукаємо...' : 'На жаль, оголошень не знайдено за вашим запитом.'}
                             </p>
                         </div>
                     )}

@@ -1,5 +1,5 @@
 .listingsPage {
-    padding: 20px 0 80px 0;
+    padding-bottom: 80px;
     width: 100%;
 }
 
@@ -8,7 +8,7 @@
     gap: 12px;
     width: 100%;
     max-width: 650px;
-    margin-top: 32px; /* Додаємо відступ зверху, оскільки підзаголовка вже немає */
+    margin-top: 20px;
 }
 
 .customSearchInput {
@@ -25,7 +25,7 @@
 .errorContainer, .noResults {
     grid-column: 1 / -1;
     text-align: center;
-    padding: 80px 20px;
+    padding: 60px 20px;
     background-color: rgba(216, 210, 194, 0.1);
     border-radius: 20px;
     border: 1px dashed var(--border-color);
@@ -35,7 +35,8 @@
     .searchBar {
         flex-direction: column;
         gap: 10px;
-        margin-top: 20px;
+        margin-top: 15px;
+        padding: 0 20px;
     }
     
     .customSearchButton {

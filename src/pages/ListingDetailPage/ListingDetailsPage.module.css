@@ -1,510 +1,183 @@
-/* src/pages/ListingDetailPage/ListingDetailsPage.module.css */
-.listingDetailsPage {
-    background-color: #FAF7F0;
-    padding: 40px 0;
-    min-height: calc(100vh - var(--navbar-height, 80px));
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    font-family: 'Afacad', sans-serif;
-    color: #4A4947;
-    width: 100%;
-    box-sizing: border-box;
+.detailsPage {
+    background-color: var(--bg-main);
+    min-height: 100vh;
+    padding: 40px 0 80px;
 }
 
-.mainContent,
-.twoColumnGrid,
-.fullWidthGrid,
-.reviewsListContainer { /* Загальний контейнер для ReviewsList */
-    background-color: #fff; /* Основний колір фону для блоків контенту */
-    border-radius: 12px;
-    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.08);
-    padding: 40px;
+.container {
     max-width: 1200px;
-    width: 100%;
-    box-sizing: border-box;
-    margin-bottom: 30px; /* Відступ між секціями */
-}
-
-/* Specific styling for the ReviewsList, as it has a different background in the screenshot */
-.reviewsListContainer {
-    background-color: #F7F5F0; /* Колір фону для блоку відгуків */
-    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05); /* Менша тінь */
-}
-
-.mainContent {
-    display: grid;
-    grid-template-columns: 1.5fr 1fr; /* Галерея трохи ширша за інфо-блок */
-    gap: 30px;
-    margin-bottom: 30px;
-    align-items: flex-start;
-}
-
-.imageGallery {
-    position: relative;
-    width: 100%;
-    padding-bottom: 65%; /* Співвідношення 4:3 для основного зображення */
-    background-color: #e0e0e0;
-    border-radius: 12px;
-    overflow: hidden;
-    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
-}
-
-.mainImage {
-    position: absolute;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    object-fit: cover;
-}
-
-.galleryButton {
-    position: absolute;
-    top: 50%;
-    transform: translateY(-50%);
-    background-color: rgba(0, 0, 0, 0.5);
-    color: white;
-    border: none;
-    border-radius: 50%;
-    width: 40px;
-    height: 40px;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    font-size: 24px;
-    cursor: pointer;
-    z-index: 10;
-    transition: background-color 0.2s ease;
-}
-
-.galleryButton:hover {
-    background-color: rgba(0, 0, 0, 0.7);
-}
-
-.prevButton {
-    left: 10px;
-}
-
-.nextButton {
-    right: 10px;
-}
-
-.imagePagination {
-    position: absolute;
-    bottom: 10px;
-    left: 50%;
-    transform: translateX(-50%);
-    display: flex;
-    gap: 8px;
-    z-index: 10;
-}
-
-.paginationDot {
-    width: 10px;
-    height: 10px;
-    background-color: rgba(255, 255, 255, 0.6);
-    border-radius: 50%;
-    cursor: pointer;
-    transition: background-color 0.2s ease;
-}
-
-.paginationDot.activeDot {
-    background-color: #B17457; /* Активна точка - помаранчева */
-}
-
-.infoSection {
+    margin: 0 auto;
+    padding: 0 25px;
     display: flex;
     flex-direction: column;
-    text-align: left;
+    gap: 40px;
 }
 
-.ratingInfo {
-    display: flex;
-    align-items: center;
-    gap: 10px;
-    margin-bottom: 10px;
-}
-
-.ratingValue {
-    font-size: 24px;
-    font-weight: 700;
-    color: #B17457;
-}
-
-.starsContainer {
-    font-size: 20px;
-}
-
-.filledStar {
-    color: #B17457;
-}
-
-.halfStar {
-    color: #B17457;
-}
-
-.emptyStar {
-    color: #D8D2C2;
-}
-
-.reviewCount {
-    font-size: 14px;
-    color: #888;
-}
-
-.title {
-    font-size: 36px;
-    font-weight: 700;
-    color: #4A4947;
-    margin-top: 0;
-    margin-bottom: 10px;
-    line-height: 1.2;
-}
-
-.price {
-    font-size: 28px;
-    font-weight: bold;
-    color: #4A4947;
-    margin-bottom: 15px;
-}
-
-.address {
-    font-size: 18px;
-    color: #4A4947;
-    margin-bottom: 20px;
-    display: flex;
-    align-items: center;
-    gap: 8px;
-}
-
-.locationIcon {
-    font-size: 20px;
-    color: #B17457;
-}
-
-/* Контейнер для кнопок "Показати на мапі" та "Вибране" */
-.buttonsContainer {
-    display: flex;
-    gap: 15px; /* Простір між кнопками */
-    margin-bottom: 30px; /* Відступ від блоку інформації */
-    align-items: center; /* Вирівнювання по центру */
-    flex-wrap: wrap; /* Додано flex-wrap */
-}
-
-.showOnMapButton {
-    background-color: transparent;
-    color: #B17457;
-    border: 2px solid #B17457;
-    border-radius: 8px;
-    padding: 10px 20px;
-    font-size: 16px;
-    font-weight: 600;
-    cursor: pointer;
-    transition: all 0.2s ease;
-    height: 48px;
-    white-space: nowrap;
-}
-
-.showOnMapButton:hover {
-    background-color: #B17457;
-    color: white;
-}
-
-/* Стилі для кнопки "Вибране" */
-.favoriteButton {
-    background: none;
-    border: 2px solid #B17457;
-    border-radius: 8px;
-    font-size: 24px;
-    color: #B17457;
-    cursor: pointer;
-    padding: 8px 12px;
-    transition: all 0.2s ease-in-out;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    height: 48px;
-    width: 48px;
-}
-
-.favoriteButton:hover {
-    background-color: #B17457;
-    color: #FAF7F0;
-}
-
-.favoriteButton.favorited {
-    background-color: #B17457;
-    color: #FAF7F0;
-    border-color: #B17457;
-}
-
-/* НОВІ СТИЛІ ДЛЯ КНОПКИ РЕДАГУВАННЯ */
-.editButton {
-    background-color: transparent;
-    color: #4CAF50; /* Зелений колір, типовий для редагування */
-    border: 2px solid #4CAF50;
-    border-radius: 8px;
-    padding: 10px 20px;
-    font-size: 16px;
-    font-weight: 600;
-    cursor: pointer;
-    transition: all 0.2s ease;
-    height: 48px;
-    white-space: nowrap;
-}
-
-.editButton:hover {
-    background-color: #4CAF50;
-    color: white;
-}
-
-/* СТИЛІ ДЛЯ КНОПКИ ВИДАЛЕННЯ */
-.deleteButton {
-    background-color: transparent;
-    color: #DC3545; /* Червоний колір для тексту кнопки */
-    border: 2px solid #DC3545; /* Червона рамка */
-    border-radius: 8px;
-    padding: 10px 20px;
-    font-size: 16px;
-    font-weight: 600;
-    cursor: pointer;
-    transition: all 0.2s ease;
-    height: 48px; /* Робимо висоту однаковою з іншими кнопками */
-    white-space: nowrap;
-}
-
-.deleteButton:hover {
-    background-color: #DC3545; /* Фон стає червоним при наведенні */
-    color: white; /* Текст стає білим */
-}
-
-
-.detailsGrid {
+/* ВЕРХНІЙ БЛОК */
+.topSection {
     display: grid;
-    grid-template-columns: 1fr;
+    grid-template-columns: 1.6fr 1fr;
+    gap: 40px;
+}
+
+.galleryColumn {
+    display: flex;
+    flex-direction: column;
     gap: 15px;
-    margin-bottom: 20px;
 }
 
-.detailItem {
-    font-size: 16px;
-    color: #4A4947;
-    margin: 0;
-}
-
-.detailLabel {
-    font-weight: 600;
-    color: #B17457;
-    margin-right: 5px;
-}
-
-.publishedDate {
-    font-size: 14px;
-    color: #888;
-    margin-top: 20px;
-}
-
-.sectionTitle {
-    font-size: 24px;
-    font-weight: 600;
-    color: #4A4947;
-    margin-top: 0;
-    margin-bottom: 25px;
-    text-align: left;
-}
-
-.twoColumnGrid {
-    display: grid;
-    grid-template-columns: 1.5fr 1fr;
-    gap: 30px;
-    align-items: flex-start;
-}
-
-.descriptionAmenities {
-    display: flex;
-    flex-direction: column;
-    gap: 30px;
-}
-
-.descriptionBlock p {
-    line-height: 1.6;
-    font-size: 16px;
-    margin: 0;
-}
-
-.ownerMap {
-    display: flex;
-    flex-direction: column;
-    gap: 30px;
-}
-
-.mapPlaceholder {
-    background-color: #EFECE6;
-    border-radius: 8px;
-    height: 200px;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    color: #777;
-    font-size: 18px;
-    border: 1px solid #D8D2C2;
-}
-
-.fullWidthGrid {
-    display: grid;
-    grid-template-columns: 1.2fr 1fr;
-    gap: 30px;
-    align-items: flex-start;
-}
-
-/* Медіа-запити для адаптивності */
-@media (max-width: 992px) {
-    .mainContent,
-    .twoColumnGrid,
-    .fullWidthGrid {
-        grid-template-columns: 1fr;
-        padding: 30px;
-    }
-    .title {
-        font-size: 32px;
-    }
-    .price {
-        font-size: 24px;
-    }
-    .sectionTitle {
-        font-size: 22px;
-    }
-    .buttonsContainer {
-        flex-direction: column; /* Кнопки в стовпець на вузьких екранах */
-        align-items: flex-start; /* Вирівнювання ліворуч */
-        gap: 10px; /* Менший відступ */
-    }
-    .showOnMapButton,
-    .favoriteButton,
-    .deleteButton, /* Додано .deleteButton сюди */
-    .editButton {  /* Додано .editButton сюди */
-        width: 100%; /* Займають всю ширину */
-        box-sizing: border-box; /* Враховуємо padding та border */
-    }
-}
-
-@media (max-width: 768px) {
-    .mainContent,
-    .twoColumnGrid,
-    .fullWidthGrid,
-    .reviewsListContainer {
-        padding: 25px 20px;
-        margin-bottom: 20px;
-    }
-    .imageGallery {
-        padding-bottom: 75%; /* Більше висоти на мобільних */
-    }
-    .title {
-        font-size: 28px;
-    }
-    .price {
-        font-size: 22px;
-    }
-    .sectionTitle {
-        font-size: 20px;
-    }
-}
-
-@media (max-width: 480px) {
-    .listingDetailsPage {
-        padding: 20px 0;
-    }
-    .mainContent,
-    .twoColumnGrid,
-    .fullWidthGrid,
-    .reviewsListContainer {
-        padding: 20px 15px;
-    }
-    .galleryButton {
-        width: 30px;
-        height: 30px;
-        font-size: 20px;
-    }
-    .paginationDot {
-        width: 8px;
-        height: 8px;
-    }
-    .title {
-        font-size: 24px;
-    }
-    .price {
-        font-size: 20px;
-    }
-    .address {
-        font-size: 16px;
-    }
-}
-
-/* Оновлення блоку карти */
-.mapContainer {
-    margin-top: 20px;
-    background: white;
-    padding: 20px;
-    border-radius: 12px;
-    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.08);
-}
-
-.sectionTitleSmall {
-    font-size: 18px;
-    font-weight: 600;
-    margin-bottom: 15px;
-    color: #4A4947;
-}
-
-.actualMap {
-    height: 250px; /* Висота карти в правій колонці */
+.mainFrame {
     width: 100%;
-    border-radius: 10px;
+    height: 500px;
+    background-color: var(--bg-filters);
+    border: 1.5px solid var(--border-color);
+    border-radius: 40px;
     overflow: hidden;
-    border: 1px solid #D8D2C2;
 }
 
-.googleMapsBtn {
-    width: 100%;
-    margin-top: 12px;
-    padding: 10px;
-    background-color: transparent;
-    border: 2px solid #B17457;
-    color: #B17457;
-    border-radius: 8px;
-    font-weight: 600;
+.mainFrame img { width: 100%; height: 100%; object-fit: cover; }
+
+.thumbRow {
+    display: flex;
+    gap: 12px;
+    overflow-x: auto;
+    padding-bottom: 5px;
+}
+
+.thumb {
+    width: 110px;
+    height: 80px;
+    border-radius: 20px;
+    border: 1.5px solid var(--border-color);
     cursor: pointer;
-    transition: all 0.2s;
+    overflow: hidden;
+    flex-shrink: 0;
+    background-color: var(--bg-filters);
 }
 
-.googleMapsBtn:hover {
-    background-color: #B17457;
-    color: white;
+.activeThumb { border-color: var(--accent-color); border-width: 2.5px; }
+
+/* ACTION CARD */
+.actionCard {
+    background-color: var(--bg-filters);
+    border: 1.5px solid var(--border-color);
+    border-radius: 40px;
+    padding: 45px;
+    display: flex;
+    flex-direction: column;
+    height: 100%;
 }
 
-/* Корекція сітки для опису та правої колонки */
-.descriptionLayout {
+.locationBadge {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    color: var(--text-muted);
+    font-weight: 500;
+    margin-top: 15px;
+}
+
+.priceContainer {
+    margin: 35px 0;
+    padding: 25px;
+    background-color: #ffffff;
+    border-radius: 30px;
+    border: 1px solid var(--border-color);
+}
+
+.priceLabel {
+    font-size: 14px;
+    color: var(--text-muted);
+    margin-bottom: 5px;
+    font-weight: 500;
+}
+
+.priceValue {
+    font-size: 38px;
+    font-weight: 900;
+    color: var(--accent-color);
+}
+
+.pricePeriod { color: var(--text-muted); font-size: 18px; margin-left: 5px; }
+
+.ownerBrief {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+    margin-bottom: 30px;
+}
+
+.avatar {
+    width: 55px; height: 55px;
+    background-color: var(--accent-color);
+    border-radius: 50%;
+    display: flex; align-items: center; justify-content: center;
+    color: white; font-weight: 800; font-size: 20px;
+}
+
+.ownerName { font-weight: 700; color: var(--text-main); font-size: 17px; }
+.ownerStatus { font-size: 13px; color: #4CAF50; font-weight: 600; }
+
+.contactBtn { width: 100% !important; height: 65px !important; font-size: 18px !important; }
+
+.metaInfo { 
+    margin-top: auto; 
+    font-size: 13px; 
+    color: var(--text-muted); 
+    display: flex; 
+    align-items: center; 
+    gap: 6px;
+    padding-top: 20px;
+}
+
+/* НИЖНІЙ БЛОК */
+.contentCard {
+    background-color: var(--bg-filters);
+    border: 1.5px solid var(--border-color);
+    border-radius: 40px;
+    padding: 45px;
+    margin-bottom: 30px;
+}
+
+.featuresGrid {
     display: grid;
-    grid-template-columns: 1.5fr 1fr; /* Робимо пропорцію як у верхнього блоку */
-    gap: 30px;
-    max-width: 1200px;
-    width: 100%;
-    margin-bottom: 40px;
-}
-
-/* Стилі для відгуків, щоб вони не розтягувалися */
-.reviewsSection {
-    max-width: 1200px;
-    width: 100%;
-    padding: 40px;
-    background: #F7F5F0;
-    border-radius: 12px;
-    box-sizing: border-box;
-}
-
-.reviewsGrid {
-    display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+    grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
     gap: 20px;
+}
+
+.featureItem {
+    background-color: #ffffff;
+    padding: 20px;
+    border-radius: 25px;
+    border: 1.5px solid var(--border-color);
+    display: flex;
+    align-items: center;
+    gap: 15px;
+}
+
+.featureIcon {
+    font-size: 22px;
+    color: var(--accent-color);
+    background-color: rgba(177, 116, 87, 0.08);
+    width: 45px;
+    height: 45px;
+    padding: 11px;
+    border-radius: 14px;
+}
+
+.featureText { display: flex; flex-direction: column; }
+.label { color: var(--text-muted); font-size: 13px; font-weight: 500; }
+.value { color: var(--text-main); font-weight: 700; font-size: 15px; }
+
+.descriptionText {
+    line-height: 1.8;
+    color: var(--text-main);
+    font-size: 16px;
+    white-space: pre-wrap;
+}
+
+@media (max-width: 900px) {
+    .topSection { grid-template-columns: 1fr; }
+    .mainFrame { height: 380px; }
+    .actionCard { padding: 30px; }
 }

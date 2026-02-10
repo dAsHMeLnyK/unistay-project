@@ -1,46 +1,132 @@
-/* App.css */
+/* ==========================================================================
+   ГЛОБАЛЬНІ СТИЛІ ТИПОГРАФІЇ ТА ШРИФТІВ
+   ========================================================================== */
 
-/* Контейнер заголовка (використовуйте на кожній сторінці) */
-.page-title-container {
+body, button, input, textarea, select {
+  font-family: 'Afacad', sans-serif;
+}
+
+/* Контейнер заголовка сторінки (центрований, для списків) */
+.page-header {
   display: flex;
   flex-direction: column;
   align-items: center;
   text-align: center;
-  margin-bottom: 45px;
-  gap: 12px;
+  margin-bottom: 40px;
+  margin-top: 20px;
+  gap: 10px;
   width: 100%;
 }
 
+/* Головний заголовок (центрований) */
 .page-title {
   font-family: 'Afacad', sans-serif;
-  font-size: 42px;
-  font-weight: 600;
+  font-size: clamp(26px, 4vw, 36px);
+  font-weight: 700;
   color: var(--text-main);
   letter-spacing: -0.01em;
   margin: 0;
 }
 
+/* Заголовок для сторінки деталей (вирівняний ліворуч) */
+.page-title-left {
+  font-family: 'Afacad', sans-serif;
+  font-size: 28px;
+  font-weight: 800;
+  color: var(--text-main);
+  letter-spacing: -0.01em;
+  line-height: 1.1;
+  margin: 0;
+}
+
+/* Опис під головним заголовком */
 .page-subtitle {
+  font-family: 'Afacad', sans-serif;
   font-size: 18px;
-  color: #8C8C8C;
-  max-width: 600px;
+  color: var(--text-muted);
+  max-width: 650px;
   line-height: 1.5;
   margin: 0;
 }
 
-/* Глобальна сітка для карток (використовуйте всюди) */
+/* Підзаголовки секцій (h2, h3) */
+.section-title {
+  font-family: 'Afacad', sans-serif;
+  font-size: 22px;
+  font-weight: 700;
+  color: var(--text-main);
+  margin-bottom: 24px;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+/* ==========================================================================
+   КОМПОНЕНТИ ТА СІТКИ
+   ========================================================================== */
+
+/* Глобальна сітка для карток (Відновлено працездатність) */
 .cards-grid {
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
   gap: 30px;
   margin-top: 30px;
+  width: 100%;
 }
 
-/* App.css */
+/* Універсальна картка контенту */
 .content-card {
-  background: #ffffff;
-  border-radius: 16px;
-  border: 1px solid var(--border-color);
-  padding: 24px;
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.03);
+  background: var(--bg-filters);
+  border-radius: 35px;
+  border: 1.5px solid var(--border-color);
+  padding: 35px;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.02);
+  display: flex;
+  flex-direction: column;
+  gap: 30px; 
+}
+
+/* Спеціальний стек для сторінки деталей, щоб блоки не злипалися */
+.details-stack {
+  display: flex;
+  flex-direction: column;
+  gap: 40px;
+  width: 100%;
+}
+
+/* Елемент-плашка для внутрішніх блоків */
+.inner-badge {
+  background-color: var(--bg-input);
+  border-radius: 20px;
+  border: 1.5px solid var(--border-color);
+  padding: 12px 20px;
+}
+
+/* ==========================================================================
+   АДАПТИВНІСТЬ
+   ========================================================================== */
+
+@media (max-width: 600px) {
+  .page-header {
+    margin-bottom: 30px;
+    padding: 0 15px;
+  }
+  
+  .page-title, .page-title-left {
+    font-size: 24px;
+  }
+  
+  .cards-grid {
+    gap: 20px;
+  }
+
+  .content-card {
+    padding: 25px;
+    border-radius: 25px;
+    gap: 20px;
+  }
+
+  .details-stack {
+    gap: 25px;
+  }
 }

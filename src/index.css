@@ -13,22 +13,29 @@
   --danger-hover: #e53e3e;
 }
 
+* {
+  box-sizing: border-box;
+}
+
 body {
   margin: 0;
   background-color: var(--bg-main);
-  font-family: 'Afacad', sans-serif;
+  /* Додаємо пріоритет для шрифту */
+  font-family: 'Afacad', sans-serif !important; 
   color: var(--text-main);
   -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  line-height: 1.5;
 }
 
 #root {
   width: 100%;
   min-height: 100vh;
-  text-align: left;
 }
 
-button, input, textarea, select {
-  font-family: inherit;
+/* Гарантуємо, що всі заголовки та елементи форм мають ваш шрифт */
+h1, h2, h3, h4, h5, h6, button, input, textarea, select {
+  font-family: 'Afacad', sans-serif !important;
 }
 
 a {

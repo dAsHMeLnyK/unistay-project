@@ -1,103 +1,84 @@
 .myListingsPage {
-    background-color: var(--bg-filters);
+    background-color: var(--bg-main);
     min-height: calc(100vh - 80px);
-    width: 100%;
-    padding: 60px 0;
+    padding: 40px 0 80px 0;
 }
 
 .pageContentWrapper {
     max-width: 1200px;
     width: 100%;
-    padding: 0 40px;
+    padding: 0 25px;
     margin: 0 auto;
 }
 
-/* КОНТЕЙНЕР ХЕДЕРУ */
 .pageHeader {
     width: 100%;
     margin-bottom: 40px;
-    display: flex;
-    flex-direction: column;
-    gap: 20px;
 }
 
 .headerTopLine {
     display: flex;
-    justify-content: space-between; /* Розносить заголовок вліво, кнопку вправо */
-    align-items: center; /* Вирівнює їх строго по центру відносно один одного */
+    justify-content: space-between;
+    align-items: center;
     width: 100%;
+    margin-bottom: 20px;
 }
 
 .titleWrapper {
     display: flex;
-    flex-direction: column;
-    gap: 10px;
+    align-items: center;
+    gap: 15px;
 }
 
-/* Лінія-розділювач під заголовком */
 .headerSeparator {
     width: 100%;
-    height: 1.5px;
+    height: 1px;
     background-color: var(--border-color);
-    opacity: 0.6;
-}
-
-.addListingBtn {
-    width: auto !important;
-    min-width: 200px;
-    padding: 12px 28px !important;
-    white-space: nowrap;
-    display: flex !important;
-    align-items: center;
-    justify-content: center;
-    gap: 10px;
+    opacity: 0.5;
 }
 
 .countBadge {
     background: rgba(177, 116, 87, 0.1);
     color: var(--accent-color);
-    padding: 4px 14px;
+    padding: 6px 14px;
     border-radius: 50px;
-    font-size: 14px;
+    font-size: 15px;
     font-weight: 700;
-    width: fit-content;
 }
 
-/* СІТКА КАРТОК */
-.listingsGrid {
-    display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
-    gap: 35px;
+.addListingBtn {
+    width: auto !important;
+    min-width: 180px;
 }
 
 .listingWrapper {
-    background-color: var(--bg-input);
-    border-radius: 24px;
-    border: 1.5px solid transparent; 
-    box-shadow: 0 8px 25px rgba(0, 0, 0, 0.04);
+    background-color: #ffffff;
+    border-radius: 20px;
+    border: 1px solid var(--border-color);
     overflow: hidden;
-    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    display: flex;
+    flex-direction: column;
+    transition: transform 0.3s ease;
 }
 
 .listingWrapper:hover {
-    transform: translateY(-8px);
-    border-color: rgba(177, 116, 87, 0.3); 
-    box-shadow: 0 15px 45px rgba(177, 116, 87, 0.12);
+    transform: translateY(-5px);
 }
 
 .cardInternalWrapper :global(.listing-card) {
     box-shadow: none !important;
-    background: transparent !important;
     border: none !important;
+    border-radius: 0 !important;
 }
 
-/* КНОПКИ КЕРУВАННЯ */
+/* КНОПКИ КЕРУВАННЯ З РОЗДІЛЮВАЧЕМ */
 .adminActions {
     display: grid;
     grid-template-columns: 1fr 1fr;
-    gap: 1px;
-    background: var(--border-color);
-    border-top: 1.5px solid var(--border-color);
+    /* Фон контейнера стає кольором лінії розділювача */
+    background-color: var(--border-color); 
+    border-top: 1px solid var(--border-color);
+    gap: 1px; 
 }
 
 .editBtn, .deleteBtn {
@@ -110,10 +91,10 @@
     align-items: center;
     justify-content: center;
     gap: 8px;
-    background-color: var(--bg-input);
+    /* Фон кнопок перекриває фон контейнера всюди, крім зазору gap */
+    background-color: var(--bg-filters); 
     color: var(--text-main);
-    transition: all 0.2s ease;
-    font-family: 'Afacad', sans-serif;
+    transition: background 0.2s ease;
 }
 
 .editBtn:hover {
@@ -121,29 +102,25 @@
     color: var(--accent-color);
 }
 
-.deleteBtn { color: #cc4444; }
+.deleteBtn { color: var(--danger-color); }
 .deleteBtn:hover {
     background-color: #fff1f1;
-    color: #e53e3e;
+    color: var(--danger-hover);
 }
 
-/* EMPTY STATE */
 .emptyState {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    padding: 100px 40px;
     text-align: center;
-    background: rgba(255, 255, 255, 0.3);
-    border-radius: 40px;
-    border: 2px dashed var(--border-color);
+    padding: 60px;
+    background: #ffffff;
+    border-radius: 20px;
+    border: 1px dashed var(--border-color);
 }
 
 @media (max-width: 768px) {
     .headerTopLine {
         flex-direction: column;
         align-items: flex-start;
-        gap: 24px;
+        gap: 20px;
     }
     .addListingBtn {
         width: 100% !important;
