@@ -43,3 +43,46 @@
         width: 100% !important;
     }
 }
+
+.mapFloatingBtn {
+    position: fixed;
+    bottom: 30px;
+    left: 50%;
+    transform: translateX(-50%);
+    z-index: 1000;
+    
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    
+    padding: 14px 24px;
+    background-color: var(--text-main, #4A4947);
+    color: #FFFFFF;
+    
+    border: none;
+    border-radius: 50px;
+    font-size: 16px;
+    font-weight: 600;
+    cursor: pointer;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.mapFloatingBtn:hover {
+    background-color: var(--accent-color);
+    transform: translateX(-50%) scale(1.05);
+    box-shadow: 0 6px 20px rgba(0, 0, 0, 0.3);
+}
+
+.mapFloatingBtn svg {
+    font-size: 20px;
+}
+
+/* На мобільних пристроях піднімаємо трохи вище, якщо є нижня навігація браузера */
+@media (max-width: 768px) {
+    .mapFloatingBtn {
+        bottom: 20px;
+        padding: 12px 20px;
+        font-size: 14px;
+    }
+}

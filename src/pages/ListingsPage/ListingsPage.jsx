@@ -6,13 +6,15 @@ import Input from '../../components/common/Input/Input';
 import Button from '../../components/common/Button/Button';
 import { useListings } from '../../context/ListingContext';
 import { ListingService } from '../../api/services/ListingService';
-import { FiSearch } from 'react-icons/fi';
+import { FiSearch, FiMap } from 'react-icons/fi';
 import styles from './ListingsPage.module.css';
+import { useNavigate } from 'react-router-dom';
 
 const ListingsPage = () => {
     const { listings, fetchListings, loading, error } = useListings();
     const [displayListings, setDisplayListings] = useState([]);
     const [isSearching, setIsSearching] = useState(false);
+    const navigate = useNavigate();
     
     const [filters, setFilters] = useState({
         search: '', type: '', utilityPaymentType: '', 
@@ -85,6 +87,12 @@ const ListingsPage = () => {
 
     return (
         <div className={styles.listingsPage}>
+            <button 
+                className={styles.mapFloatingBtn}
+                onClick={() => navigate('/explore-map')}
+            >
+                <FiMap /> Карта
+            </button>
             {/* НОВИЙ УНІФІКОВАНИЙ ЗАГОЛОВОК */}
             <header className="page-header">
                 <h1 className="page-title">Усі оголошення</h1>

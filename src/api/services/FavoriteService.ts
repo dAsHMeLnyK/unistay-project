@@ -1,33 +1,18 @@
-import { HttpClient } from "../HttpClient";
-import {
-  FavoriteDto,
-  ListingSummaryDto,
-} from "../dto/FavoriteDto";
+import api from "../HttpClient";
 
-class FavoriteService {
-  private httpClient = new HttpClient({
-    baseURL: "http://localhost:5113/api",
-  });
+export const FavoriteService = {
+  // Отримати список обраних оголошень (Бекенд повертає ListingSummaryDto: Id, Title)
+  getMyFavorites: async (): Promise<any[]> => {
+    return await api.get("/me/favorites");
+  },
 
-  async addToFavorites(listingId: string): Promise<FavoriteDto> {
-    return await this.httpClient.post<FavoriteDto, void>(`/listings/${listingId}/favorite`, undefined);
+  // Додати в обране: POST api/listings/{id}/favorite
+  addToFavorites: async (listingId: string): Promise<void> => {
+    await api.post(`/listings/${listingId}/favorite`, {});
+  },
+
+  // Видалити з обраного: DELETE api/listings/{id}/favorite
+  removeFromFavorites: async (listingId: string): Promise<void> => {
+    await api.delete(`/listings/${listingId}/favorite`);
   }
-
-  async removeFromFavorites(listingId: string): Promise<void> {
-    await this.httpClient.delete<void>(`/listings/${listingId}/favorite`);
-  }
-
-  async getMyFavorites(): Promise<ListingSummaryDto[]> {
-    return await this.httpClient.get<ListingSummaryDto[]>(`/me/favorites`);
-  }
-
-  async getFavoriteInfoForListing(listingId: string): Promise<FavoriteDto> {
-    return await this.httpClient.get<FavoriteDto>(`/listings/${listingId}/favorites-info`);
-  }
-
-  async getFavoriteById(favoriteId: string): Promise<FavoriteDto> {
-    return await this.httpClient.get<FavoriteDto>(`/favorites/${favoriteId}`);
-  }
-}
-
-export default new FavoriteService();
+};

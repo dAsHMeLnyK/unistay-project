@@ -1,9 +1,12 @@
-import React, { useState } from 'react';
+import React from 'react';
 import { Link } from 'react-router-dom';
-import { FiMapPin, FiHeart } from 'react-icons/fi'; // Використовуємо лише необхідні іконки
+import { FiMapPin, FiHeart } from 'react-icons/fi';
+import { useListings } from '../../../context/ListingContext';
 import styles from './ListingCard.module.css';
 
 const ListingCard = ({ listing }) => {
+    const { favoriteIds, toggleFavorite } = useListings();
+
     const calculateAverageRating = (reviews) => {
         if (!reviews || reviews.length === 0) return 0;
         const sum = reviews.reduce((acc, review) => acc + (review.rating || 0), 0);
@@ -17,26 +20,12 @@ const ListingCard = ({ listing }) => {
     const imageUrl = listing?.listingImages?.[0]?.imageUrl || 'https://via.placeholder.com/400x300?text=No+Image';
     const averageRating = calculateAverageRating(listing?.reviews);
 
-    const [isFavorite, setIsFavorite] = useState(() => {
-        const favorites = JSON.parse(localStorage.getItem('favorites')) || [];
-        return favorites.some(fav => fav.id === id);
-    });
+    const isFavorite = favoriteIds.includes(id);
 
     const handleFavoriteClick = (e) => {
         e.preventDefault();
         e.stopPropagation();
-        
-        let favorites = JSON.parse(localStorage.getItem('favorites')) || [];
-        
-        if (isFavorite) {
-            favorites = favorites.filter(fav => fav.id !== id);
-        } else {
-            favorites.push({ id, title, address, price, imageUrl, rating: averageRating });
-        }
-        
-        localStorage.setItem('favorites', JSON.stringify(favorites));
-        window.dispatchEvent(new Event('favoritesUpdated'));
-        setIsFavorite(!isFavorite);
+        toggleFavorite(id);
     };
 
     return (
@@ -55,9 +44,7 @@ const ListingCard = ({ listing }) => {
                                 <span className={styles.noReviews}>Немає відгуків</span>
                             )}
                         </div>
-
                         <h3 className={styles.title}>{title}</h3>
-                        
                         <p className={styles.address}>
                             <FiMapPin className={styles.locationIcon} /> {address}
                         </p>
@@ -65,14 +52,13 @@ const ListingCard = ({ listing }) => {
 
                     <div className={styles.priceContainer}>
                         <p className={styles.price}>{price.toLocaleString()} грн</p>
-                        
                         <button
                             className={`${styles.heartButton} ${isFavorite ? styles.favorited : ''}`}
                             onClick={handleFavoriteClick}
                         >
                             <FiHeart 
                                 className={styles.heartIcon} 
-                                fill={isFavorite ? "var(--accent-color)" : "none"} 
+                                fill={isFavorite ? "var(--accent-color, #ff4d4d)" : "none"} 
                             />
                         </button>
                     </div>

@@ -1,0 +1,86 @@
+.explorePage {
+    height: calc(100vh - 80px); /* Висота екрану мінус висота вашого Хедера */
+    width: 100%;
+    position: relative;
+}
+
+.mapCanvas {
+    height: 100%;
+    width: 100%;
+}
+
+/* Стиль самого цінника */
+.priceTag {
+    background-color: white;
+    border: 1.5px solid var(--accent-color);
+    border-radius: 50px;
+    padding: 4px 10px;
+    font-size: 13px;
+    font-weight: 700;
+    color: var(--text-main);
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.15);
+    white-space: nowrap;
+    text-align: center;
+    transition: all 0.2s ease;
+}
+
+.priceTag:hover {
+    background-color: var(--accent-color);
+    color: white;
+    transform: scale(1.05);
+}
+
+/* Налаштування вікна Popup */
+.mapPopup :global(.leaflet-popup-content-wrapper) {
+    padding: 0;
+    border-radius: 20px;
+    overflow: hidden;
+}
+
+.mapPopup :global(.leaflet-popup-content) {
+    margin: 0;
+    width: 260px !important; /* Ширина картки всередині карти */
+}
+
+/* Прибираємо тіні у картки всередині попапа, бо попап уже має свою тінь */
+.popupCardWrapper :global(.listing-card) {
+    box-shadow: none !important;
+    border: none !important;
+}
+
+.listFloatingBtn {
+    position: absolute; /* На мапі використовуємо absolute відносно контейнера explorePage */
+    bottom: 30px;
+    left: 50%;
+    transform: translateX(-50%);
+    z-index: 1001; /* Важливо: має бути більше, ніж у карти */
+    
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    
+    padding: 14px 24px;
+    background-color: var(--text-main, #4A4947);
+    color: #FFFFFF;
+    
+    border: none;
+    border-radius: 50px;
+    font-size: 16px;
+    font-weight: 600;
+    cursor: pointer;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.listFloatingBtn:hover {
+    background-color: var(--accent-color);
+    transform: translateX(-50%) scale(1.05);
+}
+
+@media (max-width: 768px) {
+    .listFloatingBtn {
+        bottom: 20px;
+        padding: 12px 20px;
+        font-size: 14px;
+    }
+}

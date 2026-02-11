@@ -79,7 +79,7 @@ const MyListingsPage = () => {
                                 </span>
                             )}
                         </div>
-                        {isAuthenticated && (
+                        {isAuthenticated && userListings.length > 0 && (
                             <Button
                                 onClick={() => navigate('/add-listing')}
                                 className={styles.addListingBtn}
@@ -94,8 +94,23 @@ const MyListingsPage = () => {
 
                 {userListings.length === 0 ? (
                     <div className={styles.emptyState}>
-                        <p className="page-subtitle">У вас ще немає створених оголошень.</p>
-                        <Button onClick={() => navigate('/add-listing')}>Створити перше</Button>
+                        <div className={styles.houseIllustration}>
+                            <div className={styles.roof}></div>
+                            <div className={styles.base}>
+                                <div className={styles.door}></div>
+                            </div>
+                        </div>
+                        <h2 className="section-title" style={{justifyContent: 'center'}}>У вас ще немає оголошень</h2>
+                        <p className="page-subtitle">
+                            Тут з'являться об'єкти, які ви здаєте в оренду. Створіть своє перше оголошення, щоб студенти могли його знайти!
+                        </p>
+                        <Button 
+                            variant="primary" 
+                            onClick={() => navigate('/add-listing')}
+                            className={styles.actionButton}
+                        >
+                            <FiPlus /> Додати перше оголошення
+                        </Button>
                     </div>
                 ) : (
                     <div className="cards-grid">

@@ -1,85 +1,80 @@
-import React, { useState, useEffect, useCallback } from 'react';
-import { Link } from 'react-router-dom'; // Для кнопки "Переглянути всі оголошення"
+import React, { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import ListingCard from '../../components/listings/ListingCard/ListingCard';
+import LoadingPage from '../LoadingPage/LoadingPage';
+import Button from '../../components/common/Button/Button';
+import ConfirmModal from '../../components/common/ConfirmModal/ConfirmModal'; // Імпортуємо модалку
+import { useListings } from '../../context/ListingContext';
 import styles from './FavoritesPage.module.css';
-import Button from '../../components/common/Button/Button'; // Припускаємо, що у вас є такий компонент кнопки
 
 const FavoritesPage = () => {
-    const [favoriteListings, setFavoriteListings] = useState([]);
-    const [loading, setLoading] = useState(true);
+    const { favoriteListings, loading, clearFavorites } = useListings();
+    const [isModalOpen, setIsModalOpen] = useState(false);
+    const [isClearing, setIsClearing] = useState(false);
+    const navigate = useNavigate();
 
-    // useCallback для мемоізації функції, щоб уникнути зайвих ре-рендерів та проблем з useEffect
-    const fetchFavorites = useCallback(() => {
-        setLoading(true);
-        const favorites = JSON.parse(localStorage.getItem('favorites')) || [];
-        const allListings = JSON.parse(localStorage.getItem('listings')) || [];
-
-        const foundFavoriteListings = allListings.filter(listing =>
-            favorites.some(fav => fav.id === listing.id)
-        );
-
-        setFavoriteListings(foundFavoriteListings);
-        setLoading(false);
-    }, []); // Залежності відсутні, оскільки localStorage є глобальним
-
-    useEffect(() => {
-        fetchFavorites();
-
-        // Слухач для localStorage, щоб оновлювати сторінку, якщо список обраних змінюється на інших сторінках
-        const handleStorageChange = (e) => {
-            if (e.key === 'favorites') {
-                fetchFavorites();
-            }
-        };
-
-        window.addEventListener('storage', handleStorageChange);
-        return () => {
-            window.removeEventListener('storage', handleStorageChange);
-        };
-    }, [fetchFavorites]); // Додаємо fetchFavorites у залежності, оскільки це useCallback
-
-    const handleClearFavorites = () => {
-        localStorage.removeItem('favorites');
-        setFavoriteListings([]); // Очищаємо локальний стан
-        console.log('Список обраних оголошень очищено.');
+    const handleClearConfirm = async () => {
+        setIsClearing(true);
+        await clearFavorites();
+        setIsClearing(false);
+        setIsModalOpen(false);
     };
 
-    if (loading) {
-        return <div className={styles.loading}>Завантаження вибраних оголошень...</div>;
-    }
+    if (loading) return <LoadingPage />;
 
     return (
-        <div className={styles.favoritesPage}>
-            <div className={styles.favoritesHeader}>
-                <h1 className={styles.title}>Обране</h1> {/* Змінено на "Обране" згідно скріншоту */}
-            </div>
-            {favoriteListings.length === 0 ? (
-                <p className={styles.noFavoritesMessage}>
-                    У вас поки що немає обраних оголошень. Додайте щось, що вам подобається!
-                </p>
+        <div className="container">
+            <header className="page-header">
+                <h1 className="page-title">Мої обрані оголошення</h1>
+                <p className="page-subtitle">Тут зібрані варіанти житла в Острозі, які ви зберегли</p>
+                
+                {favoriteListings.length > 0 && (
+                    <button 
+                        className={styles.clearMiniButton} 
+                        onClick={() => setIsModalOpen(true)}
+                    >
+                        Очистити список
+                    </button>
+                )}
+            </header>
+
+            {favoriteListings.length > 0 ? (
+                <div className="cards-grid">
+                    {favoriteListings.map((listing) => (
+                        <ListingCard key={listing.id} listing={listing} />
+                    ))}
+                </div>
             ) : (
-                <>
-                    <div className={styles.favoritesGrid}>
-                        {favoriteListings.map(listing => (
-                            <ListingCard key={listing.id} listing={listing} />
-                        ))}
+                <div className={styles.emptyState}>
+                    <div className={styles.houseIllustration}>
+                        <div className={styles.roof}></div>
+                        <div className={styles.base}>
+                            <div className={styles.door}></div>
+                        </div>
                     </div>
-                    <div className={styles.favoritesActions}>
-                        {/* Кнопка "Очистити список обраних" */}
-                        {/* Припускаємо, що у вас є компонент Button, і він приймає пропс `variant` або `className` */}
-                        <Button
-                            onClick={handleClearFavorites}
-                            className={styles.clearButton}
-                        >
-                            Очистити список обраних
-                        </Button>
-                        {/* Кнопка "Переглянути всі оголошення" */}
-                        <Link to="/listings" className={styles.viewAllButton}>
-                            Переглянути всі оголошення
-                        </Link>
-                    </div>
-                </>
+                    <h2 className="section-title" style={{justifyContent: 'center'}}>Тут поки порожньо</h2>
+                    <p className="page-subtitle">
+                        Ви ще не додали жодного оголошення до обраного.
+                    </p>
+                    <Button 
+                        variant="primary" 
+                        onClick={() => navigate('/listings')}
+                        className={styles.actionButton}
+                    >
+                        Переглянути оголошення
+                    </Button>
+                </div>
             )}
+
+            {/* Ваша кастомна модалка */}
+            <ConfirmModal 
+                isOpen={isModalOpen}
+                title="Очистити обране?"
+                message="Ви впевнені, що хочете видалити всі оголошення зі списку обраних? Цю дію неможливо скасувати."
+                onConfirm={handleClearConfirm}
+                onCancel={() => setIsModalOpen(false)}
+                isLoading={isClearing}
+            />
         </div>
     );
 };

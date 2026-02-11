@@ -1,44 +1,44 @@
-:root {
-  --accent-color: #B17457;
-  --accent-hover: #9c5e44;
-  --bg-input: #FDFCF9;
-  --bg-filters: #F7F5F0;
-  --text-main: #4A4947;
-  --text-muted: #8C8C8C;
-  --bg-main: #FAF7F0;
-  --transition-fast: 0.25s ease;
-  --hover-lift: translateY(-2px);
-  --border-color: #D8D2C2;
-  --danger-color: #cc4444; 
-  --danger-hover: #e53e3e;
-}
+  :root {
+    --accent-color: #B17457;
+    --accent-hover: #9c5e44;
+    --bg-input: #FDFCF9;
+    --bg-filters: #F7F5F0;
+    --text-main: #4A4947;
+    --text-muted: #8C8C8C;
+    --bg-main: #FAF7F0;
+    --transition-fast: 0.25s ease;
+    --hover-lift: translateY(-2px);
+    --border-color: #D8D2C2;
+    --danger-color: #cc4444; 
+    --danger-hover: #e53e3e;
+  }
 
-* {
-  box-sizing: border-box;
-}
+  * {
+    box-sizing: border-box;
+  }
 
-body {
-  margin: 0;
-  background-color: var(--bg-main);
-  /* Додаємо пріоритет для шрифту */
-  font-family: 'Afacad', sans-serif !important; 
-  color: var(--text-main);
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-  line-height: 1.5;
-}
+  body {
+    margin: 0;
+    background-color: var(--bg-main);
+    /* Додаємо пріоритет для шрифту */
+    font-family: 'Afacad', sans-serif !important; 
+    color: var(--text-main);
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    line-height: 1.5;
+  }
 
-#root {
-  width: 100%;
-  min-height: 100vh;
-}
+  #root {
+    width: 100%;
+    min-height: 100vh;
+  }
 
-/* Гарантуємо, що всі заголовки та елементи форм мають ваш шрифт */
-h1, h2, h3, h4, h5, h6, button, input, textarea, select {
-  font-family: 'Afacad', sans-serif !important;
-}
+  /* Гарантуємо, що всі заголовки та елементи форм мають ваш шрифт */
+  h1, h2, h3, h4, h5, h6, button, input, textarea, select {
+    font-family: 'Afacad', sans-serif !important;
+  }
 
-a {
-  text-decoration: none;
-  color: inherit;
-}
+  a {
+    text-decoration: none;
+    color: inherit;
+  }
