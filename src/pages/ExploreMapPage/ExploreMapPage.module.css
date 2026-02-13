@@ -1,86 +1,341 @@
+/* 1. БАЗОВА СТРУКТУРА СТОРІНКИ */
 .explorePage {
-    height: calc(100vh - 80px); /* Висота екрану мінус висота вашого Хедера */
+    height: calc(100vh - 100px);
     width: 100%;
     position: relative;
+    font-family: 'Afacad', sans-serif;
+    display: flex;
+    flex-direction: column;
 }
 
 .mapCanvas {
     height: 100%;
     width: 100%;
+    z-index: 1;
 }
 
-/* Стиль самого цінника */
+/* 2. ЦІННИК */
 .priceTag {
-    background-color: white;
-    border: 1.5px solid var(--accent-color);
-    border-radius: 50px;
+    background: #FAF7F0;
+    border: 1.5px solid var(--accent-color, #B17457);
     padding: 4px 10px;
-    font-size: 13px;
+    border-radius: 50px;
     font-weight: 700;
-    color: var(--text-main);
-    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.15);
-    white-space: nowrap;
+    color: var(--text-main, #4A4947);
     text-align: center;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.15);
     transition: all 0.2s ease;
+    white-space: nowrap;
 }
 
-.priceTag:hover {
-    background-color: var(--accent-color);
-    color: white;
-    transform: scale(1.05);
+.priceTagSelected {
+    background: var(--accent-color, #B17457) !important;
+    color: white !important;
+    transform: scale(1.15);
 }
 
-/* Налаштування вікна Popup */
+/* 3. POPUP LEAFLET */
 .mapPopup :global(.leaflet-popup-content-wrapper) {
-    padding: 0;
-    border-radius: 20px;
-    overflow: hidden;
+    padding: 0 !important;
+    border-radius: 20px !important;
+    overflow: hidden !important;
+    background: white !important;
+    box-shadow: 0 10px 30px rgba(0,0,0,0.2) !important;
 }
 
 .mapPopup :global(.leaflet-popup-content) {
-    margin: 0;
-    width: 260px !important; /* Ширина картки всередині карти */
+    margin: 0 !important;
+    width: 280px !important;
 }
 
-/* Прибираємо тіні у картки всередині попапа, бо попап уже має свою тінь */
-.popupCardWrapper :global(.listing-card) {
+.mapPopup :global(.leaflet-popup-tip) {
+    background: white;
+}
+
+.mapPopup :global(.leaflet-popup-close-button) {
+    display: none !important;
+}
+
+.compareBadge {
+    background: var(--accent-color, #B17457);
+    color: white;
+    padding: 2px 8px;
+    border-radius: 4px;
+    font-size: 11px;
+    font-weight: 800;
+    margin-right: 4px;
+    box-shadow: 0 2px 4px rgba(177, 116, 87, 0.3);
+}
+
+/* 4. ОБГОРТКА КАРТКИ В ПОПАПІ */
+.popupCardWrapper {
+    background-color: #ffffff;
+    display: flex;
+    flex-direction: column;
+    position: relative;
+    border-radius: 20px;
+    overflow: hidden;
+    border: 1px solid var(--border-color, #E0E0E0);
+    transition: all 0.2s ease;
+}
+
+.wrapperSelected {
+    border: 3px solid var(--accent-color, #B17457) !important;
+    box-shadow: 0 8px 25px rgba(177, 116, 87, 0.2) !important;
+}
+
+.distanceHeader {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background: #F0EBE3;
+    padding: 10px 15px;
+    color: #4A4947;
+    font-weight: 600;
+    font-size: 12px;
+    border-bottom: 1px solid var(--border-color, #E0E0E0);
+    z-index: 5;
+}
+
+.distanceInfo {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.customCloseBtn {
+    color: #4A4947;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    padding: 4px;
+    border-radius: 50%;
+    transition: background 0.2s;
+}
+
+.customCloseBtn:hover {
+    background: rgba(0, 0, 0, 0.05);
+}
+
+/* 5. ListingCard RESET (ЕТАЛОННА ВЕРСІЯ - НЕЗМІННО) */
+.cardInternalWrapper :global(.listing-card) {
     box-shadow: none !important;
     border: none !important;
+    margin: 0 !important;
+    padding: 0 !important;
+    transform: none !important;
+    transition: none !important;
+    height: auto !important;
+    background-color: transparent !important;
+    border-top-left-radius: 0 !important;
+    border-top-right-radius: 0 !important;
 }
 
-.listFloatingBtn {
-    position: absolute; /* На мапі використовуємо absolute відносно контейнера explorePage */
-    bottom: 30px;
-    left: 50%;
-    transform: translateX(-50%);
-    z-index: 1001; /* Важливо: має бути більше, ніж у карти */
-    
+.cardInternalWrapper :global([class*="card"]) {
+    outline: none !important;
+    border: none !important;
+    box-shadow: none !important;
+    transform: none !important;
+    background-color: transparent !important;
+    border-top-left-radius: 0 !important;
+    border-top-right-radius: 0 !important;
+}
+
+.cardInternalWrapper :global([class*="image"]),
+.cardInternalWrapper :global([class*="imageContainer"]) {
+    border-top-left-radius: 0 !important;
+    border-top-right-radius: 0 !important;
+}
+
+/* 6. ПАНЕЛЬ АНАЛІЗУ */
+.analysisPanel {
+    position: absolute;
+    top: 20px;
+    left: 20px;
+    z-index: 1000;
+    background: white;
+    padding: 15px;
+    border-radius: 18px;
+    box-shadow: 0 8px 30px rgba(0,0,0,0.15);
+    max-width: 280px;
+}
+
+.analysisHeader {
     display: flex;
     align-items: center;
     gap: 10px;
-    
+    font-weight: 700;
+    color: #4A4947;
+    margin-bottom: 16px; /* ВИПРАВЛЕНО: додано відступ від заголовка до сітки */
+    font-size: 14px;
+}
+
+.landmarkGrid {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px;
+}
+
+.landmarkBtn {
+    padding: 6px 10px;
+    border-radius: 12px;
+    border: 1px solid #EEEAE0;
+    background: #FAF7F0;
+    font-size: 11px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.2s;
+    color: #4A4947;
+}
+
+.activeLandmark {
+    background: #B17457 !important;
+    color: white !important;
+    border-color: #B17457 !important;
+}
+
+/* НОВА КАРТКА-ПІДКАЗКА (HINT) */
+.analysisHintCard {
+    margin-top: 15px;
+    padding: 12px;
+    background: #F0EBE3;
+    border-left: 4px solid #B17457;
+    border-radius: 8px;
+    display: flex;
+    gap: 10px;
+    animation: fadeInSlide 0.3s ease-out;
+}
+
+.hintText {
+    font-size: 12px;
+    color: #4A4947;
+    line-height: 1.4;
+}
+
+.hintText strong {
+    color: #B17457;
+}
+
+/* 7. МАРКЕРИ ПАМ'ЯТОК */
+.academyMarker {
+    background-color: #4A4947;
+    border: 2px solid white;
+    border-radius: 50%;
+    width: 35px;
+    height: 35px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.newAcademyMarker {
+    background-color: #B17457;
+    border: 2px solid white;
+    border-radius: 50%;
+    width: 35px;
+    height: 35px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    box-shadow: 0 4px 10px rgba(177, 116, 87, 0.4);
+}
+
+.landmarkNameTooltip {
+    background: white !important;
+    color: #4A4947 !important;
+    border: 1px solid #E0E0E0 !important;
+    border-radius: 8px !important;
+    padding: 4px 10px !important;
+    font-weight: 600 !important;
+    font-size: 12px !important;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.1) !important;
+}
+
+.landmarkDot {
+    width: 12px;
+    height: 12px;
+    background: #4A4947;
+    border: 2px solid white;
+    border-radius: 50%;
+    position: relative;
+}
+
+.landmarkPulse {
+    position: absolute;
+    top: -2px;
+    left: -2px;
+    width: 12px;
+    height: 12px;
+    background: rgba(177, 116, 87, 0.3);
+    border-radius: 50%;
+    animation: pulseIcon 2s infinite;
+}
+
+/* 8. АНІМАЦІЇ */
+@keyframes pulseIcon {
+    0% { transform: scale(1); opacity: 1; }
+    100% { transform: scale(3); opacity: 0; }
+}
+
+@keyframes dashAnimation {
+    from { stroke-dashoffset: 500; }
+    to { stroke-dashoffset: 0; }
+}
+
+@keyframes fadeInSlide {
+    from { opacity: 0; transform: translateY(-10px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+.animatedLine {
+    stroke-dasharray: 10, 15;
+    animation: dashAnimation 20s linear infinite;
+}
+
+/* 9. ТУЛТІПИ ВІДСТАНІ */
+.distanceTooltip {
+    background: #4A4947 !important;
+    color: white !important;
+    border: 2px solid white !important;
+    padding: 4px 10px !important;
+    border-radius: 50px !important;
+    font-weight: 700 !important;
+    font-size: 12px !important;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.2) !important;
+    white-space: nowrap !important;
+}
+
+.distanceTooltip::before {
+    display: none !important;
+}
+
+/* 10. КНОПКА СПИСОК */
+.listFloatingBtn {
+    position: absolute;
+    bottom: 30px;
+    left: 50%;
+    transform: translateX(-50%);
+    z-index: 999; 
+    display: flex;
+    align-items: center;
+    gap: 10px;
     padding: 14px 24px;
-    background-color: var(--text-main, #4A4947);
+    background-color: #4A4947;
     color: #FFFFFF;
-    
     border: none;
     border-radius: 50px;
     font-size: 16px;
     font-weight: 600;
     cursor: pointer;
     box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
-    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    transition: transform 0.2s, background-color 0.2s, bottom 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.1);
+}
+
+.listBtnRaised {
+    bottom: 100px;
 }
 
 .listFloatingBtn:hover {
-    background-color: var(--accent-color);
+    background-color: #333;
     transform: translateX(-50%) scale(1.05);
-}
-
-@media (max-width: 768px) {
-    .listFloatingBtn {
-        bottom: 20px;
-        padding: 12px 20px;
-        font-size: 14px;
-    }
 }

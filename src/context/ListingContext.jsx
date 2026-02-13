@@ -8,7 +8,8 @@ const ListingContext = createContext();
 export const ListingProvider = ({ children }) => {
     const { isAuthenticated } = useAuth();
     const [listings, setListings] = useState([]);
-    const [favoriteIds, setFavoriteIds] = useState([]); 
+    const [favoriteIds, setFavoriteIds] = useState([]);
+    const [compareIds, setCompareIds] = useState([]); // Стейт для порівняння
     const [loading, setLoading] = useState(false);
     const [error, setError] = useState(null);
 
@@ -31,7 +32,6 @@ export const ListingProvider = ({ children }) => {
         }
         try {
             const data = await FavoriteService.getMyFavorites();
-            // ВАЖЛИВО: Бекенд повертає об'єкти, беремо саме Id
             setFavoriteIds(data.map(fav => fav.id));
         } catch (err) {
             console.error("Помилка завантаження обраних:", err);
@@ -56,15 +56,12 @@ export const ListingProvider = ({ children }) => {
                 try {
                     await FavoriteService.removeFromFavorites(listingId);
                 } catch (err) {
-                    // ВАЖЛИВО: Якщо сервер повернув 404, це означає, що в базі 
-                    // запису вже немає. Ми все одно маємо видалити його зі стейту!
                     if (err.response && err.response.status === 404) {
                         console.warn("Запис не знайдено на сервері, видаляємо локально.");
                     } else {
-                        throw err; // Якщо помилка інша (напр. 500), кидаємо далі
+                        throw err;
                     }
                 }
-                // Видаляємо зі стейту незалежно від того, чи видалив сервер (204) чи не знайшов (404)
                 setFavoriteIds(prev => prev.filter(id => id !== listingId));
             } else {
                 await FavoriteService.addToFavorites(listingId);
@@ -73,10 +70,25 @@ export const ListingProvider = ({ children }) => {
         } catch (err) {
             console.error("Помилка toggle favorite:", err);
         }
-};
+    }; // ТУТ БУЛА ПОМИЛКА (пропущена дужка)
+
+    // ЛОГІКА ПОРІВНЯННЯ
+    const toggleCompare = (listingId) => {
+        setCompareIds(prev => {
+            if (prev.includes(listingId)) {
+                return prev.filter(id => id !== listingId);
+            }
+            if (prev.length >= 2) {
+                alert("Ви можете порівняти лише 2 оголошення одночасно.");
+                return prev;
+            }
+            return [...prev, listingId];
+        });
+    };
+
+    const clearCompare = () => setCompareIds([]);
 
     const clearFavorites = async () => {
-    // window.confirm більше не потрібен тут!
         const idsToDelete = [...new Set(favoriteIds)];
         try {
             await Promise.allSettled(
@@ -89,17 +101,22 @@ export const ListingProvider = ({ children }) => {
     };
 
     const favoriteListings = listings.filter(l => favoriteIds.includes(l.id));
+    const compareListings = listings.filter(l => compareIds.includes(l.id));
 
     return (
         <ListingContext.Provider value={{
             listings,
             favoriteListings,
             favoriteIds,
+            compareIds,      // Додано
+            compareListings, // Додано
             loading,
             error,
             fetchListings,
             fetchFavoriteIds,
             toggleFavorite,
+            toggleCompare,   // Додано
+            clearCompare,    // Додано
             clearFavorites,
             addListing: async (dto) => {
                 const createdListing = await ListingService.create(dto);

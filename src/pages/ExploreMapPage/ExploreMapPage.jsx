@@ -1,82 +1,164 @@
-import React, { useState, useEffect } from 'react';
-import { MapContainer, TileLayer, Marker, Popup, ZoomControl } from 'react-leaflet';
+import React, { useState, useEffect, useMemo } from 'react';
+import { MapContainer, TileLayer, Marker, Popup, ZoomControl, Polyline, Tooltip, useMap } from 'react-leaflet';
 import L from 'leaflet';
-import { ListingService } from '../../api/services/ListingService'; // перевірте шлях до сервісу
-import ListingCard from '../../components/listings/ListingCard/ListingCard'; // перевірте шлях до картки
+import { useNavigate } from 'react-router-dom';
+import { FiList, FiBookOpen, FiX } from 'react-icons/fi';
+import ReactDOMServer from 'react-dom/server';
+
+import { ListingService } from '../../api/services/ListingService';
+import { OSTROH_LANDMARKS } from '../../constants/landmarks';
+import { calculateDistance } from '../../utils/geoUtils';
+import { useListings } from '../../context/ListingContext';
+
+import MapController from './components/MapController';
+import AnalysisPanel from './components/AnalysisPanel';
+import ListingCard from '../../components/listings/ListingCard/ListingCard';
 import LoadingPage from '../LoadingPage/LoadingPage';
 import styles from './ExploreMapPage.module.css';
-import { useNavigate } from 'react-router-dom';
-import { FiList } from 'react-icons/fi';
+
+// Компонент-помічник для доступу до методів карти
+const MapActions = ({ setCloseAction }) => {
+    const map = useMap();
+    useEffect(() => {
+        setCloseAction(() => () => map.closePopup());
+    }, [map, setCloseAction]);
+    return null;
+};
 
 const ExploreMapPage = () => {
+    const navigate = useNavigate();
+    const { compareIds, compareListings } = useListings();
     const [listings, setListings] = useState([]);
     const [loading, setLoading] = useState(true);
-    const navigate = useNavigate();
-    
-    // Координати центру Острога
-    const center = [50.3291, 26.5126];
+    const [selectedLandmark, setSelectedLandmark] = useState(null);
+    const [closePopupFunc, setClosePopupFunc] = useState(null);
+
+    // Координати ключових точок
+    const MAIN_COORD = OSTROH_LANDMARKS.find(l => l.id === 'old_academy')?.coords || [50.329, 26.512];
 
     useEffect(() => {
         const fetchAllListings = async () => {
             try {
-                // Використовуємо ваш метод getAll для отримання всіх оголошень
                 const data = await ListingService.getAll();
                 setListings(data);
-            } catch (err) {
-                console.error("Не вдалося завантажити оголошення для карти:", err);
-            } finally {
-                setLoading(false);
-            }
+            } catch (err) { console.error("Data error:", err); } 
+            finally { setLoading(false); }
         };
         fetchAllListings();
     }, []);
 
-    // Створюємо вигляд маркера (цінника)
-    const createPriceIcon = (price) => {
-        return L.divIcon({
-            className: styles.customMarkerContainer, // порожній клас-обгортка Leaflet
-            html: `<div class="${styles.priceTag}">${price.toLocaleString()} ₴</div>`,
-            iconSize: [60, 30],
-            iconAnchor: [30, 15]
-        });
-    };
+    // Створення кастомних іконок
+    const academyIcon = (isNew) => L.divIcon({
+        className: styles.academyMarkerWrapper,
+        html: ReactDOMServer.renderToString(
+            <div className={isNew ? styles.newAcademyMarker : styles.academyMarker}>
+                <FiBookOpen color="white" size={20} />
+            </div>
+        ),
+        iconSize: [38, 38], iconAnchor: [19, 19]
+    });
+
+    const landmarkIcon = useMemo(() => L.divIcon({
+        className: styles.landmarkMarkerWrapper,
+        html: `<div class="${styles.landmarkDot}"><div class="${styles.landmarkPulse}"></div></div>`,
+        iconSize: [20, 20], iconAnchor: [10, 10]
+    }), []);
+
+    const createPriceIcon = (price, isSelected) => L.divIcon({
+        className: styles.customMarkerContainer,
+        html: `<div class="${styles.priceTag} ${isSelected ? styles.priceTagSelected : ''}">${price.toLocaleString()} ₴</div>`,
+        iconSize: [60, 30], iconAnchor: [30, 15]
+    });
+
+    const analysisHint = useMemo(() => {
+        if (!selectedLandmark || compareListings.length !== 2) return null;
+        const d = compareListings.map(l => calculateDistance(l.latitude, l.longitude, selectedLandmark.coords[0], selectedLandmark.coords[1]));
+        return {
+            text: d[0] < d[1] ? `Об'єкт №1 ближче до "${selectedLandmark.name}" на ${Math.abs(d[0]-d[1]).toFixed(2)} км` : `Об'єкт №2 ближче до "${selectedLandmark.name}" на ${Math.abs(d[0]-d[1]).toFixed(2)} км`
+        };
+    }, [selectedLandmark, compareListings]);
 
     if (loading) return <LoadingPage />;
 
     return (
         <div className={styles.explorePage}>
-            <button 
-                className={styles.listFloatingBtn}
-                onClick={() => navigate('/listings')}
-            >
+            {compareIds.length === 2 && (
+                <AnalysisPanel 
+                    selectedLandmark={selectedLandmark} 
+                    setSelectedLandmark={setSelectedLandmark}
+                    analysisHint={analysisHint}
+                />
+            )}
+
+            <button className={`${styles.listFloatingBtn} ${compareIds.length > 0 ? styles.listBtnRaised : ''}`} onClick={() => navigate('/listings')}>
                 <FiList /> Список
             </button>
 
-            <MapContainer 
-                center={center} 
-                zoom={15} 
-                zoomControl={false} // прибираємо стандартні кнопки, щоб поставити свої
-                className={styles.mapCanvas}
-            >
+            <MapContainer center={MAIN_COORD} zoom={16} zoomControl={false} className={styles.mapCanvas}>
                 <TileLayer url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png" />
-
-                {/* Кнопки масштабу в зручному місці */}
                 <ZoomControl position="bottomright" />
+                
+                <MapController selectedLandmark={selectedLandmark} compareListings={compareListings} mainCoord={MAIN_COORD} />
+                <MapActions setCloseAction={setClosePopupFunc} />
 
-                {listings.map(listing => (
-                    <Marker 
-                        key={listing.id}
-                        position={[listing.latitude, listing.longitude]}
-                        icon={createPriceIcon(listing.price)}
+                {OSTROH_LANDMARKS.map(landmark => {
+                    const isAcademy = landmark.id === 'old_academy' || landmark.id === 'new_academy';
+                    return (
+                        <Marker 
+                            key={landmark.id} 
+                            position={landmark.coords} 
+                            icon={isAcademy ? academyIcon(landmark.id === 'new_academy') : landmarkIcon}
+                            eventHandlers={{ click: () => setSelectedLandmark(landmark) }}
+                        >
+                            <Tooltip direction="top" offset={[0, -10]} opacity={1} className={styles.landmarkNameTooltip}>
+                                {landmark.name}
+                            </Tooltip>
+                            <Popup className={styles.landmarkPopup}><strong>{landmark.name}</strong></Popup>
+                        </Marker>
+                    );
+                })}
+
+                {selectedLandmark && compareListings.map((listing, index) => (
+                    <Polyline 
+                        key={`analysis-${selectedLandmark.id}-${listing.id}`}
+                        positions={[selectedLandmark.coords, [listing.latitude, listing.longitude]]}
+                        pathOptions={{ color: index === 0 ? '#B17457' : '#4A4947', weight: 4, dashArray: '10, 15', className: styles.animatedLine }}
                     >
-                        {/* При натисканні на маркер вискочить ваша картка */}
-                        <Popup className={styles.mapPopup}>
-                            <div className={styles.popupCardWrapper}>
-                                <ListingCard listing={listing} />
-                            </div>
-                        </Popup>
-                    </Marker>
+                        <Tooltip permanent direction="top" className={styles.distanceTooltip}>
+                            №{index + 1}: {calculateDistance(listing.latitude, listing.longitude, selectedLandmark.coords[0], selectedLandmark.coords[1])} км
+                        </Tooltip>
+                    </Polyline>
                 ))}
+
+                {listings.map(listing => {
+                    const compareIndex = compareIds.indexOf(listing.id);
+                    const isSelected = compareIndex !== -1;
+                    const distToOld = calculateDistance(listing.latitude, listing.longitude, MAIN_COORD[0], MAIN_COORD[1]);
+
+                    return (
+                        <React.Fragment key={listing.id}>
+                            <Marker position={[listing.latitude, listing.longitude]} icon={createPriceIcon(listing.price, isSelected)} zIndexOffset={isSelected ? 1000 : 0}>
+                                <Popup className={styles.mapPopup} closeButton={false}>
+                                    <div className={`${styles.popupCardWrapper} ${isSelected ? styles.wrapperSelected : ''}`}>
+                                        <div className={styles.distanceHeader}>
+                                            <div className={styles.distanceInfo}>
+                                                {isSelected && <span className={styles.compareBadge}>№{compareIndex + 1}</span>}
+                                                <FiBookOpen size={14} /> 
+                                                <span>{distToOld} км до Академії</span>
+                                            </div>
+                                            <div className={styles.customCloseBtn} onClick={() => closePopupFunc && closePopupFunc()}>
+                                                <FiX size={18} />
+                                            </div>
+                                        </div>
+                                        <div className={styles.cardInternalWrapper}>
+                                            <ListingCard listing={listing} />
+                                        </div>
+                                    </div>
+                                </Popup>
+                            </Marker>
+                        </React.Fragment>
+                    );
+                })}
             </MapContainer>
         </div>
     );

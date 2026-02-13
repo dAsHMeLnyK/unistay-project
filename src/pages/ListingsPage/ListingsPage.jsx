@@ -11,7 +11,7 @@ import styles from './ListingsPage.module.css';
 import { useNavigate } from 'react-router-dom';
 
 const ListingsPage = () => {
-    const { listings, fetchListings, loading, error } = useListings();
+    const { listings, fetchListings, loading, error, compareIds } = useListings();
     const [displayListings, setDisplayListings] = useState([]);
     const [isSearching, setIsSearching] = useState(false);
     const navigate = useNavigate();
@@ -22,6 +22,9 @@ const ListingsPage = () => {
         minPrice: '', maxPrice: '',
     });
     const [showFilters, setShowFilters] = useState(true);
+
+    // Перевірка чи відкрита панель порівняння
+    const isComparePanelOpen = compareIds && compareIds.length > 0;
 
     useEffect(() => {
         fetchListings();
@@ -88,12 +91,12 @@ const ListingsPage = () => {
     return (
         <div className={styles.listingsPage}>
             <button 
-                className={styles.mapFloatingBtn}
+                className={`${styles.mapFloatingBtn} ${isComparePanelOpen ? styles.mapFloatingBtnRaised : ''}`}
                 onClick={() => navigate('/explore-map')}
             >
                 <FiMap /> Карта
             </button>
-            {/* НОВИЙ УНІФІКОВАНИЙ ЗАГОЛОВОК */}
+
             <header className="page-header">
                 <h1 className="page-title">Усі оголошення</h1>
                 <p className="page-subtitle">Знайдіть ідеальне житло в Острозі серед актуальних пропозицій</p>
@@ -110,7 +113,7 @@ const ListingsPage = () => {
                         className={styles.customSearchInput}
                     />
                     <Button 
-                        variant="primary" // Вказуємо явно варіант
+                        variant="primary"
                         className={styles.customSearchButton}
                         onClick={handleSearchButtonClick}
                         disabled={isSearching}

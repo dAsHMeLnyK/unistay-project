@@ -1,11 +1,12 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
-import { FiMapPin, FiHeart } from 'react-icons/fi';
+import { FiMapPin, FiHeart, FiLayers } from 'react-icons/fi'; // Додано FiLayers
 import { useListings } from '../../../context/ListingContext';
 import styles from './ListingCard.module.css';
 
 const ListingCard = ({ listing }) => {
-    const { favoriteIds, toggleFavorite } = useListings();
+    // Додаємо compareIds та toggleCompare
+    const { favoriteIds, toggleFavorite, compareIds, toggleCompare } = useListings();
 
     const calculateAverageRating = (reviews) => {
         if (!reviews || reviews.length === 0) return 0;
@@ -21,6 +22,7 @@ const ListingCard = ({ listing }) => {
     const averageRating = calculateAverageRating(listing?.reviews);
 
     const isFavorite = favoriteIds.includes(id);
+    const isComparing = compareIds?.includes(id); // Безпечна перевірка порівняння
 
     const handleFavoriteClick = (e) => {
         e.preventDefault();
@@ -28,11 +30,27 @@ const ListingCard = ({ listing }) => {
         toggleFavorite(id);
     };
 
+    const handleCompareClick = (e) => {
+        e.preventDefault();
+        e.stopPropagation();
+        toggleCompare(id); // Викликаємо функцію з контексту
+    };
+
     return (
         <Link to={`/listings/${id}`} className={styles.cardLink}>
-            <div className={styles.card}>
+            {/* Додаємо динамічний клас cardComparing для підсвітки картки */}
+            <div className={`${styles.card} ${isComparing ? styles.cardComparing : ''}`}>
                 <div className={styles.imageContainer}>
                     <img src={imageUrl} alt={title} className={styles.image} />
+                    
+                    {/* КНОПКА ПОРІВНЯННЯ */}
+                    <button
+                        className={`${styles.compareButton} ${isComparing ? styles.compareActive : ''}`}
+                        onClick={handleCompareClick}
+                        title={isComparing ? "Видалити з порівняння" : "Додати до порівняння"}
+                    >
+                        <FiLayers className={styles.compareIcon} />
+                    </button>
                 </div>
 
                 <div className={styles.info}>

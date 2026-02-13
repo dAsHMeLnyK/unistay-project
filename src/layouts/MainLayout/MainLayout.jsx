@@ -1,6 +1,7 @@
 import React from "react";
 import { Outlet } from "react-router-dom";
 import Navbar from "../../components/layout/Navbar/Navbar";
+import ComparisonBar from "../../components/layout/ComparisonBar/ComparisonBar"; // ДОДАНО
 import styles from "./MainLayout.module.css";
 
 const MainLayout = () => {
@@ -12,6 +13,8 @@ const MainLayout = () => {
           <Outlet />
         </div>
       </main>
+      {/* Додаємо бар сюди — він з'являтиметься лише коли в compareIds є об'єкти */}
+      <ComparisonBar /> 
     </div>
   );
 };

@@ -18,11 +18,13 @@ import SignInPage from "./pages/SignInPage/SignInPage";
 import SignUpPage from "./pages/SignUpPage/SignUpPage";
 import NotFoundPage from "./pages/NotFoundPage/NotFoundPage";
 import ExploreMapPage from './pages/ExploreMapPage/ExploreMapPage';
+import ComparePage from "./pages/ComparePage/ComparePage";
 
 // Context & Protection
 import { AuthProvider } from "./context/AuthContext";
 import { ListingProvider } from "./context/ListingContext";
 import ProtectedRoute from "./components/common/ProtectedRoute";
+
 
 function App() {
   return (
@@ -34,6 +36,7 @@ function App() {
             <Route path="listings" element={<ListingsPage />} />
             <Route path="listings/:listingId" element={<ListingDetailPage />} />
             <Route path="/explore-map" element={<ExploreMapPage />} />
+            <Route path="compare" element={<ComparePage />} />
 
             {/* Захищені маршрути */}
             <Route path="add-listing" element={

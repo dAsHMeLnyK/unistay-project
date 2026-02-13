@@ -18,3 +18,10 @@ export const NEIGHBOUR_TYPES = [
     { value: 0, label: "З сусідами" },
     { value: 1, label: "Без сусідів" }
 ];
+
+export const COMPARISON_RESULT = {
+    LISTING_1: 0,
+    LISTING_2: 1,
+    SAME: 2,
+    NONE: 3
+};

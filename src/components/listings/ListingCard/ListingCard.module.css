@@ -11,11 +11,18 @@
     box-shadow: 0 4px 12px rgba(74, 73, 71, 0.08); /* М'якша тінь */
     overflow: hidden;
     width: 100%;
-    transition: transform 0.3s ease, box-shadow 0.3s ease;
+    transition: transform 0.3s ease, box-shadow 0.3s ease, outline 0.2s ease;
     font-family: 'Afacad', sans-serif;
     display: flex;
     flex-direction: column;
-    height: 420px; /* Фіксована висота для гарного прямокутника */
+    height: 420px; /* Фіксована висота */
+    position: relative; /* Для коректної підсвітки */
+}
+
+/* Стан, коли картка вибрана для порівняння */
+.cardComparing {
+    outline: 3px solid var(--accent-color, #B17457);
+    box-shadow: 0 8px 25px rgba(177, 116, 87, 0.2);
 }
 
 .card:hover {
@@ -25,9 +32,10 @@
 
 .imageContainer {
     width: 100%;
-    height: 200px; /* Фото займає трохи менше половини */
+    height: 200px;
     overflow: hidden;
     flex-shrink: 0;
+    position: relative; /* Щоб кнопка порівняння була всередині */
 }
 
 .image {
@@ -35,6 +43,41 @@
     height: 100%;
     object-fit: cover;
     transition: transform 0.5s ease;
+}
+
+/* КНОПКА ПОРІВНЯННЯ ПОВЕРХ ФОТО */
+.compareButton {
+    position: absolute;
+    top: 12px;
+    left: 12px;
+    width: 34px;
+    height: 34px;
+    border-radius: 50%;
+    background-color: rgba(250, 247, 240, 0.9); /* Колір вашого бежу з прозорістю */
+    border: none;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+    transition: all 0.2s ease;
+    z-index: 5;
+    color: var(--text-main, #4A4947);
+}
+
+.compareButton:hover {
+    transform: scale(1.1);
+    background-color: #ffffff;
+}
+
+/* Коли порівняння активоване */
+.compareActive {
+    background-color: var(--accent-color, #B17457) !important;
+    color: #ffffff !important;
+}
+
+.compareIcon {
+    font-size: 18px;
 }
 
 .card:hover .image {
@@ -104,7 +147,7 @@
 
 .price {
     font-size: 20px;
-    font-weight: 700; /* Зробив 700 замість bold/800, щоб було акуратніше */
+    font-weight: 700;
     color: var(--text-main);
     margin: 0;
 }
