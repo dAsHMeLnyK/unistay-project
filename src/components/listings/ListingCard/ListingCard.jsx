@@ -1,11 +1,10 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
-import { FiMapPin, FiHeart, FiLayers } from 'react-icons/fi'; // Додано FiLayers
+import { FiMapPin, FiHeart, FiLayers } from 'react-icons/fi';
 import { useListings } from '../../../context/ListingContext';
 import styles from './ListingCard.module.css';
 
 const ListingCard = ({ listing }) => {
-    // Додаємо compareIds та toggleCompare
     const { favoriteIds, toggleFavorite, compareIds, toggleCompare } = useListings();
 
     const calculateAverageRating = (reviews) => {
@@ -22,31 +21,24 @@ const ListingCard = ({ listing }) => {
     const averageRating = calculateAverageRating(listing?.reviews);
 
     const isFavorite = favoriteIds.includes(id);
-    const isComparing = compareIds?.includes(id); // Безпечна перевірка порівняння
+    const isComparing = compareIds?.includes(id);
 
-    const handleFavoriteClick = (e) => {
+    // Універсальний обробник для кнопок, щоб не переходити по лінку картки
+    const handleAction = (e, callback) => {
         e.preventDefault();
         e.stopPropagation();
-        toggleFavorite(id);
-    };
-
-    const handleCompareClick = (e) => {
-        e.preventDefault();
-        e.stopPropagation();
-        toggleCompare(id); // Викликаємо функцію з контексту
+        callback(id);
     };
 
     return (
         <Link to={`/listings/${id}`} className={styles.cardLink}>
-            {/* Додаємо динамічний клас cardComparing для підсвітки картки */}
             <div className={`${styles.card} ${isComparing ? styles.cardComparing : ''}`}>
                 <div className={styles.imageContainer}>
                     <img src={imageUrl} alt={title} className={styles.image} />
                     
-                    {/* КНОПКА ПОРІВНЯННЯ */}
                     <button
                         className={`${styles.compareButton} ${isComparing ? styles.compareActive : ''}`}
-                        onClick={handleCompareClick}
+                        onClick={(e) => handleAction(e, toggleCompare)}
                         title={isComparing ? "Видалити з порівняння" : "Додати до порівняння"}
                     >
                         <FiLayers className={styles.compareIcon} />
@@ -71,12 +63,12 @@ const ListingCard = ({ listing }) => {
                     <div className={styles.priceContainer}>
                         <p className={styles.price}>{price.toLocaleString()} грн</p>
                         <button
-                            className={`${styles.heartButton} ${isFavorite ? styles.favorited : ''}`}
-                            onClick={handleFavoriteClick}
+                            className={styles.heartButton}
+                            onClick={(e) => handleAction(e, toggleFavorite)}
                         >
                             <FiHeart 
                                 className={styles.heartIcon} 
-                                fill={isFavorite ? "var(--accent-color, #ff4d4d)" : "none"} 
+                                fill={isFavorite ? "var(--accent-color)" : "none"} 
                             />
                         </button>
                     </div>

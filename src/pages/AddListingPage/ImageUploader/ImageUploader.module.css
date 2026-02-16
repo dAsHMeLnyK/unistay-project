@@ -13,10 +13,15 @@
 .imageItem {
     position: relative;
     aspect-ratio: 1 / 1;
-    border-radius: 16px;
+    border-radius: var(--radius-inner); /* 20px - синхронізація з картою */
     overflow: hidden;
-    border: 1px solid var(--border-color);
-    background: #fff;
+    border: 1.5px solid var(--border-color);
+    background: var(--bg-white);
+    transition: transform var(--transition-fast);
+}
+
+.imageItem:hover {
+    transform: translateY(-2px);
 }
 
 .previewImage {
@@ -27,70 +32,67 @@
 
 .removeBtn {
     position: absolute;
-    top: 6px;
-    right: 6px;
-    background: white;
-    color: var(--accent-color);
+    top: 8px;
+    right: 8px;
+    background: var(--bg-white);
+    color: var(--danger-color); /* Використовуємо системний колір помилки */
     border: none;
     border-radius: 50%;
-    width: 26px;
-    height: 26px;
+    width: 28px;
+    height: 28px;
     display: flex;
     align-items: center;
     justify-content: center;
     cursor: pointer;
-    box-shadow: 0 2px 8px rgba(0,0,0,0.15);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
     z-index: 10;
-    transition: transform 0.2s ease;
+    transition: all var(--transition-fast);
 }
 
 .removeBtn:hover {
-    transform: scale(1.1);
-    background: var(--accent-color);
-    color: white;
+    background: var(--danger-color);
+    color: var(--bg-white);
+    transform: rotate(90deg);
 }
 
 .addBtn {
     aspect-ratio: 1 / 1;
     width: 100%;
     border: 2px dashed var(--border-color);
-    border-radius: 16px;
+    border-radius: var(--radius-inner);
     background-color: var(--bg-input);
     cursor: pointer;
     transition: all var(--transition-fast);
-    
     display: flex !important;
     flex-direction: column !important;
     align-items: center !important;
     justify-content: center !important;
-    padding: 0;
-    margin: 0;
+    text-align: center;
 }
 
 .addBtn:hover:not(.disabled) {
     border-color: var(--accent-color);
-    background-color: #ffffff;
+    background-color: var(--bg-white);
+    border-style: solid;
 }
 
 .plusIcon {
-    font-size: 26px;
+    font-size: 28px;
     color: var(--accent-color);
-    margin-bottom: 4px;
+    margin-bottom: 6px;
 }
 
 .addBtn span {
-    font-size: 11px;
-    font-weight: 500;
+    font-size: 12px;
+    font-weight: 600;
     color: var(--text-muted);
 }
 
-.hint {
-    font-size: 13px;
-    color: #8C8C8C; /* Ваш колір --text-muted */
-    margin: 8px 0 0 2px;
-    font-style: italic;
-    font-weight: 400;
-    opacity: 0.9;
+.loaderWrapper {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 8px;
 }
 
 .loaderIcon {
@@ -99,12 +101,28 @@
     animation: spin 1s linear infinite;
 }
 
+.hint {
+    font-size: 13px;
+    color: var(--text-muted);
+    margin: 10px 0 0 4px;
+    font-style: italic;
+    opacity: 0.8;
+}
+
 .disabled {
     cursor: not-allowed;
-    opacity: 0.6;
+    opacity: 0.5;
+    background-color: var(--border-color);
 }
 
 @keyframes spin {
     from { transform: rotate(0deg); }
     to { transform: rotate(360deg); }
+}
+
+/* Адаптація для маленьких екранів */
+@media (max-width: 480px) {
+    .imageGrid {
+        grid-template-columns: repeat(2, 1fr);
+    }
 }

@@ -5,7 +5,6 @@ import Input from '../../components/common/Input/Input';
 import Button from '../../components/common/Button/Button';
 import UserService from '../../api/services/UserService';
 import { FiUser, FiMail, FiLock, FiPhone } from 'react-icons/fi';
-import styles from './SignUpPage.module.css';
 
 const SignUpPage = () => {
   const navigate = useNavigate();
@@ -35,10 +34,6 @@ const SignUpPage = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    if (formData.password.length < 8) {
-      setError('Пароль має містити щонайменше 8 символів.');
-      return;
-    }
     if (formData.password !== formData.confirmPassword) {
       setError('Паролі не співпадають!');
       return;
@@ -46,21 +41,13 @@ const SignUpPage = () => {
 
     setLoading(true);
     try {
-      const createData = {
-        firstName: formData.firstName,
-        lastName: formData.lastName,
-        email: formData.email,
-        password: formData.password,
-        phoneNumber: formData.phoneNumber === '+380' ? null : formData.phoneNumber,
-        profileImage: null
-      };
-
-      await UserService.create(createData);
-      alert('Реєстрація успішна! Тепер увійдіть у систему.');
+      await UserService.create({
+        ...formData,
+        phoneNumber: formData.phoneNumber === '+380' ? null : formData.phoneNumber
+      });
       navigate('/signin');
     } catch (err) {
-      const message = err.response?.data?.Message || err.response?.data?.message || 'Помилка реєстрації.';
-      setError(message);
+      setError(err.response?.data?.message || 'Помилка реєстрації.');
     } finally {
       setLoading(false);
     }
@@ -69,16 +56,16 @@ const SignUpPage = () => {
   return (
     <AuthFormContainer title="Створити акаунт" isSignUp={true}>
       <form onSubmit={handleSubmit}>
-        {error && <div className={styles.errorContainer}>{error}</div>}
+        {error && <div className="system-error">{error}</div>}
         
         <Input icon={FiUser} placeholder="Ім'я" name="firstName" value={formData.firstName} onChange={handleChange} required />
         <Input icon={FiUser} placeholder="Прізвище" name="lastName" value={formData.lastName} onChange={handleChange} required />
         <Input icon={FiMail} type="email" placeholder="Email" name="email" value={formData.email} onChange={handleChange} required />
-        <Input icon={FiPhone} type="tel" placeholder="Телефон (+380...)" name="phoneNumber" value={formData.phoneNumber} onChange={handleChange} />
+        <Input icon={FiPhone} type="tel" placeholder="Телефон" name="phoneNumber" value={formData.phoneNumber} onChange={handleChange} />
         <Input icon={FiLock} type="password" placeholder="Пароль" name="password" value={formData.password} onChange={handleChange} required />
         <Input icon={FiLock} type="password" placeholder="Підтвердіть пароль" name="confirmPassword" value={formData.confirmPassword} onChange={handleChange} required />
         
-        <Button type="submit" variant="primary" disabled={loading}>
+        <Button type="submit" variant="primary" disabled={loading} fullWidth>
           {loading ? 'Створення...' : 'Зареєструватися'}
         </Button>
       </form>

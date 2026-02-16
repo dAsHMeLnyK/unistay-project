@@ -11,7 +11,6 @@ const NotFoundPage = () => {
             <div className={styles.content}>
                 <h1 className={styles.errorCode}>404</h1>
                 <div className={styles.houseIllustration}>
-                    {/* Маленька візуальна деталь: будиночок, якого "немає" */}
                     <div className={styles.roof}></div>
                     <div className={styles.base}>
                         <div className={styles.door}></div>
@@ -24,7 +23,6 @@ const NotFoundPage = () => {
                 <Button 
                     variant="primary" 
                     onClick={() => navigate('/')}
-                    className={styles.homeButtonWidth}
                 >
                     Повернутися на головну
                 </Button>

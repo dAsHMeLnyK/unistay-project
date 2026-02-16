@@ -14,7 +14,7 @@
 }
 
 .filtersSection {
-    background-color: var(--bg-filters); /* Ваш колір #F7F5F0 */
+    background-color: var(--bg-filters);
     border-radius: 24px;
     padding: 25px;
     border: 1px solid var(--border-color);
@@ -28,9 +28,7 @@
 
 .filterRow {
     display: grid;
-    /* Гнучка сітка: мінімум 200px на колонку */
     grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-    /* Перше значення - відступ між рядами (якщо переносяться), друге - між колонками */
     gap: 25px 20px;
     align-items: flex-end;
 }
@@ -42,9 +40,7 @@
     width: 100%;
 }
 
-/* ВАЖЛИВО: Нашарування (z-index). 
-   Лівий селект має перекривати правий, а верхній ряд - нижній.
-*/
+/* Layering для випадаючих списків */
 .formGroup:nth-child(1) { z-index: 10; }
 .formGroup:nth-child(2) { z-index: 9; }
 .formGroup:nth-child(3) { z-index: 8; }
@@ -57,7 +53,7 @@
     gap: 6px;
     font-size: 14px;
     color: var(--text-main);
-    margin-bottom: 10px; /* Відступ від назви до самого поля */
+    margin-bottom: 10px;
     font-weight: 700;
 }
 
@@ -66,39 +62,34 @@
     font-size: 16px;
 }
 
-/* Група для діапазону цін */
 .priceInputs {
     display: flex;
     gap: 8px;
     align-items: center;
 }
 
+/* Оновлений системний інпут ціни */
 .priceInput {
     width: 100%;
-    /* Паддінги 9px 15px роблять інпут такої ж висоти, як наш кастомний Select */
-    padding: 9px 15px;
+    padding: 12px 15px; /* Синхронізуємо висоту з Button та Input */
     border: 1.5px solid var(--border-color);
-    border-radius: 50px;
+    border-radius: var(--radius-full);
     font-size: 15px;
-    font-family: 'Afacad', sans-serif;
+    font-family: inherit;
     background-color: var(--bg-input); 
     color: var(--text-main);
     outline: none;
     transition: all var(--transition-fast);
-    box-sizing: border-box; /* Щоб бордери не збільшували висоту */
 }
 
 .priceInput:focus {
     border-color: var(--accent-color);
-    background-color: #FFFFFF; 
-    box-shadow: 0 0 0 4px rgba(177, 116, 87, 0.08);
+    background-color: var(--bg-white); 
+    box-shadow: 0 0 0 4px var(--accent-shadow);
 }
 
-/* Прибираємо стрілочки в input type="number" */
-.priceInput::-webkit-outer-spin-button,
-.priceInput::-webkit-inner-spin-button {
-    -webkit-appearance: none;
-    margin: 0;
+.priceInput::placeholder {
+    color: var(--text-muted);
 }
 
 .filterButtons {
@@ -116,19 +107,7 @@
     gap: 8px;
 }
 
-/* Адаптивність для мобільних */
 @media (max-width: 768px) {
-    .filterRow { 
-        grid-template-columns: 1fr;
-        gap: 20px; 
-    }
-
-    .filtersSection {
-        padding: 20px;
-    }
-
-    /* На мобільних пристроях ціна може займати весь рядок */
-    .priceRangeGroup {
-        z-index: 1; 
-    }
+    .filterRow { grid-template-columns: 1fr; }
+    .filtersSection { padding: 20px; }
 }

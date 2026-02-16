@@ -21,23 +21,8 @@ const SignInPage = () => {
     if (error) setError(null);
   };
 
-  const validateForm = () => {
-    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-    if (!emailRegex.test(formData.email)) {
-      setError("Будь ласка, введіть коректну електронну адресу.");
-      return false;
-    }
-    if (formData.password.length < 8) {
-      setError("Пароль повинен містити не менше 8 символів.");
-      return false;
-    }
-    return true;
-  };
-
   const handleSubmit = async (e) => {
     e.preventDefault();
-    if (!validateForm()) return;
-
     setLoading(true);
     try {
       const success = await login(formData.email, formData.password);
@@ -47,22 +32,17 @@ const SignInPage = () => {
         setError("Невірний логін або пароль.");
       }
     } catch (err) {
-      const serverMessage = err.response?.data?.Message || err.response?.data?.message;
-      setError(serverMessage || "Виникла помилка під час входу.");
+      setError(err.response?.data?.message || "Виникла помилка під час входу.");
     } finally {
       setLoading(false);
     }
   };
 
   return (
-    <AuthFormContainer
-      title="Увійти"
-      isSignUp={false}
-      onGoogleAuth={() => alert("Вхід через Google поки не реалізовано.")}
-      onFacebookAuth={() => alert("Вхід через Facebook поки не реалізовано.")}
-    >
+    <AuthFormContainer title="Увійти" isSignUp={false}>
       <form onSubmit={handleSubmit} noValidate>
-        {error && <div className={styles.errorContainer}>{error}</div>}
+        {/* Системний клас з App.css */}
+        {error && <div className="system-error">{error}</div>}
 
         <Input
           icon={FiMail}
@@ -90,7 +70,7 @@ const SignInPage = () => {
           </Link>
         </div>
 
-        <Button type="submit" variant="primary" disabled={loading}>
+        <Button type="submit" variant="primary" disabled={loading} fullWidth>
           {loading ? "Вхід..." : "Увійти"}
         </Button>
       </form>

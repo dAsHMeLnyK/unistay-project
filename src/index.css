@@ -6,11 +6,20 @@
     --text-main: #4A4947;
     --text-muted: #8C8C8C;
     --bg-main: #FAF7F0;
+    --bg-white: #FFFFFF;
+
+    --accent-shadow: rgba(177, 116, 87, 0.1); 
+    --card-shadow: rgba(0, 0, 0, 0.04);
+
     --transition-fast: 0.25s ease;
     --hover-lift: translateY(-2px);
     --border-color: #D8D2C2;
     --danger-color: #cc4444; 
     --danger-hover: #e53e3e;
+
+    --radius-full: 50px;
+    --radius-card: 35px;
+    --radius-inner: 20px;
   }
 
   * {

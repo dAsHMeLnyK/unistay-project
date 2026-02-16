@@ -16,7 +16,6 @@ let DefaultIcon = L.icon({
 });
 L.Marker.prototype.options.icon = DefaultIcon;
 
-// Допоміжний компонент для керування виглядом карти
 function ChangeView({ center, zoom }) {
     const map = useMap();
     useEffect(() => {
@@ -32,10 +31,10 @@ const AddressPicker = ({ onAddressChange, lat, lng, address }) => {
     const [suggestions, setSuggestions] = useState([]);
     const [showSuggestions, setShowSuggestions] = useState(false);
     const suggestionsRef = useRef(null);
+    const mapRef = useRef(null); // Реф для доступу до об'єкта карти
 
     const OSTROH_BOUNDS = "26.4819,50.3121,26.5542,50.3475";
 
-    // Оновлюємо внутрішній стан, тільки якщо пропси реально змінилися (наприклад, при завантаженні з БД)
     useEffect(() => {
         if (lat && lng && (lat !== position[0] || lng !== position[1])) {
             setPosition([lat, lng]);
@@ -48,7 +47,15 @@ const AddressPicker = ({ onAddressChange, lat, lng, address }) => {
         }
     }, [address]);
 
-    // Закриття підказок при кліку поза полем
+    // ФІКС: Оновлюємо розмір карти при відкритті модалки
+    useEffect(() => {
+        if (isModalOpen && mapRef.current) {
+            setTimeout(() => {
+                mapRef.current.invalidateSize();
+            }, 200);
+        }
+    }, [isModalOpen]);
+
     useEffect(() => {
         const handleClickOutside = (event) => {
             if (suggestionsRef.current && !suggestionsRef.current.contains(event.target)) {
@@ -95,7 +102,6 @@ const AddressPicker = ({ onAddressChange, lat, lng, address }) => {
 
     const updateLocation = async (newLat, newLng) => {
         if (newLat === position[0] && newLng === position[1]) return;
-        
         setPosition([newLat, newLng]);
         try {
             const response = await fetch(
@@ -119,13 +125,15 @@ const AddressPicker = ({ onAddressChange, lat, lng, address }) => {
         return null;
     };
 
-    // Оптимізація: Карта не перемальовується при зміні formData.title або formData.description
-    const MapView = useCallback(({ zoomLevel }) => (
+    const MapView = useCallback(({ zoomLevel, isFull = false }) => (
         <MapContainer 
             center={position} 
             zoom={zoomLevel} 
-            scrollWheelZoom={false} // ФІКС: вимкнено зум при скролі сторінки
+            scrollWheelZoom={isFull} 
             style={{ height: '100%', width: '100%' }}
+            whenCreated={(mapInstance) => {
+                if (isFull) mapRef.current = mapInstance;
+            }}
         >
             <TileLayer url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png" />
             <Marker 
@@ -140,7 +148,6 @@ const AddressPicker = ({ onAddressChange, lat, lng, address }) => {
         </MapContainer>
     ), [position]);
 
-    // Використовуємо useMemo для прев'ю карти, щоб вона була стабільною
     const memoizedMapPreview = useMemo(() => <MapView zoomLevel={15} />, [position, MapView]);
 
     return (
@@ -162,7 +169,8 @@ const AddressPicker = ({ onAddressChange, lat, lng, address }) => {
                     <ul className={styles.suggestionsList}>
                         {suggestions.map((item, i) => (
                             <li key={i} onClick={() => selectSuggestion(item)}>
-                                <FiMapPin className={styles.pinIcon} /> {item.display_name}
+                                <FiMapPin className={styles.pinIcon} /> 
+                                <span className={styles.suggestionText}>{item.display_name}</span>
                             </li>
                         ))}
                     </ul>
@@ -181,17 +189,20 @@ const AddressPicker = ({ onAddressChange, lat, lng, address }) => {
             </div>
 
             {isModalOpen && (
-                <div className={styles.modalOverlay}>
-                    <div className={styles.modalContent}>
+                <div className={styles.modalOverlay} onClick={() => setIsModalOpen(false)}>
+                    <div className={styles.modalContent} onClick={(e) => e.stopPropagation()}>
                         <div className={styles.modalHeader}>
                             <div className={styles.modalTitleBlock}>
-                                <h3>Оберіть точне місце</h3>
-                                <p className={styles.currentAddressPreview}>{searchQuery || "Оберіть точку на карті"}</p>
+                                <h3 className={styles.modalTitle}>Оберіть точне місце</h3>
+                                <div className={styles.addressBadge}>
+                                    <FiMapPin size={14} />
+                                    <span>{searchQuery || "Оберіть точку на карті"}</span>
+                                </div>
                             </div>
                             <button onClick={() => setIsModalOpen(false)} className={styles.closeModal}>&times;</button>
                         </div>
-                        <div className={styles.fullScreenMap}>
-                            <MapView zoomLevel={18} />
+                        <div className={styles.fullScreenMapContainer}>
+                            <MapView zoomLevel={18} isFull={true} />
                         </div>
                         <div className={styles.modalFooter}>
                             <button type="button" onClick={() => setIsModalOpen(false)} className={styles.confirmBtn}>

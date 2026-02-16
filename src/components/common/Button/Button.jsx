@@ -4,15 +4,17 @@ import styles from './Button.module.css';
 
 const Button = ({ 
   children, 
-  variant = 'primary', // за замовчуванням 'primary'
+  variant = 'primary', 
   type = 'button', 
   className = '', 
+  fullWidth = false, // Новий проп
   ...props 
 }) => {
   return (
     <button
       type={type}
-      className={`${styles.button} ${styles[variant]} ${className}`}
+      // Додаємо клас fullWidth, якщо проп передано
+      className={`${styles.button} ${styles[variant]} ${fullWidth ? styles.fullWidth : ''} ${className}`}
       {...props}
     >
       {children}

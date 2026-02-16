@@ -1,4 +1,5 @@
 import React, { useState, useEffect, useMemo } from 'react';
+import { useNavigate } from 'react-router-dom';
 import ListingCard from '../../components/listings/ListingCard/ListingCard';
 import FilterBar from '../../components/filters/FilterBar/FilterBar';
 import LoadingPage from '../LoadingPage/LoadingPage';
@@ -8,7 +9,6 @@ import { useListings } from '../../context/ListingContext';
 import { ListingService } from '../../api/services/ListingService';
 import { FiSearch, FiMap } from 'react-icons/fi';
 import styles from './ListingsPage.module.css';
-import { useNavigate } from 'react-router-dom';
 
 const ListingsPage = () => {
     const { listings, fetchListings, loading, error, compareIds } = useListings();
@@ -23,16 +23,10 @@ const ListingsPage = () => {
     });
     const [showFilters, setShowFilters] = useState(true);
 
-    // Перевірка чи відкрита панель порівняння
-    const isComparePanelOpen = compareIds && compareIds.length > 0;
+    const isComparePanelOpen = compareIds?.length > 0;
 
-    useEffect(() => {
-        fetchListings();
-    }, [fetchListings]);
-
-    useEffect(() => {
-        setDisplayListings(listings);
-    }, [listings]);
+    useEffect(() => { fetchListings(); }, [fetchListings]);
+    useEffect(() => { setDisplayListings(listings); }, [listings]);
 
     const handleFilterChange = (e) => {
         const { name, value } = e.target;
@@ -90,6 +84,7 @@ const ListingsPage = () => {
 
     return (
         <div className={styles.listingsPage}>
+            {/* Плаваюча кнопка карти */}
             <button 
                 className={`${styles.mapFloatingBtn} ${isComparePanelOpen ? styles.mapFloatingBtnRaised : ''}`}
                 onClick={() => navigate('/explore-map')}
@@ -104,7 +99,6 @@ const ListingsPage = () => {
                 <div className={styles.searchBar}>
                     <Input
                         icon={FiSearch}
-                        type="text"
                         placeholder="Пошук за ключовими словами..."
                         value={filters.search}
                         name="search"
@@ -132,11 +126,9 @@ const ListingsPage = () => {
             />
 
             {error ? (
-                <div className={styles.errorContainer}>
-                    <p className="page-subtitle">Помилка завантаження: {error}</p>
-                    <Button variant="outline" onClick={() => fetchListings()}>
-                        Спробувати ще раз
-                    </Button>
+                <div className="system-error">
+                    <p>Помилка завантаження: {error}</p>
+                    <Button variant="outline" onClick={() => fetchListings()}>Спробувати ще раз</Button>
                 </div>
             ) : (
                 <div className="cards-grid">
@@ -147,7 +139,7 @@ const ListingsPage = () => {
                     ) : (
                         <div className={styles.noResults}>
                             <p className="page-subtitle">
-                                {isSearching ? 'Шукаємо...' : 'На жаль, оголошень не знайдено за вашим запитом.'}
+                                {isSearching ? 'Шукаємо...' : 'На жаль, оголошень не знайдено.'}
                             </p>
                         </div>
                     )}

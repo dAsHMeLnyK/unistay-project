@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
-import styles from '../AddListingPage/AddListingPage.module.css';
+import styles from './EditListingPage.module.css'; // Переконайтеся, що шлях правильний
 import { useAuth } from '../../context/AuthContext';
 import { ListingService } from '../../api/services/ListingService';
 import LoadingPage from '../LoadingPage/LoadingPage';
@@ -68,7 +68,7 @@ const EditListingPage = () => {
     }, [listingId, isAuthenticated, currentUserId, navigate]);
 
     const handleSubmit = async (e) => {
-        e.preventDefault();
+        if (e) e.preventDefault();
         setIsSubmitting(true);
         try {
             const payload = {
@@ -96,15 +96,14 @@ const EditListingPage = () => {
         }
     };
 
-    const handleCancel = () => {
-        navigate(-1);
-    };
+    const handleCancel = () => navigate(-1);
 
     if (isLoading) return <LoadingPage />;
 
     return (
-        <div className={styles.addListingPage}>
+        <div className={styles.editListingPage}>
             <div className={styles.pageContentWrapper}>
+                {/* ПОВЕРНУТО ОРИГІНАЛЬНУ СТРУКТУРУ ЗАГОЛОВКА */}
                 <div className="page-title-container">
                     <h1 className="page-title">Редагувати оголошення</h1>
                     <p className="page-subtitle">Внесіть необхідні зміни у ваше оголошення</p>

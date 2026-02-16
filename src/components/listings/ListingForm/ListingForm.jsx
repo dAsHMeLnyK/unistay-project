@@ -2,6 +2,7 @@ import React from 'react';
 import styles from './ListingForm.module.css';
 import Select from '../../common/Select/Select';
 import Button from '../../common/Button/Button';
+import Input from '../../common/Input/Input';
 import AddressPicker from '../../../pages/AddListingPage/AddressPicker/AddressPicker';
 import ImageUploader from '../../../pages/AddListingPage/ImageUploader/ImageUploader';
 import AmenitySection from '../../../pages/AddListingPage/AmenitySection/AmenitySection';
@@ -20,35 +21,22 @@ const ListingForm = ({
         setFormData(prev => ({ ...prev, [name]: finalValue }));
     };
 
-    const handleKeyDown = (e) => {
-        if (e.key === 'Enter' && e.target.tagName !== 'TEXTAREA') {
-            e.preventDefault();
-        }
-    };
-
     return (
-        <form 
-            onSubmit={onSubmit} 
-            onKeyDown={handleKeyDown}
-            className={styles.listingForm}
-        >
+        <form onSubmit={onSubmit} className={styles.listingForm}>
             <div className={styles.formColumns}>
                 <div className={styles.formSection}>
                     <h2 className={styles.sectionTitle}>Основна інформація</h2>
                     
                     <div className={styles.formGroup}>
                         <label>Заголовок</label>
-                        <div className={styles.inputWrapper}>
-                            <input
-                                className={styles.inputField}
-                                name="title" 
-                                placeholder="Наприклад: Затишна кімната біля НаУОА"
-                                value={formData.title} 
-                                onChange={handleChange} 
-                                required 
-                                maxLength={255}
-                            />
-                        </div>
+                        <Input
+                            name="title" 
+                            placeholder="Наприклад: Затишна кімната біля НаУОА"
+                            value={formData.title} 
+                            onChange={handleChange} 
+                            required 
+                            maxLength={255}
+                        />
                     </div>
 
                     <div className={styles.formGroup}>
@@ -66,19 +54,16 @@ const ListingForm = ({
                     <div className={styles.formGroup}>
                         <label>Вартість оренди</label>
                         <div className={styles.priceInputWrapper}>
-                            <div className={`${styles.inputWrapper} ${styles.priceInputCompact}`}>
-                                <input 
-                                    className={styles.inputField}
-                                    type="number" 
-                                    name="price" 
-                                    placeholder="0"
-                                    value={formData.price} 
-                                    onChange={handleChange}
-                                    onWheel={(e) => e.target.blur()}
-                                    required 
-                                    min="1"
-                                />
-                            </div>
+                            <Input 
+                                type="number" 
+                                name="price" 
+                                placeholder="0"
+                                value={formData.price} 
+                                onChange={handleChange}
+                                style={{ marginBottom: 0 }} // Прибираємо відступ тільки тут
+                                className={styles.priceInputCompact}
+                                required
+                            />
                             <span className={styles.currencyBadge}>₴ / міс.</span>
                         </div>
                     </div>
@@ -90,12 +75,11 @@ const ListingForm = ({
                                 {(formData.description || "").length}/1000
                             </span>
                         </div>
-                        {/* Для textarea ми використовуємо іншу обгортку, щоб зберегти радіус 20px */}
                         <div className={styles.textareaWrapper}>
                             <textarea 
                                 className={styles.inputField} 
                                 name="description" 
-                                placeholder="Розкажіть про умови, меблі, техніку та переваги вашого житла..."
+                                placeholder="Розкажіть про умови..."
                                 value={formData.description} 
                                 onChange={handleChange} 
                                 required 
@@ -124,7 +108,6 @@ const ListingForm = ({
                         <label>Наявність сусідів</label>
                         <Select name="neighbours" value={formData.neighbours} onChange={handleChange} options={NEIGHBOUR_TYPES} />
                     </div>
-                    
                     <div className={styles.formGroup}>
                         <label>Фотографії</label>
                         <ImageUploader 
@@ -151,21 +134,11 @@ const ListingForm = ({
 
             <div className={styles.submitWrapper}>
                 {onCancel && (
-                    <Button 
-                        variant="secondary"
-                        onClick={onCancel}
-                        disabled={isSubmitting}
-                        className={styles.cancelBtnWidth}
-                    >
+                    <Button variant="secondary" onClick={onCancel} disabled={isSubmitting} className={styles.cancelBtnWidth}>
                         Скасувати
                     </Button>
                 )}
-                <Button 
-                    type="submit" 
-                    variant="primary"
-                    disabled={isSubmitting || isUploading} 
-                    className={styles.submitBtnWidth}
-                >
+                <Button type="submit" variant="primary" disabled={isSubmitting || isUploading} className={styles.submitBtnWidth}>
                     {isSubmitting ? "Збереження..." : submitText}
                 </Button>
             </div>

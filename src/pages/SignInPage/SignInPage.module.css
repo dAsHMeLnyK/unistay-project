@@ -1,6 +1,7 @@
 .forgotPasswordWrapper {
   text-align: right;
   margin-bottom: 20px;
+  margin-top: -10px; /* Трохи піднімаємо до інпуту */
 }
 
 .forgotPasswordLink {
@@ -13,16 +14,5 @@
 
 .forgotPasswordLink:hover {
   color: var(--accent-hover);
-}
-
-.errorContainer {
-  color: #d93025;
-  background-color: #fde7e9;
-  padding: 12px;
-  border-radius: 12px;
-  margin-bottom: 20px;
-  font-size: 14px;
-  text-align: center;
-  border: 1px solid #f8c9cc;
-  font-weight: 500;
+  text-decoration: underline;
 }

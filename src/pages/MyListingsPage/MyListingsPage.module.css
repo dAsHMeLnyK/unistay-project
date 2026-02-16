@@ -1,7 +1,7 @@
 .myListingsPage {
     background-color: var(--bg-main);
     min-height: calc(100vh - 80px);
-    padding: 40px 0 80px 0;
+    padding: 60px 0 80px 0;
 }
 
 .pageContentWrapper {
@@ -13,7 +13,7 @@
 
 .pageHeader {
     width: 100%;
-    margin-bottom: 40px;
+    margin-bottom: 50px;
 }
 
 .headerTopLine {
@@ -21,48 +21,50 @@
     justify-content: space-between;
     align-items: center;
     width: 100%;
-    margin-bottom: 20px;
+    margin-bottom: 25px;
+    gap: 20px;
 }
 
 .titleWrapper {
     display: flex;
     align-items: center;
     gap: 15px;
+    flex-wrap: nowrap;
 }
 
-.headerSeparator {
-    width: 100%;
-    height: 1px;
-    background-color: var(--border-color);
-    opacity: 0.5;
-}
-
+/* ПОВЕРНЕНО ПОПЕРЕДНІЙ СТИЛЬ */
 .countBadge {
-    background: rgba(177, 116, 87, 0.1);
+    background: rgba(177, 116, 87, 0.1); /* Ваш оригінальний напівпрозорий колір */
     color: var(--accent-color);
     padding: 6px 14px;
     border-radius: 50px;
     font-size: 15px;
     font-weight: 700;
+    white-space: nowrap; /* Лишаємо це, щоб текст не стрибав у два рядки */
+    flex-shrink: 0;
+    /* Жодних рамок (border: none) */
 }
 
-.addListingBtn {
-    width: auto !important;
-    min-width: 180px;
+.headerSeparator {
+    width: 100%;
+    height: 1.5px;
+    background: linear-gradient(90deg, var(--border-color) 0%, transparent 100%);
+    opacity: 0.6;
 }
 
 .listingWrapper {
-    background-color: #ffffff;
-    border-radius: 20px;
-    border: 1px solid var(--border-color);
+    background-color: var(--bg-white);
+    border-radius: var(--radius-card); /* 35px для м'якості */
+    border: 1.5px solid var(--border-color);
     overflow: hidden;
     display: flex;
     flex-direction: column;
-    transition: transform 0.3s ease;
+    transition: all var(--transition-fast);
 }
 
 .listingWrapper:hover {
-    transform: translateY(-5px);
+    transform: translateY(-8px);
+    box-shadow: 0 15px 35px rgba(0, 0, 0, 0.05);
 }
 
 .cardInternalWrapper :global(.listing-card) {
@@ -71,89 +73,61 @@
     border-radius: 0 !important;
 }
 
-/* КНОПКИ КЕРУВАННЯ З РОЗДІЛЮВАЧЕМ */
+/* АДМІН-КНОПКИ */
 .adminActions {
     display: grid;
     grid-template-columns: 1fr 1fr;
-    /* Фон контейнера стає кольором лінії розділювача */
     background-color: var(--border-color); 
-    border-top: 1px solid var(--border-color);
-    gap: 1px; 
+    border-top: 1.5px solid var(--border-color);
+    gap: 1.5px; 
 }
 
 .editBtn, .deleteBtn {
-    padding: 14px;
+    padding: 16px;
     border: none;
     font-size: 14px;
-    font-weight: 600;
+    font-weight: 700;
     cursor: pointer;
     display: flex;
     align-items: center;
     justify-content: center;
-    gap: 8px;
-    /* Фон кнопок перекриває фон контейнера всюди, крім зазору gap */
+    gap: 10px;
     background-color: var(--bg-filters); 
     color: var(--text-main);
-    transition: background 0.2s ease;
+    transition: all var(--transition-fast);
 }
 
 .editBtn:hover {
-    background-color: #ffffff;
+    background-color: var(--bg-white);
     color: var(--accent-color);
 }
 
-.deleteBtn { color: var(--danger-color); }
+.deleteBtn { 
+    color: var(--danger-color); 
+}
+
 .deleteBtn:hover {
-    background-color: #fff1f1;
+    background-color: #FFF5F5;
     color: var(--danger-hover);
 }
 
-.emptyState {
-    text-align: center;
-    padding: 60px;
-    background: #ffffff;
-    border-radius: 20px;
-    border: 1px dashed var(--border-color);
-}
-
-@media (max-width: 768px) {
-    .headerTopLine {
-        flex-direction: column;
-        align-items: flex-start;
-        gap: 20px;
-    }
-    .addListingBtn {
-        width: 100% !important;
-    }
-}
-
-/* ... попередні стилі (myListingsPage, pageHeader тощо) ... */
-
-/* Порожній стан */
+/* ПОРОЖНІЙ СТАН */
 .emptyState {
     display: flex;
     flex-direction: column;
     align-items: center;
     text-align: center;
-    margin-top: 40px;
-    padding: 60px 20px;
-    background: var(--bg-filters); /* Світлий фон для виділення зони */
-    border-radius: 32px;
+    padding: 80px 40px;
+    background: var(--bg-filters);
+    border-radius: var(--radius-card);
+    border: 2px dashed var(--border-color);
 }
 
-.actionButton {
-    margin-top: 30px;
-    width: auto !important;
-    min-width: 260px;
-}
-
-/* Ілюстрація будиночка (ідентична до FavoritesPage для впізнаваності) */
 .houseIllustration {
     width: 100px;
     height: 100px;
     margin-bottom: 30px;
     position: relative;
-    opacity: 0.7;
 }
 
 .roof {
@@ -177,7 +151,7 @@
 .door {
     width: 20px;
     height: 30px;
-    background-color: var(--bg-filters); /* Колір дверей під колір фону контейнера */
+    background-color: var(--bg-filters);
     position: absolute;
     bottom: 0;
     left: 30px;
@@ -185,9 +159,28 @@
     border-top-right-radius: 10px;
 }
 
-/* Адаптивність для будиночка */
-@media (max-width: 480px) {
-    .emptyState {
-        padding: 40px 15px;
+.actionButton {
+    margin-top: 35px;
+    min-width: 280px;
+}
+
+.isDeleting {
+    opacity: 0.5;
+    pointer-events: none;
+    filter: grayscale(1);
+}
+
+@media (max-width: 768px) {
+    .headerTopLine {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 20px;
+    }
+    .addListingBtn {
+        width: 100% !important;
+    }
+    .titleWrapper {
+        width: 100%;
+        justify-content: space-between;
     }
 }

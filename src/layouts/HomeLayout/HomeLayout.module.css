@@ -1,0 +1,11 @@
+.layoutWrapper {
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+}
+
+.mainContent {
+  flex: 1;
+  width: 100%;
+  /* Тут немає max-width та padding, сторінка сама керує своїми відступами */
+}

@@ -3,7 +3,9 @@
   align-items: center;
   justify-content: center;
   gap: 10px;
-  padding: 12px 28px;
+  /* Фіксуємо внутрішні відступи для стабільної висоти */
+  padding: 12px 28px; 
+  min-height: 46px; /* Гарантує однакову висоту всюди */
   border-radius: 50px;
   font-family: 'Afacad', sans-serif;
   font-size: 17px;
@@ -11,8 +13,16 @@
   cursor: pointer;
   transition: all var(--transition-fast);
   border: 2px solid transparent;
+  width: auto;
+  white-space: nowrap;
+  box-sizing: border-box;
+}
+
+.fullWidth {
   width: 100%;
 }
+
+/* Інші стилі (.primary, .outline тощо) залишаються без змін */
 
 /* Головна кнопка (Коричнева) */
 .primary {

@@ -70,16 +70,14 @@ const MyListingsPage = () => {
                 <header className={styles.pageHeader}>
                     <div className={styles.headerTopLine}>
                         <div className={styles.titleWrapper}>
-                            <h1 className="page-title" style={{ textAlign: 'left', margin: 0 }}>
-                                Мої оголошення
-                            </h1>
+                            <h1 className="page-title">Мої оголошення</h1>
                             {isAuthenticated && userListings.length > 0 && (
-                                <span className={styles.countBadge}>
+                                <div className={styles.countBadge}>
                                     {userListings.length} {getNoun(userListings.length, "об'єкт", "об'єкти", "об'єктів")}
-                                </span>
+                                </div>
                             )}
                         </div>
-                        {isAuthenticated && userListings.length > 0 && (
+                        {isAuthenticated && (
                             <Button
                                 onClick={() => navigate('/add-listing')}
                                 className={styles.addListingBtn}
@@ -100,7 +98,7 @@ const MyListingsPage = () => {
                                 <div className={styles.door}></div>
                             </div>
                         </div>
-                        <h2 className="section-title" style={{justifyContent: 'center'}}>У вас ще немає оголошень</h2>
+                        <h2 className="section-title">У вас ще немає оголошень</h2>
                         <p className="page-subtitle">
                             Тут з'являться об'єкти, які ви здаєте в оренду. Створіть своє перше оголошення, щоб студенти могли його знайти!
                         </p>

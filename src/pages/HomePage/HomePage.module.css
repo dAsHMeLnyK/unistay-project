@@ -1,124 +1,184 @@
 .homePage {
-  font-family: 'Afacad', sans-serif;
-  width: 100%; /* Додано, щоб .homePage також займав 100% ширини */
+  width: 100%;
 }
 
+.container {
+  max-width: 1240px;
+  width: 100%;
+  margin: 0 auto;
+  padding: 0 20px;
+  box-sizing: border-box;
+}
+
+/* --- HERO SECTION --- */
 .heroSection {
-  background-image: url('../../assets/images/bg.jpg');
   background-size: cover;
   background-position: center;
-  color: #FAF7F0;
-  min-height: 100vh;
-  display: flex;
-  align-items: center;
-  justify-content: flex-start;
+  min-height: calc(100vh - 80px); /* Висота екрану мінус хедер */
+  width: 100%;
   position: relative;
-  padding: 0 50px;
-  box-sizing: border-box;
-  width: 100%; /* Забезпечуємо повну ширину */
 }
 
 .heroOverlay {
   position: absolute;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  background-image: linear-gradient(to bottom, rgba(74, 73, 71, 0.71), rgba(74, 73, 71, 0));
+  top: 0; left: 0;
+  width: 100%; height: 100%;
+  /* Використовуємо колір тексту для затемнення, щоб зберегти тональність */
+  background: linear-gradient(
+    to right, 
+    rgba(74, 73, 71, 0.9) 0%, 
+    rgba(74, 73, 71, 0.4) 100%
+  );
+  display: flex;
+  align-items: center;
 }
 
 .heroContent {
+  max-width: 750px;
   display: flex;
   flex-direction: column;
   align-items: flex-start;
-  z-index: 10;
-  width: 100%; /* Забезпечуємо, що контент займатиме всю доступну ширину від padding */
-  max-width: 1200px; /* Обмежуємо ширину самого тексту, щоб він не був занадто широким */
-  margin: 0 auto; /* Центруємо контент всередині heroSection */
-  padding: 0 15px; /* Внутрішній відступ для контенту, якщо heroSection має padding: 0 50px */
-  box-sizing: border-box;
+  animation: fadeInUp 0.8s ease-out;
 }
 
-.heroContent h1 {
-  font-weight: bold;
-  font-size: 48px;
-  color: #FAF7F0;
-  margin-bottom: 15px;
-  text-align: left;
+.heroTitle {
+  font-family: inherit;
+  font-size: clamp(36px, 6vw, 64px);
+  line-height: 1.1;
+  font-weight: 700; /* ВАША НОВА ВАГА */
+  color: var(--bg-main); /* Використовуємо світлу змінну */
+  margin-bottom: 24px;
+  letter-spacing: -0.02em;
 }
 
-.heroContent p {
-  font-weight: regular;
-  font-size: 24px;
-  color: #FAF7F0;
-  margin-bottom: 30px;
-  text-align: left;
+.heroSubtitle {
+  color: var(--bg-main) !important;
+  opacity: 0.95;
+  max-width: 550px;
+  margin-bottom: 0; /* Скидаємо, бо є heroBtnWrapper */
 }
 
-.topListingsSection {
-  padding: 60px 0; /* Вертикальний padding, горизонтального немає */
-  width: 100%; /* Займає всю ширину */
-  box-sizing: border-box;
-  background-color: #FAF7F0; /* Фон для всієї секції */
-  text-align: center; /* Центруємо заголовок та кнопку */
-}
-
-/* topListingsContainer тепер використовується лише для обмеження ширини вмісту всередині секції */
-.topListingsContainer {
-  padding: 0 20px; /* Внутрішній відступ для оголошень від країв */
-  margin: 0 auto; /* Центрування вмісту оголошень */
-  max-width: 1200px; /* Обмеження ширини оголошень */
-  box-sizing: border-box;
-}
-
-/* Переносимо заголовок та кнопку в .topListingsContainer або додаємо свої стилі */
-.topListingsSection h2 { /* Тепер h2 буде всередині topListingsContainer */
-  font-weight: 700;
-  font-size: 28px;
-  margin-bottom: 30px;
-  color: #4A4947;
-  text-align: center;
-}
-
-.listingsGrid {
-  display: flex;
-  flex-direction: row;
-  gap: 20px;
-  overflow-x: auto;
-  padding-bottom: 20px;
-  justify-content: flex-start;
-}
-
-.listingItem {
-  width: 300px;
-  height: 300px;
-  flex-shrink: 0;
-  display: flex;
-  flex-direction: column;
-}
-
-.listingItem > div {
-  width: 100%;
-  height: 100%;
-}
-
-.viewMoreButtonContainer {
-  text-align: center;
+.heroBtnWrapper {
   margin-top: 40px;
 }
 
-.viewAllListingsLink {
-  display: inline-block;
-  padding: 15px 30px;
-  background-color: #B17457; /* Колір вашої кнопки */
-  color: #FAF7F0;
-  text-decoration: none;
-  border-radius: 1000px; /* Заокруглені кути */
-  font-size: 1.1em;
-  font-weight: 600;
-  transition: background-color 0.3s ease;
+.mainActionBtn {
+  padding: 16px 45px !important;
+  font-size: 18px !important;
+  border-radius: var(--radius-full) !important;
 }
 
-.viewAllListingsLink:hover {
-  background-color: #9c5e44; /* Колір при наведенні */
+/* --- TOP LISTINGS SECTION --- */
+.topListingsSection {
+  padding: 100px 0;
+  background-color: var(--bg-main);
+}
+
+.sectionHeader {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 40px;
+}
+
+/* Використовуємо системні класи для заголовка */
+.sectionHeader h2 {
+  margin-bottom: 0;
+}
+
+.carouselControls {
+  display: flex;
+  gap: 12px;
+}
+
+.scrollBtn {
+  background: var(--bg-input);
+  border: 1.5px solid var(--border-color);
+  color: var(--text-main);
+  width: 52px;
+  height: 52px;
+  border-radius: var(--radius-full);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: all var(--transition-fast);
+}
+
+.scrollBtn:hover {
+  background: var(--accent-color);
+  color: white;
+  border-color: var(--accent-color);
+  transform: scale(1.05);
+}
+
+.listingsCarousel {
+  display: flex;
+  gap: 30px; /* Співпадає з cards-grid */
+  overflow-x: auto;
+  scroll-behavior: smooth;
+  padding: 10px 5px 40px 5px;
+  scrollbar-width: none;
+}
+
+.listingsCarousel::-webkit-scrollbar {
+  display: none;
+}
+
+.listingItem {
+  width: 320px;
+  flex-shrink: 0;
+  transition: transform var(--transition-fast);
+}
+
+.listingItem:hover {
+  transform: var(--hover-lift); /* СИСТЕМНА АНІМАЦІЯ */
+}
+
+.viewMoreContainer {
+  margin-top: 50px;
+  display: flex;
+  justify-content: center;
+}
+
+.viewAllBtn {
+  min-width: 280px;
+  font-weight: 700 !important;
+  border-radius: var(--radius-full) !important;
+}
+
+.btnIcon {
+  margin-left: 10px;
+  transition: transform var(--transition-fast);
+}
+
+.viewAllBtn:hover .btnIcon {
+  transform: translateX(6px);
+}
+
+/* --- ANIMATIONS & ADAPTIVITY --- */
+@keyframes fadeInUp {
+  from { opacity: 0; transform: translateY(30px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+@media (max-width: 768px) {
+  .topListingsSection {
+    padding: 60px 0;
+  }
+  
+  .heroContent {
+    align-items: center;
+    text-align: center;
+  }
+  
+  .sectionHeader {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 24px;
+  }
+  
+  .carouselControls {
+    align-self: flex-end;
+  }
 }

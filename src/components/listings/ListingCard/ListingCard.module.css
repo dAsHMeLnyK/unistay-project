@@ -6,28 +6,29 @@
 }
 
 .card {
-    background-color: #FAF7F0; /* Ваш фірмовий беж */
+    background-color: var(--bg-main);
     border-radius: 16px;
-    box-shadow: 0 4px 12px rgba(74, 73, 71, 0.08); /* М'якша тінь */
+    box-shadow: 0 4px 12px rgba(74, 73, 71, 0.08);
     overflow: hidden;
     width: 100%;
-    transition: transform 0.3s ease, box-shadow 0.3s ease, outline 0.2s ease;
-    font-family: 'Afacad', sans-serif;
+    transition: transform var(--transition-fast), box-shadow var(--transition-fast), outline 0.2s ease;
+    font-family: inherit;
     display: flex;
     flex-direction: column;
-    height: 420px; /* Фіксована висота */
-    position: relative; /* Для коректної підсвітки */
+    height: 420px; /* Ваша фіксована висота */
+    position: relative;
+    box-sizing: border-box;
 }
 
-/* Стан, коли картка вибрана для порівняння */
+/* Стан для порівняння */
 .cardComparing {
-    outline: 3px solid var(--accent-color, #B17457);
-    box-shadow: 0 8px 25px rgba(177, 116, 87, 0.2);
+    outline: 3px solid var(--accent-color);
+    box-shadow: 0 8px 25px var(--accent-shadow);
 }
 
 .card:hover {
-    transform: translateY(-5px);
-    box-shadow: 0 8px 20px rgba(177, 116, 87, 0.12);
+    transform: var(--hover-lift);
+    box-shadow: 0 8px 20px var(--accent-shadow);
 }
 
 .imageContainer {
@@ -35,7 +36,7 @@
     height: 200px;
     overflow: hidden;
     flex-shrink: 0;
-    position: relative; /* Щоб кнопка порівняння була всередині */
+    position: relative;
 }
 
 .image {
@@ -45,43 +46,42 @@
     transition: transform 0.5s ease;
 }
 
-/* КНОПКА ПОРІВНЯННЯ ПОВЕРХ ФОТО */
+.card:hover .image {
+    transform: scale(1.05);
+}
+
+/* Кнопка порівняння поверх фото */
 .compareButton {
     position: absolute;
     top: 12px;
     left: 12px;
     width: 34px;
     height: 34px;
-    border-radius: 50%;
-    background-color: rgba(250, 247, 240, 0.9); /* Колір вашого бежу з прозорістю */
+    border-radius: var(--radius-full);
+    background-color: rgba(250, 247, 240, 0.9); /* Ваш беж з прозорістю */
     border: none;
     display: flex;
     align-items: center;
     justify-content: center;
     cursor: pointer;
     box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
-    transition: all 0.2s ease;
+    transition: all var(--transition-fast);
     z-index: 5;
-    color: var(--text-main, #4A4947);
+    color: var(--text-main);
 }
 
 .compareButton:hover {
     transform: scale(1.1);
-    background-color: #ffffff;
+    background-color: var(--bg-white);
 }
 
-/* Коли порівняння активоване */
 .compareActive {
-    background-color: var(--accent-color, #B17457) !important;
-    color: #ffffff !important;
+    background-color: var(--accent-color) !important;
+    color: var(--bg-main) !important;
 }
 
 .compareIcon {
     font-size: 18px;
-}
-
-.card:hover .image {
-    transform: scale(1.05);
 }
 
 .info {
@@ -103,7 +103,7 @@
 }
 
 .noReviews {
-    color: #D8D2C2;
+    color: var(--border-color);
     font-size: 13px;
 }
 
@@ -123,7 +123,7 @@
     display: flex;
     align-items: center;
     gap: 5px;
-    color: #8C8C8C;
+    color: var(--text-muted);
     font-size: 14px;
     margin: 0;
     white-space: nowrap;
@@ -160,8 +160,7 @@
     display: flex;
     align-items: center;
     justify-content: center;
-    transition: transform 0.2s ease;
-    -webkit-tap-highlight-color: transparent;
+    transition: transform var(--transition-fast);
 }
 
 .heartIcon {
@@ -172,8 +171,4 @@
 
 .heartButton:hover {
     transform: scale(1.15);
-}
-
-.heartButton:focus {
-    outline: none;
 }

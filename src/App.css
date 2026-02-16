@@ -32,7 +32,7 @@ body, button, input, textarea, select {
 .page-title-left {
   font-family: 'Afacad', sans-serif;
   font-size: 28px;
-  font-weight: 800;
+  font-weight: 700;
   color: var(--text-main);
   letter-spacing: -0.01em;
   line-height: 1.1;
@@ -61,6 +61,38 @@ body, button, input, textarea, select {
   gap: 12px;
 }
 
+
+.system-error {
+  color: var(--danger-text);
+  background-color: var(--danger-bg);
+  border: 1px solid var(--danger-border);
+  padding: 12px;
+  border-radius: var(--radius-inner); /* Наша нова системна змінна */
+  margin-bottom: 20px;
+  font-size: 14px;
+  text-align: center;
+  font-weight: 600;
+  animation: fadeIn 0.3s ease;
+}
+
+/* Глобальний допоміжний клас для рядка з одиницями виміру */
+.input-with-unit {
+  display: flex;
+  align-items: flex-end; /* Вирівнюємо по базовій лінії тексту */
+  gap: 12px;
+}
+
+.unit-label {
+  font-size: 16px;
+  font-weight: 700;
+  color: var(--accent-color);
+  padding-bottom: 14px; /* Коригуємо висоту під наш Input */
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(-5px); }
+  to { opacity: 1; transform: translateY(0); }
+}
 /* ==========================================================================
    КОМПОНЕНТИ ТА СІТКИ
    ========================================================================== */

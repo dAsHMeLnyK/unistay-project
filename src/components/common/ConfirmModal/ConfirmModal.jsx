@@ -8,9 +8,12 @@ const ConfirmModal = ({ isOpen, title, message, onConfirm, onCancel, isLoading }
 
     return (
         <div className={styles.modalOverlay} onClick={onCancel}>
-            {/* stopPropagation запобігає закриттю при кліку на саме вікно */}
             <div className={styles.modalContent} onClick={e => e.stopPropagation()}>
-                <button className={styles.closeBtn} onClick={onCancel}>
+                <button 
+                    className={styles.closeBtn} 
+                    onClick={onCancel}
+                    aria-label="Закрити"
+                >
                     <FiX />
                 </button>
                 
@@ -18,8 +21,16 @@ const ConfirmModal = ({ isOpen, title, message, onConfirm, onCancel, isLoading }
                     <div className={styles.iconWrapper}>
                         <FiAlertTriangle className={styles.warningIcon} />
                     </div>
-                    <h2 className={styles.title}>{title}</h2>
-                    <p className={styles.message}>{message}</p>
+                    
+                    {/* Використовуємо глобальний клас .section-title з App.css */}
+                    <h2 className="section-title" style={{ justifyContent: 'center', marginBottom: '12px' }}>
+                        {title}
+                    </h2>
+                    
+                    {/* Використовуємо глобальний клас .page-subtitle з App.css */}
+                    <p className="page-subtitle" style={{ textAlign: 'center', marginBottom: '35px' }}>
+                        {message}
+                    </p>
                 </div>
                 
                 <div className={styles.actions}>

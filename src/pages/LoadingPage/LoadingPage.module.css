@@ -1,10 +1,10 @@
 .loaderWrapper {
     height: 100vh;
-    background-color: #FAF7F0; /* Ваш фон */
+    background-color: var(--bg-main);
     display: flex;
     justify-content: center;
     align-items: center;
-    font-family: 'Afacad', sans-serif;
+    font-family: inherit;
 }
 
 .content {
@@ -24,33 +24,33 @@
     height: 0;
     border-left: 40px solid transparent;
     border-right: 40px solid transparent;
-    border-bottom: 35px solid #4A4947;
+    border-bottom: 35px solid var(--text-main);
 }
 
 .walls {
     width: 60px;
     height: 45px;
-    background-color: #B17457; /* Ваш акцентний колір */
+    background-color: var(--accent-color);
     margin: 0 auto;
     position: relative;
     display: flex;
     justify-content: center;
     align-items: center;
-    border-bottom-left-radius: 4px;
-    border-bottom-right-radius: 4px;
+    border-bottom-left-radius: var(--radius-sm, 4px);
+    border-bottom-right-radius: var(--radius-sm, 4px);
 }
 
 .window {
     width: 20px;
     height: 20px;
-    background-color: #FAF7F0;
+    background-color: var(--bg-main);
     border-radius: 4px;
     animation: lightSwitch 1.5s infinite;
 }
 
 .loadingText {
     font-size: 22px;
-    color: #4A4947;
+    color: var(--text-main);
     font-weight: 600;
     margin-bottom: 20px;
 }
@@ -58,8 +58,8 @@
 .progressBar {
     width: 200px;
     height: 6px;
-    background-color: #E0E0E0;
-    border-radius: 10px;
+    background-color: var(--border-color);
+    border-radius: var(--radius-full);
     margin: 0 auto;
     overflow: hidden;
 }
@@ -67,24 +67,25 @@
 .progressFill {
     width: 100%;
     height: 100%;
-    background-color: #B17457;
+    background-color: var(--accent-color);
     animation: progressAnim 2s infinite linear;
     transform-origin: left;
 }
 
-/* Анімації */
+/* Анімації на базі системних параметрів */
 @keyframes bounce {
     0%, 100% { transform: translateY(0); }
     50% { transform: translateY(-15px); }
 }
 
 @keyframes lightSwitch {
-    0%, 100% { background-color: #FAF7F0; }
-    50% { background-color: #FFD93D; } /* Наче в вікні вмикається світло */
+    0%, 100% { background-color: var(--bg-main); }
+    50% { background-color: #FFD93D; } /* Залишаємо тепле жовте світло для затишку */
 }
 
 @keyframes progressAnim {
-    0% { transform: scaleX(0); }
-    50% { transform: scaleX(1); }
+    0% { transform: scaleX(0); transform-origin: left; }
+    45% { transform: scaleX(1); transform-origin: left; }
+    55% { transform: scaleX(1); transform-origin: right; }
     100% { transform: scaleX(0); transform-origin: right; }
 }

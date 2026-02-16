@@ -6,7 +6,6 @@ const Select = ({ options = [], value, onChange, name, placeholder = "Обері
     const [isOpen, setIsOpen] = useState(false);
     const selectRef = useRef(null);
 
-    // Знаходимо поточну обрану опцію
     const selectedOption = options.find(opt => String(opt.value) === String(value));
 
     useEffect(() => {
@@ -29,6 +28,8 @@ const Select = ({ options = [], value, onChange, name, placeholder = "Обері
             <div 
                 className={`${styles.selectHeader} ${isOpen ? styles.open : ''}`} 
                 onClick={() => setIsOpen(!isOpen)}
+                aria-haspopup="listbox"
+                aria-expanded={isOpen}
             >
                 <span className={!selectedOption ? styles.placeholder : ''}>
                     {selectedOption ? selectedOption.label : placeholder}
@@ -37,12 +38,14 @@ const Select = ({ options = [], value, onChange, name, placeholder = "Обері
             </div>
 
             {isOpen && (
-                <ul className={styles.optionsList}>
+                <ul className={styles.optionsList} role="listbox">
                     {options.map((opt) => (
                         <li 
                             key={opt.value} 
                             className={`${styles.optionItem} ${String(value) === String(opt.value) ? styles.active : ''}`}
                             onClick={() => handleSelect(opt.value)}
+                            role="option"
+                            aria-selected={String(value) === String(opt.value)}
                         >
                             {opt.label}
                         </li>

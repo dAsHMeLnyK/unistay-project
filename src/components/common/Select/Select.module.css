@@ -1,16 +1,15 @@
 .customSelectContainer {
     position: relative;
     width: 100%;
-    font-family: 'Afacad', sans-serif;
+    font-family: inherit; /* Використовуємо системний шрифт */
 }
 
 .selectHeader {
     width: 100%;
-    /* Зменшуємо вертикальний паддінг з 12px до 8px-10px */
-    padding: 9px 18px; 
+    padding: 10px 18px; /* Синхронізація з Input.module.css */
     background-color: var(--bg-input);
     border: 1.5px solid var(--border-color);
-    border-radius: 50px;
+    border-radius: var(--radius-full);
     cursor: pointer;
     display: flex;
     justify-content: space-between;
@@ -19,24 +18,24 @@
     font-weight: 500;
     color: var(--text-main);
     transition: all var(--transition-fast);
-    /* Замість min-height: 44px ставимо box-sizing */
     box-sizing: border-box;
+    min-height: 48px; /* Гарантуємо однакову висоту з кнопками */
 }
 
 .selectHeader:hover, .selectHeader.open {
     border-color: var(--accent-color);
-    background-color: #ffffff;
-    box-shadow: 0 4px 12px rgba(177, 116, 87, 0.08);
+    background-color: var(--bg-white);
+    box-shadow: 0 4px 12px var(--accent-shadow);
 }
 
 .placeholder {
-    color: #a0a0a0;
+    color: var(--text-muted);
 }
 
 .arrowIcon {
     color: var(--accent-color);
-    font-size: 16px; /* Трохи менша іконка */
-    transition: transform 0.3s ease;
+    font-size: 18px;
+    transition: transform var(--transition-fast) ease;
 }
 
 .arrowIcon.rotated {
@@ -45,23 +44,30 @@
 
 .optionsList {
     position: absolute;
-    top: calc(100% + 5px);
+    top: calc(100% + 8px);
     left: 0;
     width: 100%;
-    background: #ffffff;
+    background: var(--bg-white);
     border: 1.5px solid var(--border-color);
-    border-radius: 18px;
+    border-radius: var(--radius-inner);
     box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
     z-index: 1000;
     padding: 6px;
     margin: 0;
     list-style: none;
-    max-height: 200px;
+    max-height: 250px;
     overflow-y: auto;
+    /* Легка анімація появи */
+    animation: fadeIn 0.2s ease-out;
+}
+
+@keyframes fadeIn {
+    from { opacity: 0; transform: translateY(-5px); }
+    to { opacity: 1; transform: translateY(0); }
 }
 
 .optionItem {
-    padding: 8px 14px; /* Компактніші пункти меню */
+    padding: 10px 14px;
     border-radius: 10px;
     cursor: pointer;
     font-size: 14px;
@@ -70,11 +76,21 @@
 }
 
 .optionItem:hover {
-    background-color: rgba(177, 116, 87, 0.1);
+    background-color: var(--bg-filters);
     color: var(--accent-color);
 }
 
 .optionItem.active {
     background-color: var(--accent-color);
-    color: #ffffff;
+    color: var(--bg-white);
+}
+
+/* Стилізація скроллбару для списку опцій */
+.optionsList::-webkit-scrollbar {
+    width: 6px;
+}
+
+.optionsList::-webkit-scrollbar-thumb {
+    background-color: var(--border-color);
+    border-radius: 10px;
 }

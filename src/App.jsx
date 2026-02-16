@@ -1,10 +1,11 @@
 import React from "react";
 import { Routes, Route } from "react-router-dom";
-import "./App.css"; // ПІДКЛЮЧЕНО: тепер всі класи .page-title працюватимуть
+import "./App.css";
 
 // Layouts
 import MainLayout from "./layouts/MainLayout/MainLayout";
 import AuthLayout from "./layouts/AuthLayout/AuthLayout";
+import HomeLayout from "./layouts/HomeLayout/HomeLayout"; // ДОДАНО: імпорт нового лейауту
 
 // Pages
 import HomePage from "./pages/HomePage/HomePage";
@@ -25,17 +26,21 @@ import { AuthProvider } from "./context/AuthContext";
 import { ListingProvider } from "./context/ListingContext";
 import ProtectedRoute from "./components/common/ProtectedRoute";
 
-
 function App() {
   return (
     <AuthProvider>
       <ListingProvider>
         <Routes>
-          <Route path="/" element={<MainLayout />}>
-            <Route index element={<HomePage />} />
+          {/* 1. Головна сторінка у своєму HomeLayout (без обмежень ширини) */}
+          <Route element={<HomeLayout />}>
+            <Route path="/" element={<HomePage />} />
+          </Route>
+
+          {/* 2. Всі інші сторінки у MainLayout (з обмеженням ширини контейнера) */}
+          <Route element={<MainLayout />}>
             <Route path="listings" element={<ListingsPage />} />
             <Route path="listings/:listingId" element={<ListingDetailPage />} />
-            <Route path="/explore-map" element={<ExploreMapPage />} />
+            <Route path="explore-map" element={<ExploreMapPage />} />
             <Route path="compare" element={<ComparePage />} />
 
             {/* Захищені маршрути */}
@@ -58,9 +63,11 @@ function App() {
             } />
           </Route>
 
-          {/* Авторизація */}
+          {/* 3. Авторизація (окремі лейаути) */}
           <Route path="/signin" element={<AuthLayout><SignInPage /></AuthLayout>} />
           <Route path="/signup" element={<AuthLayout><SignUpPage /></AuthLayout>} />
+          
+          {/* 4. Сторінка 404 */}
           <Route path="*" element={<NotFoundPage />} />
         </Routes>
       </ListingProvider>

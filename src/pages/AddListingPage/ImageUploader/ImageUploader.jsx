@@ -24,9 +24,12 @@ const ImageUploader = ({ imageUrls, setImageUrls, isUploading, setIsUploading })
                     { method: "POST", body: data }
                 );
                 const fileData = await response.json();
-                if (fileData.secure_url) uploadedLinks.push(fileData.secure_url);
+                if (fileData.secure_url) {
+                    uploadedLinks.push(fileData.secure_url);
+                }
             } catch (error) {
                 console.error("Помилка завантаження фото:", error);
+                alert(`Не вдалося завантажити файл ${file.name}`);
             }
         }
 
@@ -38,7 +41,6 @@ const ImageUploader = ({ imageUrls, setImageUrls, isUploading, setIsUploading })
         setImageUrls(prev => prev.filter((_, index) => index !== indexToRemove));
     };
 
-    // ... (початок компонента без змін)
     return (
         <div className={styles.uploaderContainer}>
             <div className={styles.imageGrid}>
@@ -66,7 +68,10 @@ const ImageUploader = ({ imageUrls, setImageUrls, isUploading, setIsUploading })
                         disabled={isUploading}
                     />
                     {isUploading ? (
-                        <FiLoader className={styles.loaderIcon} />
+                        <div className={styles.loaderWrapper}>
+                            <FiLoader className={styles.loaderIcon} />
+                            <span>Завантаження...</span>
+                        </div>
                     ) : (
                         <>
                             <FiPlus className={styles.plusIcon} />
@@ -75,7 +80,6 @@ const ImageUploader = ({ imageUrls, setImageUrls, isUploading, setIsUploading })
                     )}
                 </label>
             </div>
-            {/* Оновлений текст підказки */}
             <p className={styles.hint}>* Можна завантажити кілька фото одночасно</p>
         </div>
     );

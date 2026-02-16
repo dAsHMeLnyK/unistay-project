@@ -19,29 +19,16 @@
 .customSearchButton {
     width: auto !important;
     min-width: 120px;
-    height: 48px;
+    height: 52px; /* Підганяємо під Input */
 }
 
-.errorContainer, .noResults {
+.noResults {
     grid-column: 1 / -1;
     text-align: center;
     padding: 60px 20px;
-    background-color: rgba(216, 210, 194, 0.1);
+    background-color: var(--bg-filters);
     border-radius: 20px;
     border: 1px dashed var(--border-color);
-}
-
-@media (max-width: 768px) {
-    .searchBar {
-        flex-direction: column;
-        gap: 10px;
-        margin-top: 15px;
-        padding: 0 20px;
-    }
-    
-    .customSearchButton {
-        width: 100% !important;
-    }
 }
 
 .mapFloatingBtn {
@@ -50,48 +37,27 @@
     left: 50%;
     transform: translateX(-50%);
     z-index: 1000;
-    
     display: flex;
     align-items: center;
     gap: 10px;
-    
     padding: 14px 24px;
-    background-color: var(--text-main, #4A4947);
-    color: #FFFFFF;
-    
+    background-color: var(--text-main);
+    color: var(--bg-white);
     border: none;
-    border-radius: 50px;
+    border-radius: var(--radius-full);
     font-size: 16px;
     font-weight: 600;
     cursor: pointer;
-    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
-    /* Додано bottom до переходу */
-    transition: transform 0.3s, background-color 0.3s, box-shadow 0.3s, bottom 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.1);
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.15);
+    transition: all var(--transition-fast), bottom 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.1);
 }
 
-/* КЛАС ДЛЯ ПІДНЯТТЯ КНОПКИ */
 .mapFloatingBtnRaised {
-    bottom: 100px; /* Піднімаємо над панеллю порівняння */
+    bottom: 100px;
 }
 
 .mapFloatingBtn:hover {
     background-color: var(--accent-color);
-    transform: translateX(-50%) scale(1.05);
-    box-shadow: 0 6px 20px rgba(0, 0, 0, 0.3);
-}
-
-.mapFloatingBtn svg {
-    font-size: 20px;
-}
-
-@media (max-width: 768px) {
-    .mapFloatingBtn {
-        bottom: 20px;
-        padding: 12px 20px;
-        font-size: 14px;
-    }
-    
-    .mapFloatingBtnRaised {
-        bottom: 90px;
-    }
+    transform: translateX(-50%) translateY(-2px);
+    box-shadow: 0 6px 20px var(--accent-shadow);
 }

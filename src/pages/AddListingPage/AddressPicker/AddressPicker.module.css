@@ -19,17 +19,18 @@
 .searchIcon {
     position: absolute;
     left: 18px;
-    color: var(--accent-color);
+    color: var(--text-muted);
     font-size: 18px;
+    transition: color var(--transition-fast);
 }
 
 .mapInput {
     width: 100%;
-    padding: 12px 20px 12px 45px; /* Відступ для іконки */
+    padding: 12px 20px 12px 48px;
     border: 1.5px solid var(--border-color);
-    border-radius: 50px;
-    font-size: 15px;
-    font-family: 'Afacad', sans-serif;
+    border-radius: var(--radius-full);
+    font-size: 16px;
+    font-family: inherit;
     background-color: var(--bg-input);
     color: var(--text-main);
     transition: all var(--transition-fast);
@@ -37,23 +38,27 @@
 }
 
 .mapInput:focus {
-    background-color: #FFFFFF;
+    background-color: var(--bg-white);
     border-color: var(--accent-color);
-    box-shadow: 0 0 0 4px rgba(177, 116, 87, 0.08);
+    box-shadow: 0 0 0 4px var(--accent-shadow);
+}
+
+.mapInput:focus + .searchIcon {
+    color: var(--accent-color);
 }
 
 .suggestionsList {
     position: absolute;
-    top: calc(100% + 5px);
+    top: calc(100% + 8px);
     left: 0;
     right: 0;
-    background: white;
-    border: 1px solid var(--border-color);
-    border-radius: 20px;
+    background: var(--bg-white);
+    border: 1.5px solid var(--border-color);
+    border-radius: var(--radius-inner);
     padding: 10px 0;
     list-style: none;
     z-index: 1000;
-    box-shadow: 0 10px 25px rgba(0,0,0,0.1);
+    box-shadow: 0 10px 30px rgba(0,0,0,0.08);
     max-height: 250px;
     overflow-y: auto;
 }
@@ -64,8 +69,9 @@
     font-size: 14px;
     display: flex;
     align-items: center;
-    gap: 10px;
+    gap: 12px;
     transition: background 0.2s;
+    color: var(--text-main);
 }
 
 .suggestionsList li:hover {
@@ -73,28 +79,25 @@
     color: var(--accent-color);
 }
 
-.pinIcon {
-    color: var(--accent-color);
-    flex-shrink: 0;
-}
-
 .mapPreviewContainer {
-    height: 250px;
+    height: 260px;
     width: 100%;
-    border-radius: 20px;
+    border-radius: var(--radius-inner);
     overflow: hidden;
     border: 1.5px solid var(--border-color);
+    z-index: 1;
 }
 
 .mapControls {
     display: flex;
     justify-content: space-between;
     align-items: center;
+    padding: 0 5px;
 }
 
 .mapHint {
     font-size: 13px;
-    color: #888;
+    color: var(--text-muted);
     margin: 0;
     font-style: italic;
 }
@@ -105,10 +108,10 @@
     color: var(--accent-color);
     cursor: pointer;
     font-size: 14px;
-    font-weight: 600;
+    font-weight: 700;
     display: flex;
     align-items: center;
-    gap: 5px;
+    gap: 6px;
 }
 
 /* МОДАЛЬНЕ ВІКНО */
@@ -118,8 +121,8 @@
     left: 0;
     width: 100vw;
     height: 100vh;
-    background: rgba(74, 73, 71, 0.6);
-    backdrop-filter: blur(4px);
+    background: rgba(45, 42, 38, 0.7);
+    backdrop-filter: blur(8px);
     display: flex;
     justify-content: center;
     align-items: center;
@@ -127,64 +130,82 @@
 }
 
 .modalContent {
-    background: white;
+    background: var(--bg-main);
     width: 90%;
     max-width: 1000px;
     height: 85vh;
-    border-radius: 30px;
+    border-radius: var(--radius-card);
     padding: 30px;
     display: flex;
     flex-direction: column;
     gap: 20px;
+    box-shadow: 0 30px 60px rgba(0, 0, 0, 0.2);
 }
 
 .modalHeader {
     display: flex;
     justify-content: space-between;
     align-items: flex-start;
+    flex-shrink: 0;
 }
 
-.modalTitleBlock h3 {
-    margin: 0 0 5px 0;
+.modalTitle {
+    margin: 0;
+    font-size: 22px;
+    font-weight: 700;
     color: var(--text-main);
 }
 
-.currentAddressPreview {
-    margin: 0;
+.addressBadge {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    margin-top: 10px;
     color: var(--accent-color);
     font-weight: 600;
     background: var(--bg-filters);
-    padding: 6px 15px;
-    border-radius: 50px;
-    font-size: 14px;
+    padding: 6px 16px;
+    border-radius: var(--radius-full);
+    border: 1px solid var(--border-color);
 }
 
 .closeModal {
-    font-size: 32px;
+    font-size: 40px;
     border: none;
     background: none;
     cursor: pointer;
-    line-height: 1;
+    line-height: 0.5;
+    color: var(--text-muted);
 }
 
-.fullScreenMap {
-    flex: 1;
-    border-radius: 20px;
+.fullScreenMapContainer {
+    flex: 1; /* Карта заповнює все вільне місце */
+    width: 100%;
+    min-height: 0; /* ФІКС для flex-контейнерів */
+    border-radius: var(--radius-inner);
     overflow: hidden;
-    border: 1px solid var(--border-color);
+    border: 1.5px solid var(--border-color);
+    position: relative;
+}
+
+.modalFooter {
+    display: flex;
+    justify-content: center;
+    flex-shrink: 0;
 }
 
 .confirmBtn {
     background-color: var(--accent-color);
     color: white;
     border: none;
-    padding: 12px 30px;
-    border-radius: 50px;
+    padding: 14px 50px;
+    border-radius: var(--radius-full);
     font-weight: 700;
     cursor: pointer;
-    transition: transform 0.2s;
+    transition: all var(--transition-fast);
 }
 
 .confirmBtn:hover {
+    background-color: var(--accent-hover);
     transform: translateY(-2px);
 }

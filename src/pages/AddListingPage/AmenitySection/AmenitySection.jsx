@@ -22,7 +22,9 @@ const AmenitySection = ({ amenities, selectedIds, toggleAmenity }) => {
                     );
                 })}
             </div>
-            {amenities.length === 0 && <p className={styles.loadingText}>Завантаження зручностей...</p>}
+            {amenities.length === 0 && (
+                <p className={styles.loadingText}>Завантаження зручностей...</p>
+            )}
         </div>
     );
 };
