@@ -62,7 +62,6 @@ export class HttpClient {
     return response.data;
   }
 
-  // ДОДАНО МЕТОД PUT
   public async put<T, D = unknown>(url: string, data: D, config?: AxiosRequestConfig): Promise<T> {
     const response = await this.axiosInstance.put<T, any, D>(url, data, config);
     return response.data;

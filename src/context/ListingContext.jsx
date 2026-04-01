@@ -70,7 +70,7 @@ export const ListingProvider = ({ children }) => {
         } catch (err) {
             console.error("Помилка toggle favorite:", err);
         }
-    }; // ТУТ БУЛА ПОМИЛКА (пропущена дужка)
+    };
 
     // ЛОГІКА ПОРІВНЯННЯ
     const toggleCompare = (listingId) => {
@@ -115,8 +115,8 @@ export const ListingProvider = ({ children }) => {
             fetchListings,
             fetchFavoriteIds,
             toggleFavorite,
-            toggleCompare,   // Додано
-            clearCompare,    // Додано
+            toggleCompare,
+            clearCompare,
             clearFavorites,
             addListing: async (dto) => {
                 const createdListing = await ListingService.create(dto);

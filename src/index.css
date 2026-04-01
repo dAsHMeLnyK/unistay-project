@@ -20,6 +20,20 @@
     --radius-full: 50px;
     --radius-card: 35px;
     --radius-inner: 20px;
+    --radius-sm: 12px; /* кнопки та дрібні елементи */
+
+    --map-accent: var(--accent-color); /* #B17457 */
+    --map-dark: var(--text-main);     /* #4A4947 */
+    --map-bg-light: #FAF7F0;
+    --map-panel-bg: var(--bg-white);
+    --map-shadow: 0 8px 30px rgba(0, 0, 0, 0.15);
+
+    --analysis-line-1: var(--accent-color);
+    --analysis-line-2: var(--text-main);
+    --analysis-hint-bg: #F0EBE3;
+    --analysis-panel-shadow: 0 8px 30px rgba(0, 0, 0, 0.15);
+    --analysis-btn-bg: #FAF7F0;
+    --analysis-btn-border: #EEEAE0;
   }
 
   * {

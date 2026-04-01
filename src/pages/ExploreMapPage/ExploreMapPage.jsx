@@ -16,7 +16,6 @@ import ListingCard from '../../components/listings/ListingCard/ListingCard';
 import LoadingPage from '../LoadingPage/LoadingPage';
 import styles from './ExploreMapPage.module.css';
 
-// Компонент-помічник для доступу до методів карти
 const MapActions = ({ setCloseAction }) => {
     const map = useMap();
     useEffect(() => {
@@ -33,7 +32,6 @@ const ExploreMapPage = () => {
     const [selectedLandmark, setSelectedLandmark] = useState(null);
     const [closePopupFunc, setClosePopupFunc] = useState(null);
 
-    // Координати ключових точок
     const MAIN_COORD = OSTROH_LANDMARKS.find(l => l.id === 'old_academy')?.coords || [50.329, 26.512];
 
     useEffect(() => {
@@ -47,7 +45,6 @@ const ExploreMapPage = () => {
         fetchAllListings();
     }, []);
 
-    // Створення кастомних іконок
     const academyIcon = (isNew) => L.divIcon({
         className: styles.academyMarkerWrapper,
         html: ReactDOMServer.renderToString(
@@ -122,7 +119,12 @@ const ExploreMapPage = () => {
                     <Polyline 
                         key={`analysis-${selectedLandmark.id}-${listing.id}`}
                         positions={[selectedLandmark.coords, [listing.latitude, listing.longitude]]}
-                        pathOptions={{ color: index === 0 ? '#B17457' : '#4A4947', weight: 4, dashArray: '10, 15', className: styles.animatedLine }}
+                        pathOptions={{ 
+                            color: index === 0 ? 'var(--analysis-line-1)' : 'var(--analysis-line-2)', 
+                            weight: 4, 
+                            dashArray: '10, 15', 
+                            className: styles.animatedLine 
+                        }}
                     >
                         <Tooltip permanent direction="top" className={styles.distanceTooltip}>
                             №{index + 1}: {calculateDistance(listing.latitude, listing.longitude, selectedLandmark.coords[0], selectedLandmark.coords[1])} км

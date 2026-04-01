@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { useSearchParams, Link } from 'react-router-dom';
 import { FiArrowLeft, FiCheck, FiX, FiInfo } from 'react-icons/fi';
 import { ListingService } from '../../api/services/ListingService';
-import { COMPARISON_RESULT } from '../../constants/listingEnums'; // Пам'ятаєте, ми його створювали?
+import { COMPARISON_RESULT } from '../../constants/listingEnums';
 import styles from './ComparePage.module.css';
 
 const ComparePage = () => {
