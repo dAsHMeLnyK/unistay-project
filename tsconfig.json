@@ -6,7 +6,8 @@
       "dom.iterable",
       "esnext"
     ],
-    "allowJs": true, // *** ДУЖЕ ВАЖЛИВО: Дозволяє файли JavaScript (.js, .jsx) ***
+    "types": ["vite/client"], // *** ДОДАНО СЮДИ: для підтримки import.meta.env ***
+    "allowJs": true,
     "skipLibCheck": true,
     "esModuleInterop": true,
     "allowSyntheticDefaultImports": true,
@@ -18,14 +19,15 @@
     "resolveJsonModule": true,
     "isolatedModules": true,
     "noEmit": true,
-    "jsx": "react-jsx", // *** ДУЖЕ ВАЖЛИВО: Як обробляти JSX ***
-    "baseUrl": "src" // Якщо ви використовуєте абсолютні шляхи імпорту з src
+    "jsx": "react-jsx",
+    "baseUrl": "src"
   },
   "include": [
     "src/**/*.ts",
     "src/**/*.tsx",
     "src/**/*.js",
-    "src/**/*.jsx" // *** ДУЖЕ ВАЖЛИВО: Включити всі типи файлів для компіляції/перевірки ***
+    "src/**/*.jsx",
+    "src/vite-env.d.ts" // Рекомендую також явно вказати цей файл, якщо ви його створили
   ],
   "exclude": [
     "node_modules",
