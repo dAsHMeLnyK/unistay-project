@@ -1,16 +1,16 @@
 import React, { useState, useMemo } from 'react';
-import { FiStar, FiMessageSquare, FiLock, FiAlertCircle } from 'react-icons/fi';
+import { FiStar, FiLock, FiAlertCircle } from 'react-icons/fi';
 import { useAuth } from '../../../context/AuthContext';
 import ReviewService from '../../../api/services/ReviewService';
 import ReviewForm from './ReviewForm/ReviewForm';
 import styles from './ReviewSection.module.css';
 
 const ReviewSection = ({ reviews: initialReviews, listingId, ownerId, ownerName }) => {
+    // Тепер дістаємо userName з оновленого AuthContext
     const { isAuthenticated, userId, userName } = useAuth();
     const [reviews, setReviews] = useState(initialReviews || []);
     const [isSubmitting, setIsSubmitting] = useState(false);
 
-    // Приводимо ID до одного формату для порівняння
     const currentUserId = String(userId || "").toLowerCase();
     const cleanOwnerId = String(ownerId || "").toLowerCase();
 
@@ -28,19 +28,26 @@ const ReviewSection = ({ reviews: initialReviews, listingId, ownerId, ownerName 
     const handleAddReview = async (formData) => {
         setIsSubmitting(true);
         try {
+            // 1. Відправляємо на бекенд
             const result = await ReviewService.createForListing(listingId, formData);
             
-            // Створюємо об'єкт нового відгуку з актуальним ім'ям з контексту
+            // 2. Формуємо об'єкт для миттєвого відображення.
+            // Якщо бекенд повернув result.user === null, ми самі підставляємо дані з контексту.
             const newReview = {
                 ...result,
-                user: { fullName: userName || "Я" }, 
+                user: result.user || { 
+                    id: userId, 
+                    fullName: userName || "Мій відгук" 
+                },
                 userId: userId,
-                publicationDate: new Date().toISOString()
+                // Використовуємо дату з сервера або поточну
+                publicationDate: result.publicationDate || new Date().toISOString()
             };
 
             setReviews(prev => [newReview, ...prev]);
         } catch (err) {
-            alert("Помилка при додаванні відгуку");
+            console.error("Review creation error:", err);
+            alert("Помилка при додаванні відгуку. Можливо, ви вже залишали відгук для цього оголошення.");
         } finally {
             setIsSubmitting(false);
         }
@@ -66,7 +73,7 @@ const ReviewSection = ({ reviews: initialReviews, listingId, ownerId, ownerName 
                 </div>
             </div>
 
-            {/* Форма відгуку */}
+            {/* Зона взаємодії: Форма або Попередження */}
             <div className={styles.interactionZone}>
                 {!isAuthenticated ? (
                     <div className={styles.infoBox}>
@@ -86,24 +93,25 @@ const ReviewSection = ({ reviews: initialReviews, listingId, ownerId, ownerName 
             {/* Список відгуків */}
             <div className={styles.reviewsGrid}>
                 {reviews.length > 0 ? (
-                    reviews.map((review, index) => {
+                    reviews.map((review) => {
                         const reviewUserId = String(review.userId || "").toLowerCase();
                         
-                        // ЛОГІКА ВИЗНАЧЕННЯ ІМЕНІ (точно як у власника):
+                        // Пріоритет імені: 
+                        // 1. Те, що прийшло в об'єкті user (від сервера)
+                        // 2. Якщо це поточний юзер — його ім'я з контексту
+                        // 3. Якщо це власник оголошення — ownerName
                         let displayName = "Користувач";
 
                         if (review.user?.fullName) {
                             displayName = review.user.fullName;
                         } else if (reviewUserId === currentUserId && userName) {
-                            // Якщо це ВАШ відгук
                             displayName = userName;
                         } else if (reviewUserId === cleanOwnerId && ownerName) {
-                            // Якщо відгук залишив ВЛАСНИК оголошення
                             displayName = ownerName;
                         }
 
                         return (
-                            <div key={review.id || index} className={styles.reviewCard}>
+                            <div key={review.id} className={styles.reviewCard}>
                                 <div className={styles.cardHeader}>
                                     <div className={styles.authorAvatar}>
                                         {displayName.charAt(0).toUpperCase()}
