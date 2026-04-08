@@ -17,6 +17,9 @@
     --danger-color: #cc4444; 
     --danger-hover: #e53e3e;
 
+    --success-color: #439446; /* Приглушений зелений, що пасує до вашої гами */
+    --success-bg: #E8F5E9;
+
     --radius-full: 50px;
     --radius-card: 35px;
     --radius-inner: 20px;

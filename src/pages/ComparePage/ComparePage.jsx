@@ -1,14 +1,19 @@
 import React, { useEffect, useState } from 'react';
 import { useSearchParams, Link } from 'react-router-dom';
-import { FiArrowLeft, FiCheck, FiX, FiInfo } from 'react-icons/fi';
+import { FiArrowLeft } from 'react-icons/fi';
 import { ListingService } from '../../api/services/ListingService';
-import { COMPARISON_RESULT } from '../../constants/listingEnums';
+import ComparisonHeader from '../../components/comparison/ComparisonHeader';
+import PriceSection from '../../components/comparison/PriceSection';
+import InfrastructureSection from '../../components/comparison/InfrastructureSection';
+import AmenitiesSection from '../../components/comparison/AmenitiesSection';
+import PublicationSection from '../../components/comparison/PublicationSection';
 import styles from './ComparePage.module.css';
 
 const ComparePage = () => {
     const [searchParams] = useSearchParams();
     const [comparisonData, setComparisonData] = useState(null);
     const [loading, setLoading] = useState(true);
+    
     const id1 = searchParams.get('id1');
     const id2 = searchParams.get('id2');
 
@@ -20,7 +25,7 @@ const ComparePage = () => {
                     const data = await ListingService.compare(id1, id2);
                     setComparisonData(data);
                 } catch (err) {
-                    console.error("Помилка завантаження порівняння:", err);
+                    console.error("Помилка:", err);
                 } finally {
                     setLoading(false);
                 }
@@ -29,70 +34,41 @@ const ComparePage = () => {
         fetchComparison();
     }, [id1, id2]);
 
-    if (loading) return <div className={styles.loading}>Аналізуємо варіанти...</div>;
-    if (!comparisonData) return <div className={styles.error}>Не вдалося завантажити дані для порівняння.</div>;
+    if (loading) return <div className={styles.loading}>Проводимо глибокий аналіз...</div>;
+    if (!comparisonData) return <div className={styles.error}>Помилка завантаження.</div>;
 
-    const { priceComparison, amenitiesComparison, reviewsComparison, locationComparison } = comparisonData;
+    // ВСІ ДАНІ З ВАШОГО C# DTO
+    const { 
+        listing1, 
+        listing2, 
+        priceComparison, 
+        locationComparison, 
+        amenitiesComparison,
+        communalServicesComparison,
+        publicationDateComparison 
+    } = comparisonData;
 
     return (
         <div className={styles.container}>
             <header className={styles.header}>
-                <Link to="/listings" className={styles.backLink}><FiArrowLeft /> Назад до пошуку</Link>
-                <h1 className={styles.pageTitle}>Порівняння об'єктів</h1>
+                <Link to="/listings" className={styles.backLink}><FiArrowLeft /> Назад</Link>
+                <h1 className={styles.pageTitle}>Порівняльний аналіз</h1>
             </header>
 
+            {/* Використовуємо об'єкти прямо з бекенду */}
+            <ComparisonHeader listing1={listing1} listing2={listing2} />
+
             <div className={styles.compareGrid}>
-                {/* 1. Секція цін */}
-                <section className={styles.section}>
-                    <h3 className={styles.sectionTitle}>Вартість</h3>
-                    <div className={styles.row}>
-                        <div className={`${styles.cell} ${priceComparison.cheaper === 0 ? styles.winner : ''}`}>
-                            <span className={styles.priceValue}>{priceComparison.listing1Price.toLocaleString()} грн</span>
-                            {priceComparison.cheaper === 0 && <span className={styles.badge}>Дешевше</span>}
-                        </div>
-                        <div className={styles.label}>Ціна</div>
-                        <div className={`${styles.cell} ${priceComparison.cheaper === 1 ? styles.winner : ''}`}>
-                            <span className={styles.priceValue}>{priceComparison.listing2Price.toLocaleString()} грн</span>
-                            {priceComparison.cheaper === 1 && <span className={styles.badge}>Дешевше</span>}
-                        </div>
-                    </div>
-                </section>
+                <PriceSection 
+                    priceComparison={priceComparison} 
+                    communalComp={communalServicesComparison} 
+                />
+                
+                <PublicationSection dateComp={publicationDateComparison} />
 
-                {/* 2. Секція зручностей */}
-                <section className={styles.section}>
-                    <h3 className={styles.sectionTitle}>Зручності</h3>
-                    <div className={styles.row}>
-                        <div className={styles.cell}>
-                            <ul className={styles.amenityList}>
-                                {amenitiesComparison.commonAmenities.map(a => <li key={a} className={styles.common}><FiCheck/> {a}</li>)}
-                                {amenitiesComparison.onlyInListing1.map(a => <li key={a} className={styles.exclusive}><FiCheck/> {a}</li>)}
-                            </ul>
-                        </div>
-                        <div className={styles.label}>Перелік</div>
-                        <div className={styles.cell}>
-                            <ul className={styles.amenityList}>
-                                {amenitiesComparison.commonAmenities.map(a => <li key={a} className={styles.common}><FiCheck/> {a}</li>)}
-                                {amenitiesComparison.onlyInListing2.map(a => <li key={a} className={styles.exclusive}><FiCheck/> {a}</li>)}
-                            </ul>
-                        </div>
-                    </div>
-                </section>
-
-                {/* 3. Локація (Відстані до орієнтирів) */}
-                <section className={styles.section}>
-                    <h3 className={styles.sectionTitle}>Інфраструктура (відстань до об'єктів)</h3>
-                    {locationComparison.landmarkComparisons.map((landmark, idx) => (
-                        <div className={styles.row} key={idx}>
-                            <div className={`${styles.cell} ${landmark.closerListing === 0 ? styles.winner : ''}`}>
-                                {landmark.listing1DistanceKm} км
-                            </div>
-                            <div className={styles.label}>{landmark.landmarkName}</div>
-                            <div className={`${styles.cell} ${landmark.closerListing === 1 ? styles.winner : ''}`}>
-                                {landmark.listing2DistanceKm} км
-                            </div>
-                        </div>
-                    ))}
-                </section>
+                <InfrastructureSection locationComparison={locationComparison} />
+                
+                <AmenitiesSection amenitiesComparison={amenitiesComparison} />
             </div>
         </div>
     );

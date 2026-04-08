@@ -9,9 +9,8 @@ const ReviewService = {
 
     // Створити відгук
     createForListing: async (listingId: string, data: { rating: number; comment: string }): Promise<ReviewDto> => {
-        // Відправляємо об'єкт, який відповідає CreateReviewDto на бекенді
         const payload = {
-            listingId: listingId, // Хоча він є в URL, бекенд може чекати його і в тілі
+            listingId: listingId,
             rating: data.rating,
             comment: data.comment
         };

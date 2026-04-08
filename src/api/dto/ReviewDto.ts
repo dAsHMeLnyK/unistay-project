@@ -7,7 +7,7 @@ export interface ReviewDto {
     id: string;
     listingId: string;
     userId: string;
-    user: UserSummaryDto | null; // Ось тут лежить ім'я автора
+    user: UserSummaryDto | null;
     rating: number;
     comment: string;
     publicationDate: string;

@@ -1,0 +1,119 @@
+.section {
+    background: var(--bg-white);
+    border-radius: var(--radius-card);
+    padding: 35px;
+    margin-bottom: 30px;
+    border: 1.5px solid var(--border-color);
+    box-shadow: var(--card-shadow);
+}
+
+.header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 30px;
+}
+
+.sectionTitle {
+    font-size: 22px;
+    font-weight: 700;
+    color: var(--text-main);
+    margin: 0;
+}
+
+.diffBadge {
+    /* Єдине місце з зеленим кольором */
+    background: var(--success-bg); 
+    color: var(--success-color);
+    padding: 6px 14px;
+    border-radius: var(--radius-sm);
+    font-size: 13px;
+    font-weight: 700;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.priceContainer {
+    display: grid;
+    grid-template-columns: 1fr 180px 1fr;
+    align-items: center;
+    gap: 25px;
+}
+
+.priceBlock {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 25px;
+    border-radius: var(--radius-inner);
+    background: var(--bg-filters);
+    border: 1.5px solid transparent;
+    transition: all var(--transition-fast);
+}
+
+.priceBlock.isCheaper {
+    /* Використовуємо ваш акцентний колір замість зеленого */
+    border-color: var(--accent-color);
+    background: var(--accent-shadow);
+}
+
+.priceBlock.isCheaper .value {
+    color: var(--accent-color);
+}
+
+.label {
+    font-size: 12px;
+    color: var(--text-muted);
+    font-weight: 700;
+    text-transform: uppercase;
+    margin-bottom: 8px;
+    letter-spacing: 0.5px;
+}
+
+.value {
+    font-size: 26px;
+    font-weight: 700;
+    color: var(--text-main);
+}
+
+.utilityStatus {
+    font-size: 13px;
+    margin-top: 10px;
+    font-weight: 700;
+    color: var(--text-muted);
+    background: var(--bg-white);
+    padding: 4px 12px;
+    border-radius: var(--radius-sm);
+    border: 1px solid var(--border-color);
+}
+
+.visualScale {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+.track {
+    height: 6px;
+    background: var(--border-color);
+    border-radius: 3px;
+    position: relative;
+    overflow: hidden;
+}
+
+.diffFill {
+    position: absolute;
+    height: 100%;
+    background: var(--accent-color);
+    transition: width 1s ease-in-out;
+}
+
+.scaleLabels {
+    display: flex;
+    justify-content: space-between;
+    font-size: 10px;
+    color: var(--text-muted);
+    font-weight: 700;
+    text-transform: uppercase;
+}

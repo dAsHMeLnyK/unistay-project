@@ -1,116 +1,55 @@
 .container {
-    padding: 40px 0;
-    max-width: 1100px;
+    /* Відступи та макет */
+    padding: 100px 20px 80px 20px;
+    max-width: 1000px;
     margin: 0 auto;
+    /* Шрифт успадковується автоматично з body */
 }
 
 .header {
     margin-bottom: 40px;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
 }
 
 .backLink {
     display: flex;
     align-items: center;
     gap: 8px;
-    color: #8C8C8C;
+    color: var(--text-muted);
     text-decoration: none;
-    margin-bottom: 15px;
-    font-weight: 500;
+    font-size: 17px;
+    font-weight: 700;
+    transition: color var(--transition-fast);
+}
+
+.backLink:hover {
+    color: var(--accent-color);
 }
 
 .pageTitle {
+    /* Тільки специфічні параметри для цього заголовка */
+    font-size: 28px;
+    font-weight: 700;
     color: var(--text-main);
-    font-size: 32px;
+    letter-spacing: -0.01em;
+    line-height: 1.1;
+    margin: 0;
 }
 
 .compareGrid {
-    background: #FAF7F0;
-    border-radius: 24px;
-    padding: 30px;
-    box-shadow: 0 10px 40px rgba(0,0,0,0.05);
-}
-
-.section {
-    margin-bottom: 50px;
-}
-
-.sectionTitle {
-    text-align: center;
-    color: var(--accent-color);
-    font-size: 20px;
-    margin-bottom: 25px;
-    text-transform: uppercase;
-    letter-spacing: 1px;
-}
-
-.row {
-    display: grid;
-    grid-template-columns: 1fr 200px 1fr;
-    align-items: center;
-    padding: 15px 0;
-    border-bottom: 1px solid #EEEAE0;
-}
-
-.label {
-    text-align: center;
-    font-weight: 700;
-    color: #8C8C8C;
-    font-size: 14px;
-}
-
-.cell {
-    padding: 0 20px;
     display: flex;
     flex-direction: column;
-    align-items: center;
-    text-align: center;
+    gap: 0;
 }
 
-.winner {
-    color: var(--accent-color);
-    font-weight: 700;
-}
-
-.badge {
-    background: var(--accent-color);
-    color: white;
-    font-size: 10px;
-    padding: 2px 8px;
-    border-radius: 10px;
-    margin-top: 5px;
-}
-
-.priceValue {
-    font-size: 22px;
-}
-
-.amenityList {
-    list-style: none;
-    padding: 0;
-    margin: 0;
-    font-size: 14px;
-    text-align: left;
-}
-
-.amenityList li {
-    display: flex;
-    align-items: center;
-    gap: 8px;
-    margin-bottom: 5px;
-}
-
-.exclusive {
-    color: var(--text-main);
-    font-weight: 600;
-}
-
-.common {
-    color: #A0A0A0;
-}
-
-.loading {
+.loading, .error {
     text-align: center;
     padding: 100px;
     font-size: 20px;
-    color: var(--accent-color);
+    font-weight: 700;
 }
+
+.loading { color: var(--accent-color); }
+.error { color: var(--danger-color); }
