@@ -20,6 +20,7 @@ import SignUpPage from "./pages/SignUpPage/SignUpPage";
 import NotFoundPage from "./pages/NotFoundPage/NotFoundPage";
 import ExploreMapPage from './pages/ExploreMapPage/ExploreMapPage';
 import ComparePage from "./pages/ComparePage/ComparePage";
+import ProfilePage from "./pages/ProfilePage/ProfilePage";
 
 // Context & Protection
 import { AuthProvider } from "./context/AuthContext";
@@ -58,7 +59,7 @@ function App() {
             } />
             <Route path="profile" element={
               <ProtectedRoute>
-                <div style={{ padding: "20px" }}>Profile Page Placeholder</div>
+                <ProfilePage />
               </ProtectedRoute>
             } />
           </Route>

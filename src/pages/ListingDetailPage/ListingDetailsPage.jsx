@@ -5,6 +5,7 @@ import { FiMapPin, FiCalendar, FiUser, FiPhone, FiHeart } from 'react-icons/fi';
 import { ListingService } from '../../api/services/ListingService';
 import LoadingPage from '../LoadingPage/LoadingPage';
 import Button from '../../components/common/Button/Button';
+import Card from '../../components/common/Card/Card'; // Імпорт Card
 import AmenityDisplay from './AmenityDisplay/AmenityDisplay';
 import ListingFeatures from './ListingFeatures/ListingFeatures';
 import ReviewSection from './ReviewSection/ReviewSection';
@@ -42,7 +43,7 @@ const ListingDetailsPage = () => {
 
     return (
         <div className={styles.detailsPage}>
-            <div className={`${styles.container} details-stack`}>
+            <div className={`${styles.container} page-content-container details-stack`}>
                 
                 {/* ВЕРХНЯ ЧАСТИНА: ГАЛЕРЕЯ ТА ГОЛОВНА КАРТКА */}
                 <div className={styles.topSection}>
@@ -53,8 +54,6 @@ const ListingDetailsPage = () => {
                             ) : (
                                 <div className={styles.placeholderImg}>Фото відсутні</div>
                             )}
-                            
-                            {/* Лічильник обраного поверх фото */}
                             <div className={styles.favoriteBadge}>
                                 <FiHeart className={styles.heartIcon} />
                                 <span>{listing.favoriteCount || 0}</span>
@@ -74,7 +73,8 @@ const ListingDetailsPage = () => {
                         </div>
                     </div>
 
-                    <aside className={styles.actionCard}>
+                    {/* Використовуємо Card замість aside */}
+                    <Card className={styles.actionCard} padding="30px">
                         <div className={styles.headerInfo}>
                             <h1 className="page-title-left">{listing.title}</h1>
                             <div className={styles.locationBadge}>
@@ -85,7 +85,7 @@ const ListingDetailsPage = () => {
                         <div className={styles.priceContainer}>
                             <div className={styles.priceLabel}>Вартість оренди</div>
                             <div className={styles.priceRow}>
-                                <span className={styles.priceValue}>{listing.price} ₴</span>
+                                <span className={styles.priceValue}>{listing.price.toLocaleString()} ₴</span>
                                 <span className={styles.pricePeriod}>/ міс.</span>
                             </div>
                         </div>
@@ -100,24 +100,23 @@ const ListingDetailsPage = () => {
                             </div>
                         </div>
 
-                        {/* Логіка показу телефону */}
                         <Button 
-                            className={styles.contactBtn} 
+                            fullWidth
                             variant={showPhone ? "outline" : "primary"}
                             onClick={() => setShowPhone(!showPhone)}
                         >
-                            <FiPhone /> {showPhone ? "+380 XX XXX XX XX" : "Показати телефон"}
+                            <FiPhone /> {showPhone ? listing.user?.phoneNumber || "+380 XX XXX XX XX" : "Показати телефон"}
                         </Button>
 
                         <div className={styles.metaInfo}>
                             <FiCalendar /> Опубліковано {formattedDate}
                         </div>
-                    </aside>
+                    </Card>
                 </div>
 
-                {/* НИЖНЯ ЧАСТИНА: ДЕТАЛІ, ОПИС ТА ВІДГУКИ */}
+                {/* НИЖНЯ ЧАСТИНА: СТЕК КАРТОК */}
                 <div className="details-stack">
-                    <div className="content-card">
+                    <Card>
                         <div className={styles.sectionGroup}>
                             <h3 className="section-title">Характеристики об'єкту</h3>
                             <ListingFeatures listing={listing} />
@@ -127,34 +126,31 @@ const ListingDetailsPage = () => {
                             <h3 className="section-title">Про це житло</h3>
                             <p className={styles.descriptionText}>{listing.description}</p>
                         </div>
-                    </div>
+                    </Card>
 
-                    <div className="content-card">
+                    <Card>
                         <h3 className="section-title">Зручності</h3>
                         <AmenityDisplay amenities={listing.amenities} />
-                    </div>
+                    </Card>
 
-                    {/* НОВИЙ БЛОК: КАРТА */}
-                    <div className="content-card">
+                    <Card>
                         <h3 className="section-title">Розташування</h3>
                         <LocationMap 
                             lat={listing.latitude} 
                             lng={listing.longitude} 
                             address={listing.address} 
                         />
-                    </div>
+                    </Card>
 
-                    {/* Додаємо секцію відгуків з вашого DTO */}
-                    <div className="content-card">
+                    <Card>
                         <h3 className="section-title">Відгуки</h3>
                         <ReviewSection 
                             reviews={listing.reviews} 
                             listingId={listing.id} 
                             ownerId={listing.userId}
                         />
-                    </div>
+                    </Card>
                 </div>
-
             </div>
         </div>
     );

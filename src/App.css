@@ -6,7 +6,15 @@ body, button, input, textarea, select {
   font-family: 'Afacad', sans-serif;
 }
 
-/* Контейнер заголовка сторінки (центрований, для списків) */
+/* Контейнер вмісту для MainLayout */
+.page-content-container {
+  max-width: 1100px;
+  width: 100%;
+  margin: 0 auto;
+  padding: 0 20px;
+}
+
+/* Контейнер заголовка сторінки */
 .page-header {
   display: flex;
   flex-direction: column;
@@ -18,9 +26,7 @@ body, button, input, textarea, select {
   width: 100%;
 }
 
-/* Головний заголовок (центрований) */
 .page-title {
-  font-family: 'Afacad', sans-serif;
   font-size: clamp(26px, 4vw, 36px);
   font-weight: 700;
   color: var(--text-main);
@@ -28,9 +34,7 @@ body, button, input, textarea, select {
   margin: 0;
 }
 
-/* Заголовок для сторінки деталей (вирівняний ліворуч) */
 .page-title-left {
-  font-family: 'Afacad', sans-serif;
   font-size: 28px;
   font-weight: 700;
   color: var(--text-main);
@@ -39,9 +43,7 @@ body, button, input, textarea, select {
   margin: 0;
 }
 
-/* Опис під головним заголовком */
 .page-subtitle {
-  font-family: 'Afacad', sans-serif;
   font-size: 18px;
   color: var(--text-muted);
   max-width: 650px;
@@ -49,9 +51,7 @@ body, button, input, textarea, select {
   margin: 0;
 }
 
-/* Підзаголовки секцій (h2, h3) */
 .section-title {
-  font-family: 'Afacad', sans-serif;
   font-size: 22px;
   font-weight: 700;
   color: var(--text-main);
@@ -61,13 +61,18 @@ body, button, input, textarea, select {
   gap: 12px;
 }
 
+/* Допоміжний клас для акцентного тексту */
+.text-accent {
+  color: var(--accent-color);
+}
 
+/* Повідомлення про помилки */
 .system-error {
-  color: var(--danger-text);
-  background-color: var(--danger-bg);
-  border: 1px solid var(--danger-border);
+  color: var(--danger-color);
+  background-color: #fff5f5;
+  border: 1px solid var(--danger-color);
   padding: 12px;
-  border-radius: var(--radius-inner); /* Наша нова системна змінна */
+  border-radius: var(--radius-inner);
   margin-bottom: 20px;
   font-size: 14px;
   text-align: center;
@@ -75,29 +80,27 @@ body, button, input, textarea, select {
   animation: fadeIn 0.3s ease;
 }
 
-/* Глобальний допоміжний клас для рядка з одиницями виміру */
-.input-with-unit {
+/* Елемент-плашка для внутрішніх блоків (дані в профілі, теги тощо) */
+.inner-badge {
+  background-color: var(--bg-input);
+  border-radius: var(--radius-inner);
+  border: 1.5px solid var(--border-color);
+  padding: 10px 18px;
+  font-weight: 500;
+  color: var(--text-main);
+  display: inline-flex;
+  align-items: center;
+}
+
+/* Стек для деталей */
+.details-stack {
   display: flex;
-  align-items: flex-end; /* Вирівнюємо по базовій лінії тексту */
-  gap: 12px;
+  flex-direction: column;
+  gap: 40px;
+  width: 100%;
 }
 
-.unit-label {
-  font-size: 16px;
-  font-weight: 700;
-  color: var(--accent-color);
-  padding-bottom: 14px; /* Коригуємо висоту під наш Input */
-}
-
-@keyframes fadeIn {
-  from { opacity: 0; transform: translateY(-5px); }
-  to { opacity: 1; transform: translateY(0); }
-}
-/* ==========================================================================
-   КОМПОНЕНТИ ТА СІТКИ
-   ========================================================================== */
-
-/* Глобальна сітка для карток (Відновлено працездатність) */
+/* Сітка карток (для ListingsPage) */
 .cards-grid {
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
@@ -106,32 +109,9 @@ body, button, input, textarea, select {
   width: 100%;
 }
 
-/* Універсальна картка контенту */
-.content-card {
-  background: var(--bg-filters);
-  border-radius: 35px;
-  border: 1.5px solid var(--border-color);
-  padding: 35px;
-  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.02);
-  display: flex;
-  flex-direction: column;
-  gap: 30px; 
-}
-
-/* Спеціальний стек для сторінки деталей, щоб блоки не злипалися */
-.details-stack {
-  display: flex;
-  flex-direction: column;
-  gap: 40px;
-  width: 100%;
-}
-
-/* Елемент-плашка для внутрішніх блоків */
-.inner-badge {
-  background-color: var(--bg-input);
-  border-radius: 20px;
-  border: 1.5px solid var(--border-color);
-  padding: 12px 20px;
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(-5px); }
+  to { opacity: 1; transform: translateY(0); }
 }
 
 /* ==========================================================================
@@ -149,12 +129,6 @@ body, button, input, textarea, select {
   }
   
   .cards-grid {
-    gap: 20px;
-  }
-
-  .content-card {
-    padding: 25px;
-    border-radius: 25px;
     gap: 20px;
   }
 

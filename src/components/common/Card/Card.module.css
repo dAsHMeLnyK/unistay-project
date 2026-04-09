@@ -1,0 +1,22 @@
+/* src/components/common/Card/Card.module.css */
+.card {
+  background: var(--bg-filters);
+  border-radius: var(--radius-card); /* Використовуємо вашу змінну 35px */
+  border: 1.5px solid var(--border-color);
+  box-shadow: var(--card-shadow);
+  display: flex;
+  flex-direction: column;
+  gap: 30px;
+  width: 100%;
+  box-sizing: border-box;
+  transition: transform var(--transition-fast), box-shadow var(--transition-fast);
+}
+
+/* Адаптивність для карток */
+@media (max-width: 600px) {
+  .card {
+    padding: 25px !important; /* Пріоритет над інлайн-стилем для мобілок */
+    border-radius: 25px;
+    gap: 20px;
+  }
+}
