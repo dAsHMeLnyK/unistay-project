@@ -11,7 +11,7 @@
     padding: 0 20px;
 }
 
-/* ФІКС: Обмежуємо дію глобальних стилів ТІЛЬКИ цією сторінкою */
+/* Використовуємо :global тільки для специфічних контейнерів всередині цієї сторінки */
 .editListingPage :global(.page-title-container) {
     display: flex;
     flex-direction: column;
@@ -21,18 +21,12 @@
     width: 100%;
 }
 
-.editListingPage :global(.page-title) {
-    width: 100%;
-}
-
 .editListingPage :global(.page-subtitle) {
-    width: auto; /* Повертаємо автоматичну ширину */
-    max-width: 800px; /* Обмежуємо, щоб не розтягувалося на весь екран */
-    margin-left: auto;
-    margin-right: auto;
+    max-width: 800px;
+    margin: 10px auto 0;
+    color: var(--text-muted);
 }
 
-/* Налаштування сітки - теж обмежуємо поточною сторінкою */
 .editListingPage :global(.formColumns) {
     display: grid;
     grid-template-columns: 1.1fr 0.9fr;
@@ -42,10 +36,11 @@
 }
 
 .editListingPage :global(.formSection) {
-    background-color: var(--bg-filters);
+    background-color: var(--bg-white); /* Змінено на білий для контрасту на бежевому фоні */
     border-radius: var(--radius-card);
     padding: 35px;
-    border: 1px solid var(--border-color);
+    border: 1.5px solid var(--border-color);
+    box-shadow: var(--shadow-sm);
 }
 
 .editListingPage :global(.submitWrapper) {
@@ -55,21 +50,13 @@
     margin-top: 40px;
 }
 
-.editListingPage :global(.finalSubmitBtn) {
-    padding: 16px 45px;
-    font-size: 17px;
-    font-weight: 700;
-    border-radius: var(--radius-full);
-    background-color: var(--accent-color);
-    color: white;
-    border: none;
-    cursor: pointer;
-    box-shadow: 0 8px 20px var(--accent-shadow);
-    transition: all var(--transition-fast);
-}
-
+/* Медіа-запит для планшетів та телефонів */
 @media (max-width: 950px) {
     .editListingPage :global(.formColumns) {
         grid-template-columns: 1fr;
+    }
+    
+    .editListingPage :global(.formSection) {
+        padding: 25px;
     }
 }

@@ -1,13 +1,14 @@
 .navbar {
   background-color: var(--bg-main);
   padding: 15px 20px;
-  box-shadow: 0 1px 10px rgba(74, 73, 71, 0.08);
+  box-shadow: var(--shadow-sm); /* Легка системна тінь */
   position: fixed;
   top: 0;
   left: 0;
   width: 100%;
   z-index: 1000;
   box-sizing: border-box;
+  min-height: 75px; /* Фіксуємо висоту для стабільності */
 }
 
 .navContainer {
@@ -60,16 +61,16 @@
   height: 3px;
   background-color: var(--accent-color);
   position: absolute;
-  bottom: -2px;
+  bottom: -4px; /* Трохи нижче для "повітря" */
   left: 0;
-  border-radius: 2px;
+  border-radius: var(--radius-full);
 }
 
 /* КНОПКИ ТА ДІЇ */
 .userActions {
   display: flex;
   align-items: center;
-  gap: 15px;
+  gap: 12px; /* Трохи щільніше для кращого вигляду */
 }
 
 .navButton {
@@ -99,15 +100,16 @@
 
 .badge {
   position: absolute;
-  top: 4px;
+  top: 2px;
   right: -5px;
-  background-color: var(--text-main);
-  color: white;
-  font-size: 10px;
+  background-color: var(--text-main); /* Акцентний колір для бейджа */
+  color: var(--bg-main);
+  font-size: 11px;
   font-weight: 800;
-  padding: 2px 5px;
-  border-radius: 10px;
+  padding: 1px 6px;
+  border-radius: var(--radius-full);
   border: 2px solid var(--bg-main);
   min-width: 12px;
   text-align: center;
+  box-shadow: 0 2px 4px rgba(0,0,0,0.1);
 }

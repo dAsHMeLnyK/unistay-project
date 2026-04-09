@@ -1,70 +1,55 @@
-  :root {
-    --accent-color: #B17457;
-    --accent-hover: #9c5e44;
-    --bg-input: #FDFCF9;
-    --bg-filters: #F7F5F0;
-    --text-main: #4A4947;
-    --text-muted: #8C8C8C;
-    --bg-main: #FAF7F0;
-    --bg-white: #FFFFFF;
+:root {
+  /* Основна палітра */
+  --accent-color: #B17457;
+  --accent-hover: #9c5e44;
+  --accent-shadow: rgba(177, 116, 87, 0.1);
+  
+  --bg-main: #FAF7F0;
+  --bg-white: #fbfaf9;
+  --bg-input: #FDFCF9;
+  --bg-filters: #F7F5F0;
+  
+  --text-main: #4A4947;
+  --text-muted: #8C8C8C;
+  --border-color: #D8D2C2;
 
-    --accent-shadow: rgba(177, 116, 87, 0.1); 
-    --card-shadow: rgba(0, 0, 0, 0.04);
+  /* Статуси */
+  --danger-color: #cc4444;
+  --danger-hover: #e53e3e;
+  --success-color: #439446;
+  --success-bg: #E8F5E9;
 
-    --transition-fast: 0.25s ease;
-    --hover-lift: translateY(-2px);
-    --border-color: #D8D2C2;
-    --danger-color: #cc4444; 
-    --danger-hover: #e53e3e;
+  /* Радіуси (Систематизовані) */
+  --radius-full: 50px;   /* Круглі кнопки/аватари */
+  --radius-card: 20px;   /* Основні картки (Profile, Listing) */
+  --radius-inner: 12px;  /* Внутрішні плашки, інпути */
+  --radius-sm: 8px;      /* Маленькі кнопки/теги */
 
-    --success-color: #439446; /* Приглушений зелений, що пасує до вашої гами */
-    --success-bg: #E8F5E9;
+  /* Тіні (Замість 5 різних тіней - 3 рівні) */
+  --shadow-sm: 0 2px 8px rgba(0, 0, 0, 0.04);
+  --shadow-md: 0 8px 20px rgba(0, 0, 0, 0.08);
+  --shadow-lg: 0 12px 35px rgba(0, 0, 0, 0.24);
 
-    --radius-full: 50px;
-    --radius-card: 35px;
-    --radius-inner: 20px;
-    --radius-sm: 12px; /* кнопки та дрібні елементи */
+  /* Анімації */
+  --transition-fast: 0.2s ease;
+  --hover-lift: translateY(-3px);
+}
 
-    --map-accent: var(--accent-color); /* #B17457 */
-    --map-dark: var(--text-main);     /* #4A4947 */
-    --map-bg-light: #FAF7F0;
-    --map-panel-bg: var(--bg-white);
-    --map-shadow: 0 8px 30px rgba(0, 0, 0, 0.15);
+/* Скидання та Базові налаштування */
+* { box-sizing: border-box; }
 
-    --analysis-line-1: var(--accent-color);
-    --analysis-line-2: var(--text-main);
-    --analysis-hint-bg: #F0EBE3;
-    --analysis-panel-shadow: 0 8px 30px rgba(0, 0, 0, 0.15);
-    --analysis-btn-bg: #FAF7F0;
-    --analysis-btn-border: #EEEAE0;
-  }
+body {
+  margin: 0;
+  background-color: var(--bg-main);
+  font-family: 'Afacad', sans-serif;
+  color: var(--text-main);
+  line-height: 1.5;
+  -webkit-font-smoothing: antialiased;
+}
 
-  * {
-    box-sizing: border-box;
-  }
-
-  body {
-    margin: 0;
-    background-color: var(--bg-main);
-    /* Додаємо пріоритет для шрифту */
-    font-family: 'Afacad', sans-serif !important; 
-    color: var(--text-main);
-    -webkit-font-smoothing: antialiased;
-    -moz-osx-font-smoothing: grayscale;
-    line-height: 1.5;
-  }
-
-  #root {
-    width: 100%;
-    min-height: 100vh;
-  }
-
-  /* Гарантуємо, що всі заголовки та елементи форм мають ваш шрифт */
-  h1, h2, h3, h4, h5, h6, button, input, textarea, select {
-    font-family: 'Afacad', sans-serif !important;
-  }
-
-  a {
-    text-decoration: none;
-    color: inherit;
-  }
+/* Прибираємо дублювання шрифтів - один селектор для всього */
+h1, h2, h3, h4, h5, h6, button, input, textarea, select, a {
+  font-family: 'Afacad', sans-serif;
+  color: inherit;
+  text-decoration: none;
+}

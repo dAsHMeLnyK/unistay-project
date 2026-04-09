@@ -4,12 +4,13 @@ import { LISTING_TYPES, COMMUNAL_SERVICES, OWNERSHIP_TYPES, NEIGHBOUR_TYPES } fr
 import styles from './ListingFeatures.module.css';
 
 const ListingFeatures = ({ listing }) => {
-    // Масив для зручного рендерингу
+    if (!listing) return null;
+
     const features = [
         { 
             icon: <FiHome />, 
             label: "Тип житла", 
-            value: LISTING_TYPES[listing.type]?.label 
+            value: LISTING_TYPES[listing.type]?.label || "Не вказано"
         },
         { 
             icon: <FiZap />, 
@@ -21,12 +22,12 @@ const ListingFeatures = ({ listing }) => {
         { 
             icon: <FiUsers />, 
             label: "Господарі", 
-            value: OWNERSHIP_TYPES[listing.owners]?.label 
+            value: OWNERSHIP_TYPES[listing.owners]?.label || "Не вказано"
         },
         { 
             icon: <FiLayers />, 
             label: "Сусіди", 
-            value: NEIGHBOUR_TYPES[listing.neighbours]?.label 
+            value: NEIGHBOUR_TYPES[listing.neighbours]?.label || "Не вказано"
         }
     ];
 

@@ -7,14 +7,13 @@
 }
 
 .formCard {
-  /* Використовуємо ваш фірмовий беж */
-  background-color: var(--bg-main);
-  border-radius: 24px;
+  background-color: var(--bg-main); /* Ваш системний беж */
+  border-radius: var(--radius-card); /* 20px-24px з вашої системи */
   padding: 80px 40px 40px;
-  /* Додаємо тонку рамку, щоб форма не "розчинялася" на фоні сторінки */
-  border: 1px solid #E0DCD0; 
-  /* Тінь робимо теплою коричневою, щоб вона виглядала чистою */
-  box-shadow: 0 15px 35px rgba(177, 116, 87, 0.1); 
+  /* Замінив #E0DCD0 на системний колір бордера */
+  border: 1.5px solid var(--border-color); 
+  /* Тепла тінь тепер використовує системну змінну для м'якості */
+  box-shadow: 0 15px 35px var(--accent-shadow); 
   text-align: center;
   position: relative;
   width: 100%;
@@ -31,16 +30,16 @@
   width: 80px;
   height: 80px;
   background-color: var(--accent-color);
-  border-radius: 50%;
+  border-radius: var(--radius-full);
   display: flex;
   justify-content: center;
   align-items: center;
-  box-shadow: 0 8px 20px rgba(177, 116, 87, 0.3);
+  box-shadow: 0 8px 20px var(--accent-shadow);
   z-index: 2;
 }
 
 .avatarIcon {
-  color: var(--bg-main); /* Іконка кольору фону */
+  color: var(--bg-main);
   font-size: 40px;
 }
 
@@ -49,16 +48,16 @@
   color: var(--text-main);
   margin-bottom: 30px;
   margin-top: 20px;
-  font-family: 'Afacad', sans-serif;
+  font-family: inherit;
   font-weight: 700;
 }
 
 .divider {
   margin: 25px 0;
-  color: #8C8C8C;
+  color: var(--text-muted); /* #8C8C8C замінено на системний */
   position: relative;
   font-size: 14px;
-  font-weight: 500;
+  font-weight: 600;
 }
 
 .divider::before,
@@ -68,7 +67,7 @@
   top: 50%;
   width: 38%;
   height: 1px;
-  background-color: #D8D2C2;
+  background-color: var(--border-color);
 }
 
 .divider::before { left: 0; }
@@ -84,10 +83,9 @@
 .socialButton {
   width: 52px;
   height: 52px;
-  border-radius: 50%;
-  border: 1.5px solid #D8D2C2;
-  /* Кнопки теж бежеві, але трішки світліші за body для об'єму */
-  background-color: #FDFCF9; 
+  border-radius: var(--radius-full);
+  border: 1.5px solid var(--border-color);
+  background-color: var(--bg-white); /* Використовуємо системний білий/світлий */
   display: flex;
   justify-content: center;
   align-items: center;
@@ -96,7 +94,7 @@
 }
 
 .socialButton:hover {
-  background-color: #F0EDE5;
+  background-color: var(--bg-filters); /* Легкий беж при наведенні */
   border-color: var(--accent-color);
   transform: var(--hover-lift);
 }
@@ -116,9 +114,11 @@
   color: var(--accent-color);
   font-weight: 700;
   margin-left: 5px;
+  text-decoration: none;
   transition: color var(--transition-fast);
 }
 
 .switchLink:hover {
   color: var(--accent-hover);
+  text-decoration: underline;
 }

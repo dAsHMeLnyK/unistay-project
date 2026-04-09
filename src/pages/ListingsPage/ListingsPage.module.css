@@ -1,5 +1,5 @@
 .listingsPage {
-    padding-bottom: 80px;
+    padding-bottom: 120px; /* Більше місця через плаваючу кнопку */
     width: 100%;
 }
 
@@ -7,8 +7,8 @@
     display: flex;
     gap: 12px;
     width: 100%;
-    max-width: 650px;
-    margin-top: 20px;
+    max-width: 700px;
+    margin: 30px auto 0; /* Центруємо пошук */
 }
 
 .customSearchInput {
@@ -18,17 +18,19 @@
 
 .customSearchButton {
     width: auto !important;
-    min-width: 120px;
-    height: 52px; /* Підганяємо під Input */
+    min-width: 140px;
+    height: 52px;
+    font-weight: 700 !important;
 }
 
 .noResults {
     grid-column: 1 / -1;
     text-align: center;
-    padding: 60px 20px;
+    padding: 80px 20px;
     background-color: var(--bg-filters);
-    border-radius: 20px;
-    border: 1px dashed var(--border-color);
+    border-radius: var(--radius-card);
+    border: 2px dashed var(--border-color);
+    margin-top: 40px;
 }
 
 .mapFloatingBtn {
@@ -40,24 +42,35 @@
     display: flex;
     align-items: center;
     gap: 10px;
-    padding: 14px 24px;
+    padding: 16px 28px;
     background-color: var(--text-main);
     color: var(--bg-white);
     border: none;
     border-radius: var(--radius-full);
     font-size: 16px;
-    font-weight: 600;
+    font-weight: 700;
     cursor: pointer;
-    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.15);
-    transition: all var(--transition-fast), bottom 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.1);
+    box-shadow: var(--shadow-lg);
+    transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
 }
 
 .mapFloatingBtnRaised {
-    bottom: 100px;
+    bottom: 110px; /* Піднімаємо, якщо відкрита панель порівняння */
 }
 
 .mapFloatingBtn:hover {
     background-color: var(--accent-color);
-    transform: translateX(-50%) translateY(-2px);
-    box-shadow: 0 6px 20px var(--accent-shadow);
+    transform: translateX(-50%) translateY(-5px);
+    box-shadow: 0 10px 25px var(--accent-shadow);
+}
+
+@media (max-width: 600px) {
+    .searchBar {
+        flex-direction: column;
+        align-items: stretch;
+    }
+    
+    .customSearchButton {
+        width: 100% !important;
+    }
 }

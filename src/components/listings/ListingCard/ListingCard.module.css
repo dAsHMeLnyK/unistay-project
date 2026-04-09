@@ -6,12 +6,12 @@
 }
 
 .card {
-    background-color: var(--bg-main);
-    border-radius: 16px;
-    box-shadow: 0 4px 12px rgba(74, 73, 71, 0.08);
+    background-color: var(--bg-input); /* Краще білий, щоб виділявся на фоні сайту */
+    border-radius: var(--radius-card); /* Тепер автоматично 20px, а було 16px */
+    box-shadow: var(--shadow-sm); 
     overflow: hidden;
     width: 100%;
-    transition: transform var(--transition-fast), box-shadow var(--transition-fast), outline 0.2s ease;
+    transition: transform var(--transition-fast), box-shadow var(--transition-fast);
     font-family: inherit;
     display: flex;
     flex-direction: column;
@@ -23,12 +23,12 @@
 /* Стан для порівняння */
 .cardComparing {
     outline: 3px solid var(--accent-color);
-    box-shadow: 0 8px 25px var(--accent-shadow);
+    box-shadow: var(--shadow-lg); /* Для виділеної картки — сильніша тінь */
 }
 
 .card:hover {
     transform: var(--hover-lift);
-    box-shadow: 0 8px 20px var(--accent-shadow);
+    box-shadow: var(--shadow-md); /* Використовуємо системну тінь при наведенні */
 }
 
 .imageContainer {
@@ -57,14 +57,14 @@
     left: 12px;
     width: 34px;
     height: 34px;
+    background-color: var(--bg-main); /* Використовуємо ваш беж із системи */
     border-radius: var(--radius-full);
-    background-color: rgba(250, 247, 240, 0.9); /* Ваш беж з прозорістю */
+    box-shadow: var(--shadow-lg);
     border: none;
     display: flex;
     align-items: center;
     justify-content: center;
     cursor: pointer;
-    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
     transition: all var(--transition-fast);
     z-index: 5;
     color: var(--text-main);

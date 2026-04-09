@@ -8,6 +8,7 @@
 .searchBarContainer {
     position: relative;
     width: 100%;
+    z-index: 100;
 }
 
 .inputWrapper {
@@ -26,7 +27,7 @@
 
 .mapInput {
     width: 100%;
-    padding: 12px 20px 12px 48px;
+    padding: 14px 20px 14px 48px;
     border: 1.5px solid var(--border-color);
     border-radius: var(--radius-full);
     font-size: 16px;
@@ -58,7 +59,7 @@
     padding: 10px 0;
     list-style: none;
     z-index: 1000;
-    box-shadow: 0 10px 30px rgba(0,0,0,0.08);
+    box-shadow: var(--shadow-lg);
     max-height: 250px;
     overflow-y: auto;
 }
@@ -77,6 +78,11 @@
 .suggestionsList li:hover {
     background-color: var(--bg-filters);
     color: var(--accent-color);
+}
+
+.pinIcon {
+    color: var(--accent-color);
+    flex-shrink: 0;
 }
 
 .mapPreviewContainer {
@@ -112,6 +118,11 @@
     display: flex;
     align-items: center;
     gap: 6px;
+    transition: color var(--transition-fast);
+}
+
+.expandBtn:hover {
+    color: var(--accent-hover);
 }
 
 /* МОДАЛЬНЕ ВІКНО */
@@ -139,14 +150,13 @@
     display: flex;
     flex-direction: column;
     gap: 20px;
-    box-shadow: 0 30px 60px rgba(0, 0, 0, 0.2);
+    box-shadow: var(--shadow-lg);
 }
 
 .modalHeader {
     display: flex;
     justify-content: space-between;
     align-items: flex-start;
-    flex-shrink: 0;
 }
 
 .modalTitle {
@@ -163,25 +173,30 @@
     margin-top: 10px;
     color: var(--accent-color);
     font-weight: 600;
-    background: var(--bg-filters);
+    background: var(--bg-white);
     padding: 6px 16px;
     border-radius: var(--radius-full);
-    border: 1px solid var(--border-color);
+    border: 1.5px solid var(--border-color);
 }
 
 .closeModal {
-    font-size: 40px;
+    font-size: 32px;
     border: none;
     background: none;
     cursor: pointer;
-    line-height: 0.5;
+    line-height: 1;
     color: var(--text-muted);
+    transition: color var(--transition-fast);
+}
+
+.closeModal:hover {
+    color: var(--danger-color);
 }
 
 .fullScreenMapContainer {
-    flex: 1; /* Карта заповнює все вільне місце */
+    flex: 1;
     width: 100%;
-    min-height: 0; /* ФІКС для flex-контейнерів */
+    min-height: 0;
     border-radius: var(--radius-inner);
     overflow: hidden;
     border: 1.5px solid var(--border-color);
@@ -191,12 +206,11 @@
 .modalFooter {
     display: flex;
     justify-content: center;
-    flex-shrink: 0;
 }
 
 .confirmBtn {
     background-color: var(--accent-color);
-    color: white;
+    color: var(--bg-white);
     border: none;
     padding: 14px 50px;
     border-radius: var(--radius-full);
@@ -207,5 +221,5 @@
 
 .confirmBtn:hover {
     background-color: var(--accent-hover);
-    transform: translateY(-2px);
+    transform: var(--hover-lift);
 }

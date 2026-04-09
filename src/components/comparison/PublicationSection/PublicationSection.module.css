@@ -1,14 +1,13 @@
 .section {
-    background: var(--bg-white);
-    border-radius: var(--radius-card); /* 35px */
+    background: var(--bg-filters);
+    border-radius: var(--radius-card);
     padding: 35px;
     margin-bottom: 30px;
     border: 1.5px solid var(--border-color);
-    box-shadow: var(--card-shadow);
 }
 
 .sectionTitle {
-    font-size: 22px; /* Уніфіковано з іншими секціями */
+    font-size: 22px;
     font-weight: 700;
     margin-bottom: 25px;
     display: flex;
@@ -51,5 +50,5 @@
     font-weight: 700;
     background: var(--accent-shadow);
     padding: 6px 14px;
-    border-radius: var(--radius-full);
+    border-radius: var(--radius-sm);
 }

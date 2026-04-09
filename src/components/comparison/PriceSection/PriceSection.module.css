@@ -1,10 +1,9 @@
 .section {
-    background: var(--bg-white);
+    background: var(--bg-filters);
     border-radius: var(--radius-card);
     padding: 35px;
     margin-bottom: 30px;
     border: 1.5px solid var(--border-color);
-    box-shadow: var(--card-shadow);
 }
 
 .header {
@@ -22,7 +21,7 @@
 }
 
 .diffBadge {
-    /* Єдине місце з зеленим кольором */
+    /* Використовуємо зелений з ваших загальних стилів */
     background: var(--success-bg); 
     color: var(--success-color);
     padding: 6px 14px;
@@ -53,7 +52,7 @@
 }
 
 .priceBlock.isCheaper {
-    /* Використовуємо ваш акцентний колір замість зеленого */
+    /* Використовуємо акцент для виділення вигідної картки */
     border-color: var(--accent-color);
     background: var(--accent-shadow);
 }

@@ -6,7 +6,7 @@
 
 .selectHeader {
     width: 100%;
-    padding: 10px 18px; /* Синхронізація з Input.module.css */
+    padding: 0 18px;
     background-color: var(--bg-input);
     border: 1.5px solid var(--border-color);
     border-radius: var(--radius-full);
@@ -19,13 +19,13 @@
     color: var(--text-main);
     transition: all var(--transition-fast);
     box-sizing: border-box;
-    min-height: 48px; /* Гарантуємо однакову висоту з кнопками */
+    min-height: 48px;
 }
 
 .selectHeader:hover, .selectHeader.open {
     border-color: var(--accent-color);
     background-color: var(--bg-white);
-    box-shadow: 0 4px 12px var(--accent-shadow);
+    box-shadow: var(--shadow-sm); /* Така ж тінь, як в інпута */
 }
 
 .placeholder {
@@ -48,16 +48,15 @@
     left: 0;
     width: 100%;
     background: var(--bg-white);
-    border: 1.5px solid var(--border-color);
-    border-radius: var(--radius-inner);
-    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
+    border: 1px solid var(--border-color); /* Робимо тоншу рамку */
+    border-radius: var(--radius-inner); /* 12px з системи */
+    box-shadow: var(--shadow-md); /* Глибша тінь для випадаючих елементів */
     z-index: 1000;
     padding: 6px;
     margin: 0;
     list-style: none;
     max-height: 250px;
     overflow-y: auto;
-    /* Легка анімація появи */
     animation: fadeIn 0.2s ease-out;
 }
 
@@ -68,11 +67,11 @@
 
 .optionItem {
     padding: 10px 14px;
-    border-radius: 10px;
+    border-radius: var(--radius-sm); /* 8px з системи */
     cursor: pointer;
     font-size: 14px;
     color: var(--text-main);
-    transition: all 0.2s ease;
+    transition: all var(--transition-fast);
 }
 
 .optionItem:hover {

@@ -3,6 +3,7 @@ import styles from './ListingForm.module.css';
 import Select from '../../common/Select/Select';
 import Button from '../../common/Button/Button';
 import Input from '../../common/Input/Input';
+import Card from '../../common/Card/Card';
 import AddressPicker from '../../../pages/AddListingPage/AddressPicker/AddressPicker';
 import ImageUploader from '../../../pages/AddListingPage/ImageUploader/ImageUploader';
 import AmenitySection from '../../../pages/AddListingPage/AmenitySection/AmenitySection';
@@ -24,12 +25,13 @@ const ListingForm = ({
     return (
         <form onSubmit={onSubmit} className={styles.listingForm}>
             <div className={styles.formColumns}>
-                <div className={styles.formSection}>
+                {/* ЛІВА КОЛОНКА */}
+                <Card className={styles.formSection} padding="30px">
                     <h2 className={styles.sectionTitle}>Основна інформація</h2>
                     
-                    <div className={styles.formGroup}>
-                        <label>Заголовок</label>
+                    <div className={styles.fieldGroup}>
                         <Input
+                            label="Заголовок"
                             name="title" 
                             placeholder="Наприклад: Затишна кімната біля НаУОА"
                             value={formData.title} 
@@ -39,8 +41,8 @@ const ListingForm = ({
                         />
                     </div>
 
-                    <div className={styles.formGroup}>
-                        <label>Локація в Острозі</label>
+                    <div className={styles.fieldGroup}>
+                        <label className={styles.fieldLabel}>Локація в Острозі</label>
                         <AddressPicker 
                             lat={formData.latitude} 
                             lng={formData.longitude} 
@@ -51,8 +53,8 @@ const ListingForm = ({
                         />
                     </div>
 
-                    <div className={styles.formGroup}>
-                        <label>Вартість оренди</label>
+                    <div className={styles.fieldGroup}>
+                        <label className={styles.fieldLabel}>Вартість оренди</label>
                         <div className={styles.priceInputWrapper}>
                             <Input 
                                 type="number" 
@@ -60,7 +62,7 @@ const ListingForm = ({
                                 placeholder="0"
                                 value={formData.price} 
                                 onChange={handleChange}
-                                style={{ marginBottom: 0 }} // Прибираємо відступ тільки тут
+                                style={{ marginBottom: 0 }}
                                 className={styles.priceInputCompact}
                                 required
                             />
@@ -68,18 +70,19 @@ const ListingForm = ({
                         </div>
                     </div>
 
-                    <div className={styles.formGroup}>
+                    {/* Секція опису з лічильником */}
+                    <div className={styles.fieldGroup}>
                         <div className={styles.labelWithCounter}>
-                            <label>Опис об'єкту</label>
+                            <label className={styles.fieldLabel}>Опис об'єкту</label>
                             <span className={styles.charCounter}>
                                 {(formData.description || "").length}/1000
                             </span>
                         </div>
                         <div className={styles.textareaWrapper}>
                             <textarea 
-                                className={styles.inputField} 
+                                className={styles.textareaField} 
                                 name="description" 
-                                placeholder="Розкажіть про умови..."
+                                placeholder="Розкажіть про умови, правила та особливості..."
                                 value={formData.description} 
                                 onChange={handleChange} 
                                 required 
@@ -88,28 +91,34 @@ const ListingForm = ({
                             />
                         </div>
                     </div>
-                </div>
+                </Card>
 
-                <div className={styles.formSection}>
+                {/* ПРАВА КОЛОНКА */}
+                <Card className={styles.formSection} padding="30px">
                     <h2 className={styles.sectionTitle}>Деталі та Фото</h2>
-                    <div className={styles.formGroup}>
-                        <label>Тип житла</label>
+                    
+                    <div className={styles.fieldGroup}>
+                        <label className={styles.fieldLabel}>Тип житла</label>
                         <Select name="type" value={formData.type} onChange={handleChange} options={LISTING_TYPES} />
                     </div>
-                    <div className={styles.formGroup}>
-                        <label>Комунальні послуги</label>
+
+                    <div className={styles.fieldGroup}>
+                        <label className={styles.fieldLabel}>Комунальні послуги</label>
                         <Select name="communalService" value={formData.communalService} onChange={handleChange} options={COMMUNAL_SERVICES} />
                     </div>
-                    <div className={styles.formGroup}>
-                        <label>Проживання з господарями</label>
+
+                    <div className={styles.fieldGroup}>
+                        <label className={styles.fieldLabel}>Проживання з господарями</label>
                         <Select name="owners" value={formData.owners} onChange={handleChange} options={OWNERSHIP_TYPES} />
                     </div>
-                    <div className={styles.formGroup}>
-                        <label>Наявність сусідів</label>
+
+                    <div className={styles.fieldGroup}>
+                        <label className={styles.fieldLabel}>Наявність сусідів</label>
                         <Select name="neighbours" value={formData.neighbours} onChange={handleChange} options={NEIGHBOUR_TYPES} />
                     </div>
-                    <div className={styles.formGroup}>
-                        <label>Фотографії</label>
+
+                    <div className={styles.fieldGroup}>
+                        <label className={styles.fieldLabel}>Фотографії</label>
                         <ImageUploader 
                             imageUrls={imageUrls} 
                             setImageUrls={setImageUrls} 
@@ -117,10 +126,10 @@ const ListingForm = ({
                             setIsUploading={setIsUploading} 
                         />
                     </div>
-                </div>
+                </Card>
             </div>
 
-            <div className={styles.formSection}>
+            <Card className={styles.formSection} padding="30px">
                 <h2 className={styles.sectionTitle}>Зручності та особливості</h2>
                 <AmenitySection 
                     amenities={dbAmenities} 
@@ -130,15 +139,15 @@ const ListingForm = ({
                         amenityIds: prev.amenityIds.includes(id) ? prev.amenityIds.filter(aId => aId !== id) : [...prev.amenityIds, id]
                     }))} 
                 />
-            </div>
+            </Card>
 
             <div className={styles.submitWrapper}>
                 {onCancel && (
-                    <Button variant="secondary" onClick={onCancel} disabled={isSubmitting} className={styles.cancelBtnWidth}>
+                    <Button variant="secondary" onClick={onCancel} disabled={isSubmitting} className={styles.cancelBtn}>
                         Скасувати
                     </Button>
                 )}
-                <Button type="submit" variant="primary" disabled={isSubmitting || isUploading} className={styles.submitBtnWidth}>
+                <Button type="submit" variant="primary" disabled={isSubmitting || isUploading} className={styles.submitBtn}>
                     {isSubmitting ? "Збереження..." : submitText}
                 </Button>
             </div>

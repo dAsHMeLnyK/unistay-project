@@ -1,22 +1,24 @@
-/* src/components/common/Card/Card.module.css */
 .card {
-  background: var(--bg-filters);
-  border-radius: var(--radius-card); /* Використовуємо вашу змінну 35px */
-  border: 1.5px solid var(--border-color);
-  box-shadow: var(--card-shadow);
+  /* Залишаємо ваш улюблений фоновий колір */
+  background: var(--bg-filters); 
+  
+  /* Тепер це автоматично 20px з index.css */
+  border-radius: var(--radius-card); 
+  
+  /* Використовуємо системний колір рамки та м'яку тінь */
+  border: 1px solid var(--border-color);
+  
   display: flex;
   flex-direction: column;
-  gap: 30px;
   width: 100%;
   box-sizing: border-box;
   transition: transform var(--transition-fast), box-shadow var(--transition-fast);
 }
 
-/* Адаптивність для карток */
 @media (max-width: 600px) {
   .card {
-    padding: 25px !important; /* Пріоритет над інлайн-стилем для мобілок */
-    border-radius: 25px;
-    gap: 20px;
+    /* На мобільних скруглення має бути трохи меншим, щоб не "з'їдати" простір */
+    border-radius: var(--radius-inner); 
+    padding: 20px !important;
   }
 }

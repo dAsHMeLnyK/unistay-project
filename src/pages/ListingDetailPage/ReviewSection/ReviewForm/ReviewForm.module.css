@@ -1,11 +1,11 @@
 .reviewForm {
     background-color: var(--bg-filters);
     border: 1.5px solid var(--border-color);
-    border-radius: 30px;
+    border-radius: var(--radius-xl, 30px);
     padding: 35px;
     display: flex;
     flex-direction: column;
-    gap: 20px;
+    gap: 24px;
 }
 
 .formHeader {
@@ -21,6 +21,7 @@
     font-size: 20px;
     font-weight: 700;
     color: var(--text-main);
+    font-family: var(--font-main, inherit);
 }
 
 .starRatingGroup {
@@ -42,13 +43,17 @@
     font-size: 32px;
     color: var(--border-color);
     padding: 0;
-    transition: var(--transition-fast);
+    transition: transform 0.2s cubic-bezier(0.175, 0.885, 0.32, 1.275), color 0.2s;
     display: flex;
     align-items: center;
 }
 
+.starBtn:hover {
+    transform: scale(1.15);
+}
+
 .starBtn.active {
-    color: #FFB800;
+    color: #FFB800; /* Золотий стандарт для зірок */
 }
 
 .ratingText {
@@ -69,17 +74,19 @@
     min-height: 140px;
     background-color: var(--bg-input);
     border: 1.5px solid var(--border-color);
-    border-radius: 20px;
+    border-radius: var(--radius-lg, 20px);
     padding: 20px;
-    font-family: inherit;
+    font-family: var(--font-main, inherit);
     font-size: 15px;
+    color: var(--text-main);
     outline: none;
     resize: vertical;
-    transition: border-color 0.2s;
+    transition: border-color 0.2s, box-shadow 0.2s;
 }
 
 .commentInput:focus {
     border-color: var(--accent-color);
+    box-shadow: 0 0 0 4px rgba(177, 116, 87, 0.1);
 }
 
 .formFooter {

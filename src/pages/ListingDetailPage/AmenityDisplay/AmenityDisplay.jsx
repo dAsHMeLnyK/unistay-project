@@ -3,13 +3,16 @@ import { FiCheck } from 'react-icons/fi';
 import styles from './AmenityDisplay.module.css';
 
 const AmenityDisplay = ({ amenities }) => {
-    if (!amenities || amenities.length === 0) return null;
+    // Важливо: перевіряємо чи amenities це масив
+    if (!amenities || !Array.isArray(amenities) || amenities.length === 0) {
+        return null;
+    }
 
     return (
         <div className={styles.container}>
             <div className={styles.amenitiesGrid}>
                 {amenities.map((amenity) => (
-                    <div key={amenity.id} className={styles.amenityItem}>
+                    <div key={amenity.id || amenity.title} className={styles.amenityItem}>
                         <div className={styles.checkbox}>
                             <FiCheck className={styles.checkIcon} />
                         </div>

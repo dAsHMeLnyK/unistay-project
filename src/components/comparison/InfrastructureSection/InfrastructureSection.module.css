@@ -1,10 +1,9 @@
 .section {
-    background: var(--bg-white);
+    background: var(--bg-filters);
     border-radius: var(--radius-card);
-    padding: 35px;
+    padding: 30px;
     margin-bottom: 30px;
     border: 1.5px solid var(--border-color);
-    box-shadow: var(--card-shadow);
 }
 
 .sectionTitle {
@@ -41,21 +40,17 @@
 
 .distValue {
     font-size: 13px;
-    font-weight: 600;
-    color: var(--text-muted);
-    margin-bottom: 6px;
-}
-
-.winnerValue {
-    color: var(--text-main);
     font-weight: 700;
+    color: var(--text-muted);
+    margin-bottom: 8px;
+    display: block;
 }
 
 .track {
     width: 100%;
-    height: 6px;
+    height: 8px;
     background: var(--bg-filters);
-    border-radius: 3px;
+    border-radius: var(--radius-full);
     overflow: hidden;
 }
 
@@ -66,5 +61,13 @@
 }
 
 .winnerFill {
-    background: var(--accent-color); /* Більш спокійний темний акцент */
+    background: var(--accent-color);
+}
+
+.reverse {
+    text-align: right;
+}
+
+@media (max-width: 600px) {
+    .barsContainer { gap: 20px; }
 }

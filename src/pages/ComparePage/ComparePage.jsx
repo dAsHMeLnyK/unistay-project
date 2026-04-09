@@ -2,11 +2,11 @@ import React, { useEffect, useState } from 'react';
 import { useSearchParams, Link } from 'react-router-dom';
 import { FiArrowLeft } from 'react-icons/fi';
 import { ListingService } from '../../api/services/ListingService';
-import ComparisonHeader from '../../components/comparison/ComparisonHeader';
-import PriceSection from '../../components/comparison/PriceSection';
-import InfrastructureSection from '../../components/comparison/InfrastructureSection';
-import AmenitiesSection from '../../components/comparison/AmenitiesSection';
-import PublicationSection from '../../components/comparison/PublicationSection';
+import ComparisonHeader from '../../components/comparison/ComparisonHeader/ComparisonHeader';
+import PriceSection from '../../components/comparison/PriceSection/PriceSection';
+import InfrastructureSection from '../../components/comparison/InfrastructureSection/InfrastructureSection';
+import AmenitiesSection from '../../components/comparison/AmenitiesSection/AmenitiesSection';
+import PublicationSection from '../../components/comparison/PublicationSection/PublicationSection';
 import styles from './ComparePage.module.css';
 
 const ComparePage = () => {

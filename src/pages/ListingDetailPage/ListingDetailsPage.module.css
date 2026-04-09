@@ -170,10 +170,12 @@
 .value { color: var(--text-main); font-weight: 700; font-size: 15px; }
 
 .descriptionText {
-    line-height: 1.8;
-    color: var(--text-main);
     font-size: 16px;
-    white-space: pre-wrap;
+    line-height: 1.7; 
+    color: var(--text-main);
+    white-space: pre-line; 
+    max-width: 760px;
+    opacity: 0.9;
 }
 
 @media (max-width: 900px) {
@@ -181,3 +183,4 @@
     .mainFrame { height: 380px; }
     .actionCard { padding: 30px; }
 }
+

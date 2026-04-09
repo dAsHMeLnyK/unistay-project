@@ -1,12 +1,10 @@
 .stickyHeader {
     position: sticky;
-    top: 80px; 
+    top: 75px; /* Синхронізовано з висотою Navbar */
     z-index: 900;
-    /* Використовуємо системний фон замість #FAF7F0 */
     background: var(--bg-main); 
     padding: 15px 0;
     margin-bottom: 25px;
-    /* Використовуємо системну межу */
     border-bottom: 1.5px solid var(--border-color);
 }
 
@@ -21,12 +19,11 @@
     display: flex;
     align-items: center;
     gap: 15px;
-    background: var(--bg-white);
+    background: var(--bg-input);
     padding: 10px;
-    /* Використовуємо системний радіус (20px замість 16px для кращого UX) */
-    border-radius: var(--radius-inner); 
+    border-radius: var(--radius-inner); /* 12px */
     border: 1px solid var(--border-color);
-    box-shadow: var(--card-shadow);
+    box-shadow: var(--shadow-sm);
 }
 
 .imageWrapper {
@@ -49,12 +46,12 @@
     top: -6px;
     left: -6px;
     background: var(--accent-color);
-    color: white;
-    font-size: 9px;
+    color: var(--bg-main); /* Читабельність на акценті */
+    font-size: 10px;
     font-weight: 700;
-    padding: 2px 6px;
-    border-radius: 6px;
-    box-shadow: 0 2px 5px var(--accent-shadow);
+    padding: 2px 8px;
+    border-radius: var(--radius-sm);
+    box-shadow: var(--shadow-sm);
 }
 
 .headerContent h4 {
@@ -80,14 +77,13 @@
     width: 36px;
     height: 36px;
     background: var(--text-main);
-    color: var(--bg-white);
-    border-radius: 50%;
+    color: var(--bg-main); /* Контраст з темним фоном */
+    border-radius: var(--radius-full);
     display: flex;
     align-items: center;
     justify-content: center;
     font-weight: 700;
     font-size: 12px;
     margin: 0 auto;
-    /* Обводка під колір фону сторінки з дизайн-системи */
-    box-shadow: 0 0 0 4px var(--bg-main);
+    box-shadow: var(--shadow-sm);
 }

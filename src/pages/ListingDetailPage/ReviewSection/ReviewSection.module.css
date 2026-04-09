@@ -1,15 +1,17 @@
 .sectionContainer {
     display: flex;
     flex-direction: column;
-    gap: 35px;
+    gap: 40px;
     width: 100%;
 }
 
 .ratingSummary {
-    padding-bottom: 30px;
-    border-bottom: 1.5px solid var(--border-color);
+    padding: 30px;
+    background: var(--bg-input);
+    border-radius: var(--radius-xl, 30px);
+    border: 1.5px solid var(--border-color);
     display: flex;
-    justify-content: center; /* Центруємо рейтинг */
+    justify-content: center;
     text-align: center;
 }
 
@@ -21,10 +23,10 @@
 }
 
 .ratingValue {
-    font-size: 64px; /* Трохи збільшено для акценту */
+    font-size: 64px;
     font-weight: 800;
     color: var(--text-main);
-    line-height: 1;
+    letter-spacing: -2px;
 }
 
 .starsRow {
@@ -88,16 +90,13 @@
 .reviewCard {
     background-color: var(--bg-input);
     border: 1.5px solid var(--border-color);
-    border-radius: 25px;
+    border-radius: var(--radius-lg, 25px);
     padding: 25px;
     display: flex;
     flex-direction: column;
-    transition: var(--transition-fast);
-}
-
-.reviewCard:hover {
-    transform: var(--hover-lift);
-    border-color: var(--accent-color);
+    transition: all var(--transition-fast, 0.2s);
+    /* Захист від дуже довгих слів користувачів */
+    word-break: break-word; 
 }
 
 .cardHeader {
@@ -108,16 +107,17 @@
 }
 
 .authorAvatar {
-    width: 46px;
-    height: 46px;
-    background-color: var(--bg-filters);
-    border-radius: 50%;
+    width: 48px;
+    height: 48px;
+    background: var(--accent-color); /* Або градієнт вашої системи */
+    color: white;
+    border-radius: var(--radius-circle, 50%);
     display: flex;
     align-items: center;
     justify-content: center;
-    color: var(--accent-color);
-    font-weight: 800;
-    flex-shrink: 0;
+    font-weight: 700;
+    font-size: 18px;
+    box-shadow: 0 4px 10px rgba(177, 116, 87, 0.2);
 }
 
 .authorMeta { display: flex; flex-direction: column; }
@@ -127,13 +127,29 @@
 .cardRating {
     margin-left: auto;
     background: var(--bg-filters);
-    padding: 6px 12px;
-    border-radius: 12px;
+    padding: 6px 14px;
+    border-radius: var(--radius-full, 50px);
     display: flex;
     align-items: center;
-    gap: 5px;
+    gap: 6px;
+    color: var(--text-main);
     font-weight: 800;
     font-size: 14px;
+    border: 1px solid var(--border-color);
+}
+
+.cardRating svg {
+    color: #FFB800;
+    fill: #FFB800;
+}
+
+.infoBox {
+    background-color: var(--bg-filters);
+    border: 1.5px dashed var(--border-color);
+    border-radius: var(--radius-xl, 25px);
+    padding: 40px;
+    text-align: center;
+    transition: border-color 0.3s;
 }
 
 .starIcon { color: #FFB800; fill: #FFB800; font-size: 12px; }

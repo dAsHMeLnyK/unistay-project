@@ -16,14 +16,14 @@
 }
 
 .barContainer {
-    background-color: #FAF7F0; /* Ваш фірмовий беж */
-    border: 1px solid #D8D2C2;
-    border-radius: 20px;
+    background-color: var(--bg-main);
+    border: 1.5px solid var(--border-color);
+    border-radius: var(--radius-card);
     padding: 12px 24px;
     display: flex;
     align-items: center;
     gap: 30px;
-    box-shadow: 0 10px 30px rgba(74, 73, 71, 0.15);
+    box-shadow: var(--shadow-lg);
     max-width: 800px;
     width: 100%;
 }
@@ -66,20 +66,20 @@
 .text p {
     margin: 0;
     font-size: 13px;
-    color: #8C8C8C;
+    color: var(--text-muted);
 }
 
 .selectedItems {
     display: flex;
-    gap: 10px;
+    gap: 12px; /* Трохи збільшив відступ */
 }
 
 .miniCard {
     position: relative;
-    width: 50px;
-    height: 50px;
-    border-radius: 10px;
-    overflow: hidden;
+    width: 52px;
+    height: 52px;
+    border-radius: var(--radius-sm);
+    /* overflow: visible; — Важливо, щоб хрестик міг трохи виступати, якщо треба */
     border: 2px solid var(--accent-color);
 }
 
@@ -87,35 +87,46 @@
     width: 100%;
     height: 100%;
     object-fit: cover;
+    display: block;
+    border-radius: calc(var(--radius-sm) - 2px);
 }
 
 .placeholderCard {
-    width: 50px;
-    height: 50px;
-    border-radius: 10px;
-    border: 2px dashed #D8D2C2;
+    width: 52px;
+    height: 52px;
+    border-radius: var(--radius-sm);
+    border: 2px dashed var(--border-color);
     display: flex;
     align-items: center;
     justify-content: center;
-    color: #D8D2C2;
+    color: var(--text-muted);
     font-size: 20px;
 }
 
+/* ОНОВЛЕНИЙ ХРЕСТИК */
 .removeMini {
     position: absolute;
-    top: 2px;
-    right: 2px;
-    background: rgba(0,0,0,0.5);
+    top: -6px; /* Виносимо трохи вгору */
+    right: -6px; /* Виносимо трохи вбік */
+    background: var(--text-main); /* Темний солідний фон */
     color: white;
-    border: none;
+    border: 2px solid var(--bg-main); /* Контур, щоб не зливався з фото */
     border-radius: 50%;
-    width: 16px;
-    height: 16px;
+    width: 22px; /* Збільшений розмір */
+    height: 22px;
     display: flex;
     align-items: center;
     justify-content: center;
     cursor: pointer;
-    font-size: 10px;
+    font-size: 12px;
+    transition: all var(--transition-fast);
+    box-shadow: 0 2px 4px rgba(0,0,0,0.2);
+    z-index: 2;
+}
+
+.removeMini:hover {
+    background: var(--accent-color);
+    transform: scale(1.1);
 }
 
 .actions {
@@ -127,32 +138,40 @@
 .clearBtn {
     background: none;
     border: none;
-    color: #8C8C8C;
+    color: var(--text-muted);
     cursor: pointer;
     font-size: 14px;
-    font-family: 'Afacad', sans-serif;
+    font-weight: 600;
+    font-family: inherit;
+    transition: color var(--transition-fast);
+}
+
+.clearBtn:hover {
+    color: var(--accent-color);
 }
 
 .compareBtn {
     background-color: var(--accent-color);
     color: white;
     border: none;
-    padding: 10px 20px;
-    border-radius: 12px;
-    font-weight: 600;
+    padding: 10px 22px;
+    border-radius: var(--radius-inner);
+    font-weight: 700;
     cursor: pointer;
     display: flex;
     align-items: center;
     gap: 8px;
-    transition: all 0.2s;
-}
-
-.compareBtn:disabled {
-    background-color: #D8D2C2;
-    cursor: not-allowed;
+    transition: all var(--transition-fast);
 }
 
 .compareBtn:not(:disabled):hover {
-    transform: translateY(-2px);
-    box-shadow: 0 4px 12px rgba(177, 116, 87, 0.3);
+    transform: var(--hover-lift);
+    box-shadow: var(--shadow-sm);
+    background-color: var(--accent-hover);
+}
+
+.compareBtn:disabled {
+    background-color: var(--border-color);
+    color: var(--text-muted);
+    cursor: not-allowed;
 }

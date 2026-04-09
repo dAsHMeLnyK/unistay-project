@@ -4,7 +4,7 @@ import L from 'leaflet';
 import { FiMaximize2, FiMapPin } from 'react-icons/fi';
 import styles from './LocationMap.module.css';
 
-// Використовуємо ті ж налаштування іконок, що і в AddressPicker
+// Стандартні іконки Leaflet
 import markerIcon from 'leaflet/dist/images/marker-icon.png';
 import markerShadow from 'leaflet/dist/images/marker-shadow.png';
 
@@ -16,20 +16,31 @@ let DefaultIcon = L.icon({
 });
 
 const LocationMap = ({ lat, lng, address }) => {
-    const position = [lat, lng];
+    // Валідація координат
+    const hasCoords = lat !== undefined && lng !== undefined;
+    const position = hasCoords ? [lat, lng] : [50.4501, 30.5234]; // Default to Kyiv if error
 
     const openInGoogleMaps = () => {
-        window.open(`https://www.google.com/maps?q=${lat},${lng}`, '_blank');
+        if (!hasCoords) return;
+        // Виправлений формат посилання Google Maps
+        const url = `https://www.google.com/maps/search/?api=1&query=${lat},${lng}`;
+        window.open(url, '_blank', 'noopener,noreferrer');
     };
+
+    if (!hasCoords) return null;
 
     return (
         <div className={styles.mapWrapper}>
             <div className={styles.mapHeader}>
                 <div className={styles.addressInfo}>
                     <FiMapPin className={styles.pinIcon} />
-                    <span>{address}</span>
+                    <span>{address || "Адреса уточнюється"}</span>
                 </div>
-                <button className={styles.googleBtn} onClick={openInGoogleMaps}>
+                <button 
+                    className={styles.googleBtn} 
+                    onClick={openInGoogleMaps}
+                    title="Відкрити в новому вікні"
+                >
                     <FiMaximize2 /> Відкрити Google Maps
                 </button>
             </div>
@@ -37,11 +48,15 @@ const LocationMap = ({ lat, lng, address }) => {
             <div className={styles.mapContainer}>
                 <MapContainer 
                     center={position} 
-                    zoom={16} 
+                    zoom={15} 
                     scrollWheelZoom={false} 
                     style={{ height: '100%', width: '100%' }}
+                    zoomControl={true}
                 >
-                    <TileLayer url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png" />
+                    <TileLayer 
+                        attribution='&copy; OpenStreetMap'
+                        url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png" 
+                    />
                     <Marker position={position} icon={DefaultIcon} />
                 </MapContainer>
             </div>

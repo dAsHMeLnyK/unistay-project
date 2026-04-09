@@ -1,6 +1,5 @@
 .uploaderContainer {
     width: 100%;
-    box-sizing: border-box;
 }
 
 .imageGrid {
@@ -13,15 +12,16 @@
 .imageItem {
     position: relative;
     aspect-ratio: 1 / 1;
-    border-radius: var(--radius-inner); /* 20px - синхронізація з картою */
+    border-radius: var(--radius-inner);
     overflow: hidden;
     border: 1.5px solid var(--border-color);
     background: var(--bg-white);
-    transition: transform var(--transition-fast);
+    transition: all var(--transition-fast);
 }
 
 .imageItem:hover {
-    transform: translateY(-2px);
+    transform: var(--hover-lift);
+    border-color: var(--accent-color);
 }
 
 .previewImage {
@@ -32,27 +32,27 @@
 
 .removeBtn {
     position: absolute;
-    top: 8px;
-    right: 8px;
+    top: 6px;
+    right: 6px;
     background: var(--bg-white);
-    color: var(--danger-color); /* Використовуємо системний колір помилки */
+    color: var(--danger-color);
     border: none;
     border-radius: 50%;
-    width: 28px;
-    height: 28px;
+    width: 26px;
+    height: 26px;
     display: flex;
     align-items: center;
     justify-content: center;
     cursor: pointer;
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+    box-shadow: var(--shadow-sm);
     z-index: 10;
     transition: all var(--transition-fast);
 }
 
 .removeBtn:hover {
     background: var(--danger-color);
-    color: var(--bg-white);
-    transform: rotate(90deg);
+    color: white;
+    transform: scale(1.1) rotate(90deg);
 }
 
 .addBtn {
@@ -67,7 +67,6 @@
     flex-direction: column !important;
     align-items: center !important;
     justify-content: center !important;
-    text-align: center;
 }
 
 .addBtn:hover:not(.disabled) {
@@ -79,20 +78,13 @@
 .plusIcon {
     font-size: 28px;
     color: var(--accent-color);
-    margin-bottom: 6px;
+    margin-bottom: 4px;
 }
 
 .addBtn span {
     font-size: 12px;
-    font-weight: 600;
+    font-weight: 700;
     color: var(--text-muted);
-}
-
-.loaderWrapper {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    gap: 8px;
 }
 
 .loaderIcon {
@@ -106,13 +98,6 @@
     color: var(--text-muted);
     margin: 10px 0 0 4px;
     font-style: italic;
-    opacity: 0.8;
-}
-
-.disabled {
-    cursor: not-allowed;
-    opacity: 0.5;
-    background-color: var(--border-color);
 }
 
 @keyframes spin {
@@ -120,7 +105,6 @@
     to { transform: rotate(360deg); }
 }
 
-/* Адаптація для маленьких екранів */
 @media (max-width: 480px) {
     .imageGrid {
         grid-template-columns: repeat(2, 1fr);

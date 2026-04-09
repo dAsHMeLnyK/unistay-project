@@ -13,9 +13,9 @@
     align-items: center;
     gap: 12px;
     padding: 10px 16px;
-    background-color: var(--bg-input); /* Використовуємо системний кремовий */
+    background-color: var(--bg-input);
     border: 1.5px solid var(--border-color);
-    border-radius: var(--radius-full); /* Використовуємо системні 50px */
+    border-radius: var(--radius-full);
     cursor: pointer;
     transition: all var(--transition-fast);
     user-select: none;
@@ -23,18 +23,18 @@
 
 .amenityItem:hover {
     border-color: var(--accent-color);
-    background-color: var(--bg-white); /* Використовуємо системний білий */
+    background-color: var(--bg-white);
+    transform: translateY(-1px);
 }
 
 .selected {
-    /* Використовуємо напівпрозорий акцентний колір для фону */
     background-color: var(--accent-shadow) !important; 
     border-color: var(--accent-color);
 }
 
 .checkbox {
-    width: 20px;
-    height: 20px;
+    width: 22px;
+    height: 22px;
     border-radius: 50%;
     border: 2px solid var(--border-color);
     background-color: var(--bg-white);
@@ -58,13 +58,13 @@
 
 .title {
     font-size: 14px;
-    font-weight: 500;
+    font-weight: 600;
     color: var(--text-main);
 }
 
 .selected .title {
     color: var(--accent-color);
-    font-weight: 700; /* Трохи жирніше для виділення */
+    font-weight: 700;
 }
 
 .loadingText {
@@ -76,11 +76,6 @@
 @media (max-width: 480px) {
     .amenitiesGrid {
         grid-template-columns: 1fr 1fr;
-        gap: 8px;
-    }
-    
-    .amenityItem {
-        padding: 8px 12px;
         gap: 8px;
     }
 }

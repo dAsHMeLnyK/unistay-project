@@ -1,10 +1,9 @@
 .section {
-    background: var(--bg-white);
+    background: var(--bg-filters);
     border-radius: var(--radius-card);
-    padding: 35px;
+    padding: 30px; /* Трохи зменшив для балансу */
     margin-bottom: 30px;
     border: 1.5px solid var(--border-color);
-    box-shadow: var(--card-shadow);
 }
 
 .sectionTitle {
@@ -60,6 +59,6 @@
 }
 
 .hasNot { 
-    color: var(--text-main);
-    opacity: 0.3;
+    color: var(--text-muted); /* Замість opacity використовуємо колір */
+    opacity: 0.4;
 }

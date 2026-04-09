@@ -1,82 +1,14 @@
 .favoritesPage {
     padding-top: 40px;
-    min-height: 70vh;
-}
-
-/* Кнопка очищення: зробили її "тихою" */
-.clearMiniButton {
-    background: none;
-    border: none;
-    color: var(--text-muted);
-    font-family: inherit;
-    font-size: 15px;
-    font-weight: 600;
-    text-decoration: underline;
-    cursor: pointer;
-    margin-top: 10px;
-    transition: color var(--transition-fast);
-}
-
-.clearMiniButton:hover {
-    color: var(--danger-color);
-}
-
-/* Стилізація порожнього стану */
-.emptyState {
+    /* Збільшений відступ знизу для гарантованого скролу */
+    padding-bottom: 120px; 
+    min-height: 100vh;
     display: flex;
     flex-direction: column;
-    align-items: center;
-    text-align: center;
-    margin-top: 60px;
-    padding: 40px;
-}
-
-.actionButton {
-    margin-top: 30px;
-    width: auto !important; /* Щоб кнопка не розтягувалася */
-    min-width: 250px;
-}
-
-/* Ілюстрація будиночка (перевикористання вашого дизайну) */
-.houseIllustration {
-    width: 100px;
-    height: 100px;
-    margin-bottom: 30px;
-    position: relative;
-    opacity: 0.6; /* Робимо трохи блідішим для Empty State */
-}
-
-.roof {
-    width: 0;
-    height: 0;
-    border-left: 50px solid transparent;
-    border-right: 50px solid transparent;
-    border-bottom: 40px solid var(--text-main);
-}
-
-.base {
-    width: 80px;
-    height: 50px;
-    background-color: var(--accent-color);
-    margin: 0 auto;
-    position: relative;
-    border-bottom-left-radius: 4px;
-    border-bottom-right-radius: 4px;
-}
-
-.door {
-    width: 20px;
-    height: 30px;
     background-color: var(--bg-main);
-    position: absolute;
-    bottom: 0;
-    left: 30px;
-    border-top-left-radius: 10px;
-    border-top-right-radius: 10px;
 }
 
-/* ... попередні стилі (emptyState, house, etc) ... */
-
+/* Кнопка очищення */
 .clearMiniButton {
     background: none;
     border: none;
@@ -86,12 +18,91 @@
     font-weight: 700;
     text-decoration: underline;
     cursor: pointer;
-    margin-top: 10px;
+    margin-top: 15px;
     padding: 5px 10px;
     transition: all var(--transition-fast);
 }
 
 .clearMiniButton:hover {
-    color: var(--accent-color); /* Змінено з червоного на ваш коричневий */
+    color: var(--accent-color);
     opacity: 0.8;
+}
+
+/* Оновлений ПОРОЖНІЙ СТАН: ширший та виразніший */
+.emptyState {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+    margin: 60px auto;
+    padding: 80px 40px; /* Збільшив вертикальні падінги */
+    background-color: var(--bg-filters);
+    border-radius: var(--radius-card);
+    border: 2px dashed var(--border-color);
+    /* Розширюємо блок */
+    width: 100%;
+    max-width: 1000px; 
+    box-sizing: border-box;
+}
+
+.actionButton {
+    margin-top: 40px;
+    min-width: 280px;
+}
+
+/* Ілюстрація будиночка */
+.houseIllustration {
+    width: 120px; /* Трохи збільшив масштаб */
+    height: 120px;
+    margin-bottom: 40px;
+    position: relative;
+    opacity: 0.5;
+}
+
+.roof {
+    width: 0;
+    height: 0;
+    border-left: 60px solid transparent;
+    border-right: 60px solid transparent;
+    border-bottom: 48px solid var(--text-main);
+}
+
+.base {
+    width: 96px;
+    height: 60px;
+    background-color: var(--accent-color);
+    margin: 0 auto;
+    position: relative;
+    border-bottom-left-radius: 6px;
+    border-bottom-right-radius: 6px;
+}
+
+.door {
+    width: 24px;
+    height: 36px;
+    background-color: var(--bg-main);
+    position: absolute;
+    bottom: 0;
+    left: 36px;
+    border-top-left-radius: 12px;
+    border-top-right-radius: 12px;
+}
+
+/* Адаптація */
+@media (max-width: 1024px) {
+    .emptyState {
+        max-width: 90%;
+    }
+}
+
+@media (max-width: 768px) {
+    .favoritesPage {
+        padding-top: 20px;
+        padding-bottom: 100px;
+    }
+
+    .emptyState {
+        padding: 60px 20px;
+        margin-top: 30px;
+    }
 }
