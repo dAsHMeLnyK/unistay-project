@@ -51,9 +51,9 @@ export const ListingProvider: React.FC<{ children: ReactNode }> = ({ children })
             return;
         }
         try {
-            // Припускаємо, що FavoriteService повертає масив об'єктів з id
             const data = await FavoriteService.getMyFavorites();
-            setFavoriteIds(data.map((fav: any) => fav.id));
+            // ВИПРАВЛЕНО: Мапимо саме listingId (або id оголошення), приводимо до рядка
+            setFavoriteIds(data.map((fav: any) => (fav.listingId || fav.id).toString()));
         } catch (err) {
             console.error("Помилка завантаження обраних:", err);
         }
@@ -73,23 +73,20 @@ export const ListingProvider: React.FC<{ children: ReactNode }> = ({ children })
             return;
         }
 
-        const isFavorited = favoriteIds.includes(listingId);
+        const idStr = listingId.toString();
+        const isFavorited = favoriteIds.includes(idStr);
         
         try {
             if (isFavorited) {
                 try {
-                    await FavoriteService.removeFromFavorites(listingId);
+                    await FavoriteService.removeFromFavorites(idStr);
                 } catch (err: any) {
-                    if (err.response?.status === 404) {
-                        console.warn("Запис не знайдено на сервері, видаляємо локально.");
-                    } else {
-                        throw err;
-                    }
+                    if (err.response?.status !== 404) throw err;
                 }
-                setFavoriteIds(prev => prev.filter(id => id !== listingId));
+                setFavoriteIds(prev => prev.filter(id => id !== idStr));
             } else {
-                await FavoriteService.addToFavorites(listingId);
-                setFavoriteIds(prev => [...prev, listingId]);
+                await FavoriteService.addToFavorites(idStr);
+                setFavoriteIds(prev => [...prev, idStr]);
             }
         } catch (err) {
             console.error("Помилка toggle favorite:", err);
@@ -97,15 +94,16 @@ export const ListingProvider: React.FC<{ children: ReactNode }> = ({ children })
     };
 
     const toggleCompare = (listingId: string) => {
+        const idStr = listingId.toString();
         setCompareIds(prev => {
-            if (prev.includes(listingId)) {
-                return prev.filter(id => id !== listingId);
+            if (prev.includes(idStr)) {
+                return prev.filter(id => id !== idStr);
             }
             if (prev.length >= 2) {
                 alert("Ви можете порівняти лише 2 оголошення одночасно.");
                 return prev;
             }
-            return [...prev, listingId];
+            return [...prev, idStr];
         });
     };
 
@@ -124,10 +122,10 @@ export const ListingProvider: React.FC<{ children: ReactNode }> = ({ children })
 
     const value = {
         listings,
-        favoriteListings: listings.filter(l => favoriteIds.includes(l.id)),
+        favoriteListings: listings.filter(l => favoriteIds.includes(l.id.toString())),
         favoriteIds,
         compareIds,
-        compareListings: listings.filter(l => compareIds.includes(l.id)),
+        compareListings: listings.filter(l => compareIds.includes(l.id.toString())),
         loading,
         error,
         fetchListings,
@@ -143,7 +141,7 @@ export const ListingProvider: React.FC<{ children: ReactNode }> = ({ children })
         },
         deleteListing: async (id: string) => {
             await ListingService.delete(id);
-            setListings(prev => prev.filter(l => l.id !== id));
+            setListings(prev => prev.filter(l => l.id.toString() !== id.toString()));
         }
     };
 

@@ -1,17 +1,19 @@
 .reviewForm {
-    background-color: var(--bg-filters);
-    border: 1.5px solid var(--border-color);
-    border-radius: var(--radius-xl, 30px);
-    padding: 35px;
+    /* Прибираємо фон та рамку, щоб не було дублювання */
+    background: transparent;
+    border: none;
+    padding: 0; 
+    
     display: flex;
     flex-direction: column;
     gap: 24px;
+    width: 100%;
 }
 
 .formHeader {
     display: flex;
     flex-direction: column;
-    align-items: center; /* Центруємо заголовок форми та зірки */
+    align-items: center;
     gap: 15px;
     text-align: center;
 }
@@ -21,7 +23,6 @@
     font-size: 20px;
     font-weight: 700;
     color: var(--text-main);
-    font-family: var(--font-main, inherit);
 }
 
 .starRatingGroup {
@@ -53,7 +54,7 @@
 }
 
 .starBtn.active {
-    color: #FFB800; /* Золотий стандарт для зірок */
+    color: #FFB800;
 }
 
 .ratingText {
@@ -72,21 +73,21 @@
 .commentInput {
     width: 100%;
     min-height: 140px;
-    background-color: var(--bg-input);
+    background-color: var(--bg-white); /* Змінив на білий для контрасту з фоном форми */
     border: 1.5px solid var(--border-color);
-    border-radius: var(--radius-lg, 20px);
+    border-radius: var(--radius-inner); /* Використовуємо ваш токен */
     padding: 20px;
-    font-family: var(--font-main, inherit);
+    font-family: inherit;
     font-size: 15px;
     color: var(--text-main);
     outline: none;
     resize: vertical;
-    transition: border-color 0.2s, box-shadow 0.2s;
+    transition: all var(--transition-fast);
 }
 
 .commentInput:focus {
     border-color: var(--accent-color);
-    box-shadow: 0 0 0 4px rgba(177, 116, 87, 0.1);
+    box-shadow: 0 0 0 4px var(--accent-shadow);
 }
 
 .formFooter {
@@ -99,10 +100,4 @@
     font-size: 13px;
     color: var(--text-muted);
     font-weight: 500;
-}
-
-.submitBtn {
-    display: flex;
-    align-items: center;
-    gap: 8px;
 }

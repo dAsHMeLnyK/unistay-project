@@ -5,182 +5,45 @@
 }
 
 .container {
-    max-width: 1200px;
-    margin: 0 auto;
-    padding: 0 25px;
     display: flex;
     flex-direction: column;
-    gap: 40px;
+    gap: 48px; /* Відступ між верхньою секцією та нижніми картками */
 }
 
-/* ВЕРХНІЙ БЛОК */
 .topSection {
     display: grid;
     grid-template-columns: 1.6fr 1fr;
     gap: 40px;
 }
 
-.galleryColumn {
+/* Стек нижніх карток */
+.detailsStack {
     display: flex;
     flex-direction: column;
-    gap: 15px;
+    gap: 32px; /* Відступ між самими картками Card */
 }
 
-.mainFrame {
-    width: 100%;
-    height: 500px;
-    background-color: var(--bg-filters);
-    border: 1.5px solid var(--border-color);
-    border-radius: 40px;
-    overflow: hidden;
+/* Стиль для кожної картки на цій сторінці */
+.detailCard {
+    padding: 40px !important;
 }
 
-.mainFrame img { width: 100%; height: 100%; object-fit: cover; }
-
-.thumbRow {
-    display: flex;
-    gap: 12px;
-    overflow-x: auto;
-    padding-bottom: 5px;
+.sectionGroup {
+    margin-bottom: 40px;
+    padding-bottom: 40px;
+    border-bottom: 1px solid var(--border-color);
 }
-
-.thumb {
-    width: 110px;
-    height: 80px;
-    border-radius: 20px;
-    border: 1.5px solid var(--border-color);
-    cursor: pointer;
-    overflow: hidden;
-    flex-shrink: 0;
-    background-color: var(--bg-filters);
-}
-
-.activeThumb { border-color: var(--accent-color); border-width: 2.5px; }
-
-/* ACTION CARD */
-.actionCard {
-    background-color: var(--bg-filters);
-    border: 1.5px solid var(--border-color);
-    border-radius: 40px;
-    padding: 45px;
-    display: flex;
-    flex-direction: column;
-    height: 100%;
-}
-
-.locationBadge {
-    display: flex;
-    align-items: center;
-    gap: 8px;
-    color: var(--text-muted);
-    font-weight: 500;
-    margin-top: 15px;
-}
-
-.priceContainer {
-    margin: 35px 0;
-    padding: 25px;
-    background-color: #ffffff;
-    border-radius: 30px;
-    border: 1px solid var(--border-color);
-}
-
-.priceLabel {
-    font-size: 14px;
-    color: var(--text-muted);
-    margin-bottom: 5px;
-    font-weight: 500;
-}
-
-.priceValue {
-    font-size: 38px;
-    font-weight: 900;
-    color: var(--accent-color);
-}
-
-.pricePeriod { color: var(--text-muted); font-size: 18px; margin-left: 5px; }
-
-.ownerBrief {
-    display: flex;
-    align-items: center;
-    gap: 15px;
-    margin-bottom: 30px;
-}
-
-.avatar {
-    width: 55px; height: 55px;
-    background-color: var(--accent-color);
-    border-radius: 50%;
-    display: flex; align-items: center; justify-content: center;
-    color: white; font-weight: 800; font-size: 20px;
-}
-
-.ownerName { font-weight: 700; color: var(--text-main); font-size: 17px; }
-.ownerStatus { font-size: 13px; color: #4CAF50; font-weight: 600; }
-
-.contactBtn { width: 100% !important; height: 65px !important; font-size: 18px !important; }
-
-.metaInfo { 
-    margin-top: auto; 
-    font-size: 13px; 
-    color: var(--text-muted); 
-    display: flex; 
-    align-items: center; 
-    gap: 6px;
-    padding-top: 20px;
-}
-
-/* НИЖНІЙ БЛОК */
-.contentCard {
-    background-color: var(--bg-filters);
-    border: 1.5px solid var(--border-color);
-    border-radius: 40px;
-    padding: 45px;
-    margin-bottom: 30px;
-}
-
-.featuresGrid {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
-    gap: 20px;
-}
-
-.featureItem {
-    background-color: #ffffff;
-    padding: 20px;
-    border-radius: 25px;
-    border: 1.5px solid var(--border-color);
-    display: flex;
-    align-items: center;
-    gap: 15px;
-}
-
-.featureIcon {
-    font-size: 22px;
-    color: var(--accent-color);
-    background-color: rgba(177, 116, 87, 0.08);
-    width: 45px;
-    height: 45px;
-    padding: 11px;
-    border-radius: 14px;
-}
-
-.featureText { display: flex; flex-direction: column; }
-.label { color: var(--text-muted); font-size: 13px; font-weight: 500; }
-.value { color: var(--text-main); font-weight: 700; font-size: 15px; }
 
 .descriptionText {
     font-size: 16px;
-    line-height: 1.7; 
+    line-height: 1.8;
     color: var(--text-main);
-    white-space: pre-line; 
-    max-width: 760px;
-    opacity: 0.9;
+    white-space: pre-line;
+    max-width: 850px;
 }
 
 @media (max-width: 900px) {
     .topSection { grid-template-columns: 1fr; }
-    .mainFrame { height: 380px; }
-    .actionCard { padding: 30px; }
+    .container { gap: 32px; }
+    .detailCard { padding: 24px !important; }
 }
-
