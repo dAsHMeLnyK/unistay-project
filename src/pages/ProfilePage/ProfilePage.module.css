@@ -16,6 +16,9 @@
     overflow: hidden;
     display: flex;
     flex-direction: column;
+    background-color: var(--bg-white);
+    border-radius: var(--radius-card);
+    border: 1.5px solid var(--border-color);
 }
 
 /* САЙДБАР */
@@ -32,7 +35,6 @@
     margin-bottom: 20px;
 }
 
-/* ЕФЕКТ ТІНІ ДЛЯ АВАТАРА */
 .avatarPlaceholder, .avatar {
     width: 110px;
     height: 110px;
@@ -44,7 +46,7 @@
     color: var(--accent-color);
     border: 1px solid var(--border-color);
     object-fit: cover;
-    box-shadow: var(--shadow-md); /* М'яка тінь */
+    box-shadow: var(--shadow-md);
 }
 
 .photoEditBadge {
@@ -75,12 +77,6 @@
     font-weight: 700;
     margin: 0;
     color: var(--text-main);
-}
-
-/* ЛІНІЯ НАД ВИХОДОМ */
-.sidebarFooter {
-    border-top: 1.5px solid var(--border-color);
-    background-color: var(--border-color);
 }
 
 /* ГОЛОВНИЙ БЛОК */
@@ -134,8 +130,32 @@
     color: var(--text-main);
 }
 
-/* КНОПКИ */
-.cardActions, .logoutActionBtn {
+.infoValueMuted {
+    color: var(--text-muted);
+    font-weight: 500;
+}
+
+/* ПОЛЯ РЕДАГУВАННЯ */
+.editInput {
+    padding: 8px 14px;
+    border: 1.5px solid var(--border-color);
+    border-radius: var(--radius-inner);
+    background-color: var(--bg-input);
+    font-family: inherit;
+    font-size: 14px;
+    font-weight: 600;
+    width: 100%;
+    max-width: 250px;
+    outline: none;
+    transition: border-color var(--transition-fast);
+}
+
+.editInput:focus {
+    border-color: var(--accent-color);
+}
+
+/* АДМІН-КНОПКИ (СТИЛЬ ЯК В ОГОЛОШЕННЯХ) */
+.adminActions, .sidebarFooter {
     display: grid;
     grid-template-columns: 1fr 1fr;
     background-color: var(--border-color); 
@@ -144,12 +164,11 @@
     margin-top: auto;
 }
 
-.logoutActionBtn {
+.sidebarFooter {
     grid-template-columns: 1fr;
-    width: 100%;
 }
 
-.editBtn, .passwordBtn, .logoutActionBtn {
+.editBtn, .passwordBtn, .saveBtn, .cancelBtn, .logoutActionBtn {
     padding: 18px;
     border: none;
     font-size: 14px;
@@ -164,18 +183,48 @@
     transition: all var(--transition-fast);
 }
 
-.editBtn:hover, .passwordBtn:hover, .logoutActionBtn:hover {
+/* Ефекти наведення */
+.editBtn:hover, .passwordBtn:hover {
     background-color: var(--bg-white);
     color: var(--accent-color);
 }
 
-.logoutActionBtn:hover {
+.saveBtn { color: var(--success-color); }
+.saveBtn:hover { background-color: var(--success-bg); }
+
+.cancelBtn:hover {
+    background-color: var(--danger-bg);
     color: var(--danger-color);
-    background-color: #FFF5F5;
+}
+
+.logoutActionBtn:hover {
+    background-color: var(--danger-bg);
+    color: var(--danger-color);
 }
 
 @media (max-width: 900px) {
     .profileLayout {
         grid-template-columns: 1fr;
     }
+}
+
+.avatarLoader {
+    width: 110px;
+    height: 110px;
+    border-radius: 50%;
+    background-color: var(--bg-filters);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: var(--accent-color);
+}
+
+.spinIcon {
+    animation: spin 1s linear infinite;
+    font-size: 24px;
+}
+
+@keyframes spin {
+    from { transform: rotate(0deg); }
+    to { transform: rotate(360deg); }
 }

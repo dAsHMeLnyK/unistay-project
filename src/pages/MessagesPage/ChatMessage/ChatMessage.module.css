@@ -1,0 +1,172 @@
+.messageRow {
+    display: flex;
+    gap: 12px;
+    max-width: 80%;
+    margin-bottom: 4px;
+}
+
+.myRow {
+    align-self: flex-end;
+    flex-direction: row-reverse;
+}
+
+.theirRow {
+    align-self: flex-start;
+}
+
+.miniAvatar {
+    width: 32px;
+    height: 32px;
+    background-color: var(--border-color);
+    border-radius: var(--radius-full);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 12px;
+    font-weight: 700;
+    flex-shrink: 0;
+    overflow: hidden;
+}
+
+.avatarImg {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+}
+
+.bubble {
+    padding: 10px 16px;
+    border-radius: var(--radius-inner);
+    position: relative;
+    box-shadow: var(--shadow-sm);
+    min-width: 60px;
+}
+
+.myRow .bubble {
+    background-color: var(--accent-color);
+    color: white;
+    border-bottom-right-radius: 4px;
+}
+
+.theirRow .bubble {
+    background-color: var(--bg-white);
+    border: 1px solid var(--border-color);
+    color: var(--text-main);
+    border-bottom-left-radius: 4px;
+}
+
+.senderName {
+    display: block;
+    font-size: 11px;
+    font-weight: 700;
+    margin-bottom: 4px;
+    opacity: 0.8;
+}
+
+.text {
+    margin: 0;
+    font-size: 15px;
+    line-height: 1.4;
+    word-break: break-word;
+}
+
+.msgFooter {
+    display: flex;
+    justify-content: flex-end;
+    align-items: center;
+    gap: 6px;
+    margin-top: 4px;
+}
+
+.time {
+    font-size: 10px;
+    opacity: 0.6;
+}
+
+.editedTag {
+    font-size: 10px;
+    font-style: italic;
+    opacity: 0.5;
+}
+
+/* Actions logic */
+.messageActions {
+    position: absolute;
+    top: -15px;
+    right: 0;
+    display: none;
+    gap: 4px;
+    background: var(--bg-white);
+    border: 1px solid var(--border-color);
+    padding: 4px;
+    border-radius: var(--radius-inner);
+    box-shadow: var(--shadow-sm);
+}
+
+.bubble:hover .messageActions {
+    display: flex;
+}
+
+.messageActions button {
+    background: none;
+    border: none;
+    cursor: pointer;
+    color: var(--text-muted);
+    display: flex;
+    align-items: center;
+    transition: color 0.2s;
+}
+
+.messageActions button:hover {
+    color: var(--accent-color);
+}
+
+/* Edit Mode */
+.editForm {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    min-width: 200px;
+}
+
+.editInput {
+    border: 1px solid var(--border-color);
+    border-radius: var(--radius-inner);
+    padding: 6px 10px;
+    font-size: 14px;
+    outline: none;
+}
+
+.editActions {
+    display: flex;
+    gap: 12px;
+}
+
+.editActions button {
+    background: none;
+    border: none;
+    cursor: pointer;
+    font-size: 18px;
+    display: flex;
+    align-items: center;
+}
+
+.saveBtn { color: var(--accent-color); }
+
+.actionBtn {
+    background: none;
+    border: none;
+    padding: 5px;
+    cursor: pointer;
+    color: var(--text-muted);
+    display: flex;
+    align-items: center;
+    border-radius: 4px;
+    transition: 0.2s;
+}
+
+.actionBtn:hover {
+    background-color: var(--bg-input);
+    color: var(--accent-color);
+}

@@ -22,12 +22,12 @@ const FilterBar = ({ filters, onFilterChange, onResetFilters, showFilters, onTog
             { value: "0", label: "Включено" }
         ],
         owners: [
-            { value: "", label: "Усі" },
+            { value: "", label: "Усі варіанти" },
             { value: "0", label: "З господарями" },
             { value: "1", label: "Без господарів" }
         ],
         neighbors: [
-            { value: "", label: "Усі" },
+            { value: "", label: "Усі варіанти" },
             { value: "0", label: "З сусідами" },
             { value: "1", label: "Без сусідів" }
         ]

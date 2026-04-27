@@ -5,7 +5,7 @@ import "./App.css";
 // Layouts
 import MainLayout from "./layouts/MainLayout/MainLayout";
 import AuthLayout from "./layouts/AuthLayout/AuthLayout";
-import HomeLayout from "./layouts/HomeLayout/HomeLayout"; // ДОДАНО: імпорт нового лейауту
+import HomeLayout from "./layouts/HomeLayout/HomeLayout";
 
 // Pages
 import HomePage from "./pages/HomePage/HomePage";
@@ -21,57 +21,67 @@ import NotFoundPage from "./pages/NotFoundPage/NotFoundPage";
 import ExploreMapPage from './pages/ExploreMapPage/ExploreMapPage';
 import ComparePage from "./pages/ComparePage/ComparePage";
 import ProfilePage from "./pages/ProfilePage/ProfilePage";
+import MessagesPage from "./pages/MessagesPage/MessagesPage"; // ДОДАНО
 
 // Context & Protection
 import { AuthProvider } from "./context/AuthContext";
 import { ListingProvider } from "./context/ListingContext";
+import { ChatProvider } from "./context/ChatContext";
 import ProtectedRoute from "./components/common/ProtectedRoute";
 
 function App() {
   return (
     <AuthProvider>
-      <ListingProvider>
-        <Routes>
-          {/* 1. Головна сторінка у своєму HomeLayout (без обмежень ширини) */}
-          <Route element={<HomeLayout />}>
-            <Route path="/" element={<HomePage />} />
-          </Route>
+      <ChatProvider>
+        <ListingProvider>
+          <Routes>
+            {/* 1. Головна сторінка */}
+            <Route element={<HomeLayout />}>
+              <Route path="/" element={<HomePage />} />
+            </Route>
 
-          {/* 2. Всі інші сторінки у MainLayout (з обмеженням ширини контейнера) */}
-          <Route element={<MainLayout />}>
-            <Route path="listings" element={<ListingsPage />} />
-            <Route path="listings/:listingId" element={<ListingDetailPage />} />
-            <Route path="explore-map" element={<ExploreMapPage />} />
-            <Route path="compare" element={<ComparePage />} />
+            {/* 2. Всі інші сторінки */}
+            <Route element={<MainLayout />}>
+              <Route path="listings" element={<ListingsPage />} />
+              <Route path="listings/:listingId" element={<ListingDetailPage />} />
+              <Route path="explore-map" element={<ExploreMapPage />} />
+              <Route path="compare" element={<ComparePage />} />
 
-            {/* Захищені маршрути */}
-            <Route path="add-listing" element={
-              <ProtectedRoute><AddListingPage /></ProtectedRoute>
-            } />
-            <Route path="edit-listing/:listingId" element={
-              <ProtectedRoute><EditListingPage /></ProtectedRoute>
-            } />
-            <Route path="favorites" element={
-              <ProtectedRoute><FavoritesPage /></ProtectedRoute>
-            } />
-            <Route path="my-listings" element={
-              <ProtectedRoute><MyListingsPage /></ProtectedRoute>
-            } />
-            <Route path="profile" element={
-              <ProtectedRoute>
-                <ProfilePage />
-              </ProtectedRoute>
-            } />
-          </Route>
+              {/* Захищені маршрути */}
+              <Route path="add-listing" element={
+                <ProtectedRoute><AddListingPage /></ProtectedRoute>
+              } />
+              <Route path="edit-listing/:listingId" element={
+                <ProtectedRoute><EditListingPage /></ProtectedRoute>
+              } />
+              <Route path="favorites" element={
+                <ProtectedRoute><FavoritesPage /></ProtectedRoute>
+              } />
+              <Route path="my-listings" element={
+                <ProtectedRoute><MyListingsPage /></ProtectedRoute>
+              } />
+              <Route path="profile" element={
+                <ProtectedRoute><ProfilePage /></ProtectedRoute>
+              } />
 
-          {/* 3. Авторизація (окремі лейаути) */}
-          <Route path="/signin" element={<AuthLayout><SignInPage /></AuthLayout>} />
-          <Route path="/signup" element={<AuthLayout><SignUpPage /></AuthLayout>} />
-          
-          {/* 4. Сторінка 404 */}
-          <Route path="*" element={<NotFoundPage />} />
-        </Routes>
-      </ListingProvider>
+              {/* Сторінка повідомлень */}
+              <Route path="messages" element={
+                <ProtectedRoute>
+                  <MessagesPage />
+                </ProtectedRoute>
+              } />
+              
+            </Route>
+
+            {/* 3. Авторизація */}
+            <Route path="/signin" element={<AuthLayout><SignInPage /></AuthLayout>} />
+            <Route path="/signup" element={<AuthLayout><SignUpPage /></AuthLayout>} />
+            
+            {/* 4. Сторінка 404 */}
+            <Route path="*" element={<NotFoundPage />} />
+          </Routes>
+        </ListingProvider>
+      </ChatProvider>
     </AuthProvider>
   );
 }

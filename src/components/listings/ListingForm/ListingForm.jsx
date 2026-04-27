@@ -7,7 +7,7 @@ import Card from '../../common/Card/Card';
 import AddressPicker from '../../../pages/AddListingPage/AddressPicker/AddressPicker';
 import ImageUploader from '../../../pages/AddListingPage/ImageUploader/ImageUploader';
 import AmenitySection from '../../../pages/AddListingPage/AmenitySection/AmenitySection';
-import { LISTING_TYPES, COMMUNAL_SERVICES, OWNERSHIP_TYPES, NEIGHBOUR_TYPES } from '../../../constants/listingEnums';
+import { LISTING_TYPES, COMMUNAL_SERVICES, OWNERSHIP_TYPES, NEIGHBOUR_TYPES } from '../../../api/dto/ListingDto';
 
 const ListingForm = ({ 
     formData, setFormData, onSubmit, onCancel,

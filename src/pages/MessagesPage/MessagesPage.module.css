@@ -1,0 +1,17 @@
+.messagingLayout {
+    display: grid;
+    grid-template-columns: 320px 1fr;
+    height: 700px;
+    background-color: var(--bg-white);
+    border: 1px solid var(--border-color);
+    border-radius: var(--radius-card);
+    overflow: hidden;
+    margin-bottom: 60px;
+}
+
+@media (max-width: 768px) {
+    .messagingLayout {
+        grid-template-columns: 1fr;
+        height: 85vh;
+    }
+}

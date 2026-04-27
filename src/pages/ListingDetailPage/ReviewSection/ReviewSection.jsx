@@ -9,7 +9,8 @@ import Button from '../../../components/common/Button/Button';
 import styles from './ReviewSection.module.css';
 
 const ReviewSection = ({ reviews: initialReviews, listingId, ownerId }) => {
-    const { isAuthenticated, userId, userName } = useAuth();
+    // Дістаємо profileImage з оновленого контексту
+    const { isAuthenticated, userId, userName, profileImage } = useAuth();
     const [reviews, setReviews] = useState(initialReviews || []);
     const [isSubmitting, setIsSubmitting] = useState(false);
     const [isFormOpen, setIsFormOpen] = useState(false);
@@ -32,14 +33,26 @@ const ReviewSection = ({ reviews: initialReviews, listingId, ownerId }) => {
         setIsSubmitting(true);
         try {
             const result = await ReviewService.createForListing(listingId, formData);
+            
+            // Формуємо об'єкт користувача максимально безпечно
+            const userToDisplay = {
+                id: userId,
+                // Якщо userName містить @, вважаємо це імейлом і пишемо "Користувач"
+                fullName: (userName && !userName.includes('@')) ? userName : "Користувач",
+                profileImage: profileImage || null
+            };
+
             const newReview = {
                 ...result,
-                user: result.user || { id: userId, fullName: userName || "Користувач" },
+                // Пріоритет даним від сервера (якщо він їх повернув), інакше - нашому об'єкту
+                user: (result.user && result.user.fullName) ? result.user : userToDisplay,
                 publicationDate: result.publicationDate || new Date().toISOString()
             };
+            
             setReviews(prev => [newReview, ...prev]);
             setIsFormOpen(false);
         } catch (err) {
+            console.error(err);
             alert("Помилка при додаванні відгуку.");
         } finally {
             setIsSubmitting(false);
@@ -48,7 +61,6 @@ const ReviewSection = ({ reviews: initialReviews, listingId, ownerId }) => {
 
     return (
         <div className={styles.sectionContainer}>
-            
             <div className={styles.headerGrid}>
                 <ReviewStats {...stats} />
 
@@ -87,7 +99,10 @@ const ReviewSection = ({ reviews: initialReviews, listingId, ownerId }) => {
 
             <div className="cards-grid">
                 {reviews.length > 0 ? (
-                    reviews.map(review => <ReviewCard key={review.id} review={review} />)
+                    // Використовуємо комбінацію id та дати для ключа, щоб уникнути проблем з дублікатами
+                    reviews.map((review, index) => (
+                        <ReviewCard key={review.id || index} review={review} />
+                    ))
                 ) : (
                     <div className={styles.emptyState}>
                         <p>Відгуків ще немає. Будьте першим!</p>

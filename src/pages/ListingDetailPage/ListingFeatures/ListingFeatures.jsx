@@ -1,6 +1,6 @@
 import React from 'react';
 import { FiHome, FiZap, FiUsers, FiLayers } from 'react-icons/fi';
-import { LISTING_TYPES, COMMUNAL_SERVICES, OWNERSHIP_TYPES, NEIGHBOUR_TYPES } from '../../../constants/listingEnums';
+import { LISTING_TYPES, COMMUNAL_SERVICES, OWNERSHIP_TYPES, NEIGHBOUR_TYPES } from '../../../api/dto/ListingDto';
 import styles from './ListingFeatures.module.css';
 
 const ListingFeatures = ({ listing }) => {
