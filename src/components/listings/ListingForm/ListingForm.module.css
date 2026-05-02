@@ -26,9 +26,9 @@
     color: var(--text-main);
 }
 
-/* Повертаємо стабільні відступи для всіх груп полів */
+
 .fieldGroup {
-    margin-bottom: 24px; /* Було 20px, повернув 24px для більшого простору */
+    margin-bottom: 24px;
     display: flex;
     flex-direction: column;
 }
@@ -76,11 +76,11 @@
     display: flex;
     justify-content: space-between;
     align-items: center;
-    margin-bottom: 10px; /* Додав трохи більше простору */
+    margin-bottom: 10px;
 }
 
 .labelWithCounter .fieldLabel {
-    margin-bottom: 0; /* Прибираємо нижній маржин лейбла тут, бо є флекс-контейнер */
+    margin-bottom: 0;
 }
 
 .charCounter {

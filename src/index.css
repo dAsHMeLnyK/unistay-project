@@ -20,6 +20,10 @@
   --success-color: #439446;
   --success-bg: #E8F5E9;
 
+  --analysis-line-1: #607D8B; /* Наприклад, синій */
+  --analysis-line-2: #8EACCD;
+
+
   /* Радіуси (Систематизовані) */
   --radius-full: 50px;   /* Круглі кнопки/аватари */
   --radius-card: 20px;   /* Основні картки (Profile, Listing) */
@@ -35,6 +39,8 @@
   --transition-fast: 0.2s ease;
   --hover-lift: translateY(-3px);
 }
+
+
 
 /* Скидання та Базові налаштування */
 * { box-sizing: border-box; }

@@ -7,19 +7,23 @@ import {
   FiPhone,
   FiNavigation,
   FiMessageSquare,
+  FiUsers,
 } from "react-icons/fi";
 import { ChatService } from "../../../api/services/ChatService";
-import { useAuth } from "../../../context/AuthContext"; 
+import { useAuth } from "../../../context/AuthContext";
 import Button from "../../../components/common/Button/Button";
 import Card from "../../../components/common/Card/Card";
 import styles from "./ListingMainInfo.module.css";
-import { ChatType, ChatMemberRole } from "../../../api/dto/ChatDto";
+import { ChatType } from "../../../api/dto/ChatDto";
+import CreateGroupModal from "./CreateGroupModal/CreateGroupModal";
 
 const ListingMainInfo = ({ listing }) => {
   const [showPhone, setShowPhone] = useState(false);
   const [isCreatingChat, setIsCreatingChat] = useState(false);
+  const [isCreatingGroup, setIsCreatingGroup] = useState(false);
   const navigate = useNavigate();
-  const { userId } = useAuth(); 
+  const { userId } = useAuth();
+  const [isGroupModalOpen, setIsGroupModalOpen] = useState(false);
 
   const rawPhone = listing.user?.phoneNumber || "";
   const cleanPhone = rawPhone.replace(/\D/g, "");
@@ -38,8 +42,8 @@ const ListingMainInfo = ({ listing }) => {
         (chat) =>
           chat.type === ChatType.Private &&
           chat.members.some(
-            (m) => m.userId.toLowerCase() === listing.userId.toLowerCase()
-          )
+            (m) => m.userId.toLowerCase() === listing.userId.toLowerCase(),
+          ),
       );
 
       if (existingChat) {
@@ -47,30 +51,48 @@ const ListingMainInfo = ({ listing }) => {
         return;
       }
 
+      // Виправлено: додано зворотні лапки (backticks)
       const newChat = await ChatService.createChat({
         name: `Обговорення: ${listing.title}`,
         description: `Чат щодо оголошення за адресою: ${listing.address}`,
         type: ChatType.Private,
+        targetUserId: listing.userId,
       });
 
-      try {
-        await ChatService.addMember(newChat.id, {
-          targetUserId: listing.userId,
-          role: ChatMemberRole.Member,
-        });
-
-        navigate("/messages", { state: { selectedChatId: newChat.id } });
-      } catch (memberError) {
-        console.error("Failed to add owner to chat:", memberError);
-        alert("Чат створено, але не вдалося автоматично додати власника.");
-        navigate("/messages", { state: { selectedChatId: newChat.id } });
-      }
-
+      navigate("/messages", { state: { selectedChatId: newChat.id } });
     } catch (error) {
       console.error("Error starting chat:", error);
       alert("Не вдалося почати діалог. Спробуйте пізніше.");
     } finally {
       setIsCreatingChat(false);
+    }
+  };
+
+  const handleOpenGroupModal = () => {
+    if (userId && listing.userId.toLowerCase() === userId.toLowerCase()) {
+      alert("Це ваше оголошення. Ви не можете створити групу із самим собою.");
+      return;
+    }
+    setIsGroupModalOpen(true);
+  };
+
+  const handleConfirmCreateGroup = async (groupName) => {
+    setIsCreatingGroup(true);
+    try {
+      const newGroupChat = await ChatService.createChat({
+        name: groupName,
+        description: `Групове обговорення оренди: ${listing.address}`,
+        type: ChatType.Group,
+        targetUserId: listing.userId,
+      });
+
+      navigate("/messages", { state: { selectedChatId: newGroupChat.id } });
+    } catch (error) {
+      console.error("Error creating group:", error);
+      alert("Не вдалося створити групу. Спробуйте пізніше.");
+    } finally {
+      setIsCreatingGroup(false);
+      setIsGroupModalOpen(false);
     }
   };
 
@@ -107,19 +129,18 @@ const ListingMainInfo = ({ listing }) => {
       </div>
 
       <div className={styles.ownerCard}>
-        {/* ОНОВЛЕНИЙ БЛОК АВАТАРА */}
         <div className={styles.ownerAvatar}>
           {listing.user?.profileImage ? (
-            <img 
-              src={listing.user.profileImage} 
-              alt={listing.user.fullName} 
-              className={styles.avatarImage} 
+            <img
+              src={listing.user.profileImage}
+              alt={listing.user.fullName}
+              className={styles.avatarImage}
             />
           ) : (
             listing.user?.fullName?.charAt(0) || <FiUser />
           )}
         </div>
-        
+
         <div className={styles.ownerInfo}>
           <div className={styles.ownerName}>
             {listing.user?.fullName || "Власник"}
@@ -129,47 +150,48 @@ const ListingMainInfo = ({ listing }) => {
       </div>
 
       <div className={styles.actions}>
+        {/* 1. ГОЛОВНА ДІЯ: Написати у внутрішній чат */}
+        <Button
+          fullWidth
+          variant="primary"
+          onClick={handleStartChat}
+          disabled={isCreatingChat || isCreatingGroup}
+        >
+          <FiMessageSquare />{" "}
+          {isCreatingChat ? "Відкриття..." : "Написати власнику"}
+        </Button>
+
+        {/* 2. ДРУГОРЯДНА ДІЯ: Показати номер телефону */}
         {!showPhone ? (
           <Button
             fullWidth
-            variant="primary"
+            variant="secondary"
             onClick={() => setShowPhone(true)}
           >
-            <FiPhone /> Показати контакти
+            <FiPhone /> Показати телефон
           </Button>
         ) : (
-          <div className={styles.contactExpanded}>
-            <a href={`tel:+${cleanPhone}`} className={styles.phoneCallLink}>
+          <div className={styles.phoneRevealed}>
+            <a href={`tel:+${cleanPhone}`} className={styles.phoneLink}>
               <FiPhone /> {rawPhone}
             </a>
-            <div className={styles.messengerGrid}>
-              <a
-                href={`https://t.me/+${cleanPhone}`}
-                target="_blank"
-                rel="noreferrer"
-                className={`${styles.messengerBtn} ${styles.tg}`}
-              >
-                TG
-              </a>
-              <a
-                href={`viber://chat?number=%2B${cleanPhone}`}
-                className={`${styles.messengerBtn} ${styles.viber}`}
-              >
-                Viber
-              </a>
-            </div>
           </div>
         )}
 
-        <Button
-          fullWidth
-          variant="secondary"
-          onClick={handleStartChat}
-          disabled={isCreatingChat}
-        >
-          <FiMessageSquare />{" "}
-          {isCreatingChat ? "Створення..." : "Написати повідомлення"}
-        </Button>
+        {/* 3. ДОДАТКОВА ДІЯ: Створити групу */}
+        <div className={styles.groupActionWrapper}>
+          <Button
+            fullWidth
+            variant="outline"
+            onClick={handleOpenGroupModal} // ЗМІНЕНО ТУТ
+            disabled={isCreatingChat || isCreatingGroup}
+          >
+            <FiUsers />{" "}
+            {isCreatingGroup
+              ? "Створення..."
+              : "Створити спільний чат з друзями"}
+          </Button>
+        </div>
       </div>
 
       <div className={styles.footerMeta}>
@@ -178,6 +200,15 @@ const ListingMainInfo = ({ listing }) => {
           Опубліковано {new Date(listing.publicationDate).toLocaleDateString()}
         </span>
       </div>
+
+      <CreateGroupModal
+        isOpen={isGroupModalOpen}
+        onClose={() => setIsGroupModalOpen(false)}
+        onConfirm={handleConfirmCreateGroup}
+        isLoading={isCreatingGroup}
+        defaultName={`Група: ${listing.title}`}
+        ownerName={listing.user?.fullName}
+      />
     </Card>
   );
 };

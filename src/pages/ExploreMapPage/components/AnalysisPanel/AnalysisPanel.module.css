@@ -1,0 +1,77 @@
+.analysisPanel { 
+    position: absolute; 
+    top: 20px; 
+    left: 20px; 
+    z-index: 1000; 
+    background: var(--bg-white); 
+    padding: 18px; 
+    border-radius: var(--radius-card); 
+    box-shadow: var(--shadow-lg); 
+    max-width: 280px; 
+    border: 1px solid var(--border-color);
+} 
+ 
+.analysisHeader { 
+    display: flex; 
+    align-items: center; 
+    gap: 10px; 
+    font-weight: 600;
+    color: var(--text-main);
+    margin-bottom: 15px;
+    font-size: 16px;
+} 
+ 
+.landmarkGrid { 
+    display: grid; 
+    grid-template-columns: 1fr; 
+    gap: 8px; 
+    margin-bottom: 15px;
+} 
+ 
+.landmarkBtn { 
+    padding: 10px 14px; 
+    border: 1.5px solid var(--border-color); 
+    background: var(--bg-input); 
+    border-radius: var(--radius-inner); 
+    font-size: 12px; 
+    font-weight: 600; 
+    color: var(--text-main); 
+    cursor: pointer; 
+    text-align: left; 
+    transition: all var(--transition-fast); 
+} 
+ 
+.landmarkBtn:hover { 
+    border-color: var(--accent-color); 
+    background: var(--bg-white); 
+} 
+ 
+.activeLandmark { 
+    background: var(--accent-color) !important; 
+    color: var(--bg-white) !important; 
+    border-color: var(--accent-color) !important; 
+    box-shadow: var(--shadow-sm);
+} 
+ 
+.analysisHintCard { 
+    margin-top: 15px; 
+    padding: 12px; 
+    background: var(--bg-filters); 
+    border-radius: var(--radius-inner); 
+    border-left: 4px solid var(--accent-color);
+    display: flex; 
+    gap: 10px; 
+} 
+ 
+.hintText { 
+    font-size: 13px; 
+    line-height: 1.4; 
+    color: var(--text-main); 
+}
+
+.miniDist {
+    display: block;
+    font-size: 11px;
+    opacity: 0.8;
+    margin-top: 2px;
+}

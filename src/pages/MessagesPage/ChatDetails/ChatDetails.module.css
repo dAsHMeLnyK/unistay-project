@@ -177,3 +177,48 @@
     background-color: rgba(var(--accent-rgb), 0.1);
 }
 
+.deleteBtn {
+    width: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    padding: 12px;
+    border: none;
+    color: var(--bg-white); /* Використовуйте ваші змінні, якщо є */
+    background-color: var(--danger-color);
+    border-radius: 8px;
+    cursor: pointer;
+    font-weight: 600;
+    margin-top: 10px;
+    transition: all 0.2s ease;
+}
+
+.deleteBtn:hover {
+    background-color: var(--danger-hover);
+}
+
+/* ДОДАНО: Стилі для кнопки підвищення до адміна */
+.makeAdminBtn {
+    background: none;
+    border: none;
+    color: var(--text-muted); /* Зливається з іншим текстом, не кричить */
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 6px;
+    border-radius: 6px;
+    transition: all 0.2s ease;
+    margin-left: auto; /* Притискає кнопку до правого краю, якщо є вільне місце */
+}
+
+.makeAdminBtn:hover {
+    color: var(--accent-color); /* При наведенні стає фірмовим кольором дій */
+    background-color: rgba(0, 0, 0, 0.04); /* Дуже легкий фон, як у ваших інших кнопок */
+    transform: translateY(-1px); /* Легкий ефект підняття (асоціація з підвищенням) */
+}
+
+.makeAdminBtn:active {
+    transform: translateY(0); /* Ефект натискання */
+}

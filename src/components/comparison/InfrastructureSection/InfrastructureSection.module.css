@@ -49,9 +49,10 @@
 .track {
     width: 100%;
     height: 8px;
-    background: var(--bg-filters);
+    background: var(--bg-white);
     border-radius: var(--radius-full);
     overflow: hidden;
+    border: 1.5px solid var(--border-color);
 }
 
 .fill {
@@ -70,4 +71,80 @@
 
 @media (max-width: 600px) {
     .barsContainer { gap: 20px; }
+}
+
+/* ... твої існуючі стилі ... */
+
+/* СТИЛІ ДЛЯ БАНЕРА КАРТИ */
+.mapBanner {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background: var(--bg-white);
+    border: 1px dashed var(--accent-color);
+    border-radius: var(--radius-inner);
+    padding: 16px 20px;
+    margin-bottom: 30px;
+    gap: 20px;
+}
+
+.bannerText {
+    display: flex;
+    gap: 12px;
+    align-items: flex-start;
+}
+
+.infoIcon {
+    color: var(--accent-color);
+    flex-shrink: 0;
+    margin-top: 2px;
+}
+
+.bannerText strong {
+    display: block;
+    font-size: 15px;
+    color: var(--text-main);
+    margin-bottom: 4px;
+}
+
+.bannerText p {
+    font-size: 13px;
+    color: var(--text-muted);
+    margin: 0;
+    line-height: 1.4;
+}
+
+.mapButton {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    background-color: var(--text-main);
+    color: var(--bg-white);
+    border: none;
+    padding: 10px 20px;
+    border-radius: var(--radius-full);
+    font-size: 14px;
+    font-weight: 700;
+    cursor: pointer;
+    white-space: nowrap;
+    transition: all var(--transition-fast);
+}
+
+.mapButton:hover {
+    background-color: var(--accent-color);
+    transform: translateY(-2px);
+    box-shadow: var(--shadow-md);
+}
+
+
+@media (max-width: 768px) {
+    .mapBanner {
+        flex-direction: column;
+        align-items: stretch;
+        text-align: left;
+    }
+    
+    .mapButton {
+        justify-content: center;
+    }
 }

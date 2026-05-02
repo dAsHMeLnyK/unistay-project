@@ -1,0 +1,168 @@
+.modalOverlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: var(--shadow-lg);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 2000;
+    backdrop-filter: blur(6px);
+    animation: fadeIn 0.2s ease-out;
+}
+
+.modalContent {
+    background-color: var(--bg-white);
+    padding: 40px;
+    border-radius: var(--radius-card);
+    width: 90%;
+    max-width: 420px;
+    position: relative;
+    border: 1px solid var(--border-color);
+    box-shadow: var(--shadow-lg);
+    animation: slideUp 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+
+.closeBtn {
+    position: absolute;
+    top: 20px;
+    right: 20px;
+    background: var(--bg-filters);
+    border: none;
+    width: 36px;
+    height: 36px;
+    border-radius: var(--radius-full);
+    color: var(--text-muted);
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.iconWrapper {
+    width: 70px;
+    height: 70px;
+    background: rgba(var(--accent-rgb), 0.1);
+    border-radius: var(--radius-full);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin: 0 auto 24px;
+}
+
+/* Перейменували addIcon на editIcon */
+.editIcon {
+    font-size: 32px;
+    color: var(--accent-color);
+}
+
+.inputWrapper {
+    margin-bottom: 20px; /* Зробив відступ трохи меншим, щоб вмістити два поля */
+}
+
+/* Додано стилі для textarea, щоб він імітував ваш компонент Input */
+.textarea {
+    width: 100%;
+    padding: 12px 16px;
+    border: 1px solid var(--border-color);
+    border-radius: 8px; /* Підлаштуйте під ваш --radius-input, якщо він є */
+    font-family: inherit;
+    font-size: 15px;
+    background-color: var(--bg-white);
+    color: var(--text-main);
+    resize: vertical;
+    outline: none;
+    transition: all 0.2s ease;
+}
+
+.textarea:focus {
+    border-color: var(--accent-color);
+    box-shadow: 0 0 0 3px rgba(var(--accent-rgb), 0.15);
+}
+
+.textarea::placeholder {
+    color: var(--text-muted);
+}
+
+.actions {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 12px;
+    margin-top: 10px;
+}
+
+@keyframes fadeIn {
+    from { opacity: 0; }
+    to { opacity: 1; }
+}
+
+@keyframes slideUp {
+    from {
+        transform: translateY(20px) scale(0.95);
+        opacity: 0;
+    }
+    to {
+        transform: translateY(0) scale(1);
+        opacity: 1;
+    }
+}
+
+/* --- СТИЛІ ДЛЯ ПОЛЯ ОПИСУ (з ListingForm) --- */
+
+.labelWithCounter {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 10px;
+}
+
+.fieldLabel {
+    font-weight: 700;
+    margin-bottom: 0; /* Тут 0, бо відступ робить контейнер */
+    font-size: 15px;
+    color: var(--text-main);
+}
+
+.charCounter {
+    font-size: 12px;
+    font-weight: 600;
+    color: var(--text-muted);
+    opacity: 0.8;
+}
+
+.textareaWrapper {
+    display: flex;
+    align-items: center;
+    background-color: var(--bg-input); /* Додав фолбек, якщо змінної немає */
+    border: 1.5px solid var(--border-color);
+    transition: all var(--transition-fast, 0.2s ease);
+    border-radius: var(--radius-inner, 8px);
+    padding: 15px 20px;
+}
+
+.textareaWrapper:focus-within {
+    border-color: var(--accent-color);
+    background-color: var(--bg-white);
+    box-shadow: var(--shadow-sm, 0 1px 2px rgba(0,0,0,0.05));
+}
+
+.textareaField {
+    flex-grow: 1;
+    border: none;
+    background-color: transparent;
+    outline: none;
+    font-size: 16px;
+    color: var(--text-main);
+    font-family: inherit;
+    font-weight: 500;
+    width: 100%;
+    min-height: 100px;
+    resize: none;
+}
+
+.textareaField::placeholder {
+    color: var(--text-muted);
+    font-weight: 400;
+}

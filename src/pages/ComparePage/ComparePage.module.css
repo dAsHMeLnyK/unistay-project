@@ -13,19 +13,61 @@
     gap: 10px;
 }
 
+.headerNavigation {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    width: 100%;
+}
+
 .backLink {
     display: flex;
     align-items: center;
     gap: 8px;
     color: var(--text-muted);
-    text-decoration: none;
+    background: transparent !important;
+    background-color: transparent !important;
+    border: none !important;
+    outline: none !important;
+    box-shadow: none !important;
+    padding: 0;
     font-size: 17px;
+    font-family: inherit;
     font-weight: 700;
+    cursor: pointer;
     transition: color var(--transition-fast);
 }
 
 .backLink:hover {
     color: var(--accent-color);
+}
+
+.backLink:hover {
+    color: var(--accent-color);
+}
+
+.mapActionBtn {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    background-color: var(--bg-input);
+    color: var(--text-main);
+    border: 1px solid var(--border-color);
+    padding: 8px 16px;
+    border-radius: var(--radius-inner);
+    font-size: 15px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all var(--transition-fast);
+    box-shadow: var(--shadow-sm);
+}
+
+.mapActionBtn:hover {
+    background-color: var(--bg-white);
+    border-color: var(--accent-color);
+    color: var(--accent-color);
+    transform: translateY(-2px);
+    box-shadow: var(--shadow-md);
 }
 
 .pageTitle {

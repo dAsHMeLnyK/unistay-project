@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
-import { useSearchParams, Link } from 'react-router-dom';
-import { FiArrowLeft } from 'react-icons/fi';
+import { useSearchParams, useNavigate } from 'react-router-dom'; // Замінили Link на useNavigate
+import { FiArrowLeft, FiMap } from 'react-icons/fi'; // Додали іконку карти
 import { ListingService } from '../../api/services/ListingService';
 import ComparisonHeader from '../../components/comparison/ComparisonHeader/ComparisonHeader';
 import PriceSection from '../../components/comparison/PriceSection/PriceSection';
@@ -11,6 +11,7 @@ import styles from './ComparePage.module.css';
 
 const ComparePage = () => {
     const [searchParams] = useSearchParams();
+    const navigate = useNavigate(); // Хук для навігації
     const [comparisonData, setComparisonData] = useState(null);
     const [loading, setLoading] = useState(true);
     
@@ -37,7 +38,6 @@ const ComparePage = () => {
     if (loading) return <div className={styles.loading}>Проводимо глибокий аналіз...</div>;
     if (!comparisonData) return <div className={styles.error}>Помилка завантаження.</div>;
 
-    // ВСІ ДАНІ З ВАШОГО C# DTO
     const { 
         listing1, 
         listing2, 
@@ -51,11 +51,26 @@ const ComparePage = () => {
     return (
         <div className={styles.container}>
             <header className={styles.header}>
-                <Link to="/listings" className={styles.backLink}><FiArrowLeft /> Назад</Link>
+                {/* Верхній рядок з навігацією */}
+                <div className={styles.headerNavigation}>
+                    <button onClick={() => navigate(-1)} className={styles.backLink}>
+                        <FiArrowLeft /> Назад
+                    </button>
+                    
+                    {/* Кнопка переходу на карту */}
+                    <button 
+                        onClick={() => navigate('/explore-map')} 
+                        className={styles.mapActionBtn}
+                        title="Інтерактивне порівняння відстаней"
+                    >
+                        <FiMap size={18} />
+                        <span>На карті</span>
+                    </button>
+                </div>
+                
                 <h1 className={styles.pageTitle}>Порівняльний аналіз</h1>
             </header>
 
-            {/* Використовуємо об'єкти прямо з бекенду */}
             <ComparisonHeader listing1={listing1} listing2={listing2} />
 
             <div className={styles.compareGrid}>
@@ -63,11 +78,8 @@ const ComparePage = () => {
                     priceComparison={priceComparison} 
                     communalComp={communalServicesComparison} 
                 />
-                
                 <PublicationSection dateComp={publicationDateComparison} />
-
                 <InfrastructureSection locationComparison={locationComparison} />
-                
                 <AmenitiesSection amenitiesComparison={amenitiesComparison} />
             </div>
         </div>

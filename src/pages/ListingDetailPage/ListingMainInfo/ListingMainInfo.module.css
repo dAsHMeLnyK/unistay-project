@@ -109,67 +109,49 @@
   font-weight: 500;
 }
 
-.actions {
-  display: flex;
-  flex-direction: column;
-  gap: 12px;
+.actions { 
+  display: flex; 
+  flex-direction: column; 
+  gap: 12px; 
+  margin-bottom: 20px; 
 }
 
-.contactExpanded {
+@keyframes slideDown { 
+  from { opacity: 0; transform: translateY(-10px); } 
+  to { opacity: 1; transform: translateY(0); } 
+}
+
+.phoneRevealed {
   display: flex;
-  flex-direction: column;
-  gap: 10px;
+  justify-content: center;
+  align-items: center;
+  padding: 12px;
+  background-color: var(--bg-filters); 
+  border: 1px dashed var(--border-color); 
+  border-radius: var(--radius-full); 
+  min-height: 48px;
   animation: slideDown 0.3s ease-out;
 }
 
-@keyframes slideDown {
-  from { opacity: 0; transform: translateY(-10px); }
-  to { opacity: 1; transform: translateY(0); }
-}
-
-.phoneCallLink {
+.phoneLink {
   display: flex;
   align-items: center;
-  justify-content: center;
   gap: 10px;
-  padding: 14px;
-  background: var(--bg-white);
-  border: 2px solid var(--accent-color);
-  border-radius: var(--radius-inner);
-  color: var(--accent-color);
+  color: var(--text-main);
   text-decoration: none;
   font-weight: 700;
-  font-size: 18px;
-  transition: var(--transition-fast);
+  font-size: 17px;
+  transition: color var(--transition-fast);
 }
 
-.phoneCallLink:hover {
-  background: var(--accent-shadow);
+.phoneLink:hover {
+  color: var(--accent-color);
 }
 
-.messengerGrid {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 10px;
-}
-
-.messengerBtn {
-  padding: 10px;
-  border-radius: var(--radius-sm);
-  text-align: center;
-  text-decoration: none;
-  color: var(--bg-white);
-  font-weight: 600;
-  font-size: 14px;
-  transition: var(--transition-fast);
-}
-
-.tg { background-color: #0088cc; }
-.viber { background-color: #7360f2; }
-
-.messengerBtn:hover {
-  filter: brightness(1.1);
-  transform: translateY(-2px);
+.groupActionWrapper {
+  margin-top: 8px; 
+  padding-top: 20px;
+  border-top: 1px solid var(--border-color); 
 }
 
 .footerMeta {

@@ -58,7 +58,7 @@
 
 .system-error {
   color: var(--danger-color);
-  background-color: #fff5f5;
+  background-color: var(--danger-bg);
   border: 1px solid var(--danger-color);
   padding: 14px;
   border-radius: var(--radius-inner);
